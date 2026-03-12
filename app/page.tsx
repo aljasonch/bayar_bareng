@@ -110,9 +110,6 @@ export default function Home() {
       <header className="border-b border-white/5 bg-zinc-950/80 backdrop-blur-xl sticky top-0 z-50">
         <div className="w-full max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-brand to-orange-600 flex items-center justify-center shadow-lg shadow-brand/20">
-              <HiOutlineReceiptPercent className="text-white text-base sm:text-lg" />
-            </div>
             <div>
               <h1 className="text-base sm:text-lg font-extrabold text-zinc-100 leading-tight">Bayar Bareng</h1>
               <p className="text-[10px] sm:text-xs text-zinc-500 leading-tight">Split Bill Calculator</p>
