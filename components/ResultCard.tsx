@@ -1,12 +1,6 @@
 'use client'
 
 import { PersonResult } from '@/types'
-import {
-  HiOutlineTag,
-  HiOutlineTruck,
-  HiOutlineClipboardDocumentList,
-  HiOutlineGift,
-} from 'react-icons/hi2'
 
 interface ResultCardProps {
   result: PersonResult
@@ -44,37 +38,25 @@ export default function ResultCard({ result, index }: ResultCardProps) {
         </div>
         {result.discountSaved > 0 && (
           <div className="flex justify-between items-center">
-            <span className="text-zinc-400 flex items-center gap-1.5">
-              <HiOutlineTag className="w-3.5 h-3.5 text-teal-400" />
-              Discount
-            </span>
+            <span className="text-zinc-400">Discount</span>
             <span className="font-mono text-teal-400">-Rp{result.discountSaved.toLocaleString('id-ID')}</span>
           </div>
         )}
         {result.deliveryShare > 0 && (
           <div className="flex justify-between items-center">
-            <span className="text-zinc-400 flex items-center gap-1.5">
-              <HiOutlineTruck className="w-3.5 h-3.5 text-blue-400" />
-              Delivery
-            </span>
+            <span className="text-zinc-400">Delivery</span>
             <span className="font-mono text-zinc-300">+Rp{result.deliveryShare.toLocaleString('id-ID')}</span>
           </div>
         )}
         {result.additionalFeesShare > 0 && (
           <div className="flex justify-between items-center">
-            <span className="text-zinc-400 flex items-center gap-1.5">
-              <HiOutlineClipboardDocumentList className="w-3.5 h-3.5 text-amber-400" />
-              Add. Fees
-            </span>
+            <span className="text-zinc-400">Add. Fees</span>
             <span className="font-mono text-zinc-300">+Rp{result.additionalFeesShare.toLocaleString('id-ID')}</span>
           </div>
         )}
         {result.cashbackSaved > 0 && (
           <div className="flex justify-between items-center">
-            <span className="text-zinc-400 flex items-center gap-1.5">
-              <HiOutlineGift className="w-3.5 h-3.5 text-purple-400" />
-              Cashback
-            </span>
+            <span className="text-zinc-400">Cashback</span>
             <span className="font-mono text-teal-400">-Rp{result.cashbackSaved.toLocaleString('id-ID')}</span>
           </div>
         )}

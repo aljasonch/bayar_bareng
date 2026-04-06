@@ -7,14 +7,6 @@ import { getHistory, deleteFromHistory } from '@/lib/history'
 import { getWhatsAppUrl } from '@/lib/whatsapp'
 import HistoryCard from '@/components/HistoryCard'
 import ResultCard from '@/components/ResultCard'
-import {
-  HiOutlineArrowLeft,
-  HiOutlinePlus,
-  HiOutlineInbox,
-  HiOutlineClipboardDocumentList,
-  HiOutlineXMark,
-  HiOutlineReceiptPercent,
-} from 'react-icons/hi2'
 import { IoLogoWhatsapp } from 'react-icons/io5'
 
 export default function HistoryPage() {
@@ -51,7 +43,7 @@ export default function HistoryPage() {
               href="/"
               className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-100 transition-colors p-1.5 rounded-lg hover:bg-white/5"
             >
-              <HiOutlineArrowLeft className="w-5 h-5" />
+              &larr;
             </Link>
             <div>
               <h1 className="text-base sm:text-lg font-extrabold text-zinc-100 leading-tight">History</h1>
@@ -62,8 +54,8 @@ export default function HistoryPage() {
             href="/"
             className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-brand transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5"
           >
-            <HiOutlinePlus className="w-4 h-4" />
             <span className="hidden sm:inline">New Bill</span>
+            <span className="sm:hidden">+</span>
           </Link>
         </div>
       </header>
@@ -71,16 +63,12 @@ export default function HistoryPage() {
       <main className="w-full max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {history.length === 0 ? (
           <div className="text-center py-16 sm:py-24 animate-fade-in">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-zinc-800 flex items-center justify-center">
-              <HiOutlineInbox className="w-8 h-8 text-zinc-500" />
-            </div>
             <h2 className="text-lg sm:text-xl font-bold text-zinc-300 mb-2">No history yet</h2>
             <p className="text-sm text-zinc-500 mb-6">Your saved split bills will appear here</p>
             <Link
               href="/"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand text-white font-semibold text-sm hover:bg-orange-600 transition-all duration-200 shadow-lg shadow-brand/25"
             >
-              <HiOutlineReceiptPercent className="w-4 h-4" />
               Start Splitting
             </Link>
           </div>
@@ -103,7 +91,6 @@ export default function HistoryPage() {
               {selectedResult ? (
                 <div className="sticky top-20 space-y-4 animate-fade-in">
                   <div className="flex items-center gap-2 mb-2">
-                    <HiOutlineClipboardDocumentList className="w-5 h-5 text-brand" />
                     <h3 className="text-base font-bold text-zinc-100">Breakdown Detail</h3>
                     <span className="text-xs text-zinc-500 font-mono ml-auto">
                       {new Date(selectedResult.createdAt).toLocaleDateString('id-ID', {
@@ -150,7 +137,6 @@ export default function HistoryPage() {
               ) : (
                 <div className="sticky top-20 pt-2">
                   <p className="text-sm text-zinc-500 flex items-center gap-2">
-                    <HiOutlineClipboardDocumentList className="w-4 h-4 text-zinc-600" />
                     Select a bill to see the breakdown
                   </p>
                 </div>
@@ -176,9 +162,9 @@ export default function HistoryPage() {
                 </div>
                 <button
                   onClick={() => setSelectedResult(null)}
-                  className="text-zinc-400 hover:text-zinc-100 p-2 rounded-lg hover:bg-white/5 transition-colors"
+                  className="text-zinc-400 hover:text-zinc-100 p-2 rounded-lg hover:bg-white/5 transition-colors text-lg font-bold"
                 >
-                  <HiOutlineXMark className="w-5 h-5" />
+                  &times;
                 </button>
               </div>
 
@@ -214,7 +200,6 @@ export default function HistoryPage() {
                 rel="noopener noreferrer"
                 className="w-full mt-4 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition-all duration-200"
               >
-                <IoLogoWhatsapp className="w-5 h-5" />
                 Share via WhatsApp
               </a>
 

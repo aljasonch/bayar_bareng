@@ -1,7 +1,6 @@
 'use client'
 
 import { Person, Item } from '@/types'
-import { HiOutlineTrash, HiOutlineXMark, HiOutlinePlus } from 'react-icons/hi2'
 
 interface PersonCardProps {
   person: Person
@@ -64,10 +63,10 @@ export default function PersonCard({ person, index, onUpdate, onRemove, canRemov
         {canRemove && (
           <button
             onClick={onRemove}
-            className="text-zinc-500 hover:text-red-400 transition-colors p-1.5 rounded-lg hover:bg-red-400/10"
+            className="text-zinc-500 hover:text-red-400 transition-colors p-1.5 rounded-lg hover:bg-red-400/10 text-sm"
             aria-label="Remove person"
           >
-            <HiOutlineTrash className="w-5 h-5" />
+            Remove
           </button>
         )}
       </div>
@@ -97,10 +96,10 @@ export default function PersonCard({ person, index, onUpdate, onRemove, canRemov
             <button
               onClick={() => removeItem(item.id)}
               disabled={person.items.length <= 1}
-              className="text-zinc-600 hover:text-red-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors p-1 rounded-lg hover:bg-red-400/10 flex-shrink-0"
+              className="text-zinc-600 hover:text-red-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors p-1 rounded-lg hover:bg-red-400/10 flex-shrink-0 text-lg leading-none"
               aria-label="Remove item"
             >
-              <HiOutlineXMark className="w-4 h-4" />
+              &times;
             </button>
           </div>
         ))}
@@ -111,8 +110,7 @@ export default function PersonCard({ person, index, onUpdate, onRemove, canRemov
           onClick={addItem}
           className="text-brand hover:text-orange-400 text-sm font-semibold flex items-center gap-1.5 transition-colors"
         >
-          <HiOutlinePlus className="w-4 h-4" />
-          Add Item
+          + Add Item
         </button>
         <span className="font-mono text-sm text-zinc-400">
           Subtotal: <span className="text-zinc-100 font-bold">Rp{subtotal.toLocaleString('id-ID')}</span>

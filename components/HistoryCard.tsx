@@ -1,7 +1,6 @@
 'use client'
 
 import { BillResult } from '@/types'
-import { HiOutlineTrash } from 'react-icons/hi2'
 
 interface HistoryCardProps {
   result: BillResult
@@ -38,10 +37,10 @@ export default function HistoryCard({ result, onDelete, onView }: HistoryCardPro
             e.stopPropagation()
             onDelete(result.id)
           }}
-          className="text-zinc-600 hover:text-red-400 transition-colors p-1.5 rounded-lg hover:bg-red-400/10 opacity-0 group-hover:opacity-100"
+          className="text-zinc-600 hover:text-red-400 transition-colors p-1.5 rounded-lg hover:bg-red-400/10 opacity-0 group-hover:opacity-100 text-sm"
           aria-label="Delete entry"
         >
-          <HiOutlineTrash className="w-4 h-4" />
+          Delete
         </button>
       </div>
 

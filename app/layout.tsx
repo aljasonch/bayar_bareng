@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Bayar Bareng — Split Bill Calculator',
+  title: 'Bayar Bareng | Split Bill Calculator',
   description: 'Split your bills easily with friends. Calculate discounts, delivery fees, cashback, and share the breakdown via WhatsApp.',
 }
 

@@ -2,9 +2,6 @@
 
 import { useState } from 'react'
 import { AdditionalFee } from '@/types'
-import { HiOutlineClipboardDocumentList, HiOutlinePlus, HiOutlineXMark } from 'react-icons/hi2'
-import { MdRestaurant } from 'react-icons/md'
-import { HiOutlineDevicePhoneMobile } from 'react-icons/hi2'
 
 interface AdditionalFeesProps {
   fees: AdditionalFee[]
@@ -16,8 +13,8 @@ function generateId(): string {
 }
 
 const PRESET_FEES = [
-  { name: 'Service Charge', icon: MdRestaurant },
-  { name: 'Biaya Platform/App', icon: HiOutlineDevicePhoneMobile },
+  { name: 'Service Charge' },
+  { name: 'Biaya Platform/App' },
 ]
 
 export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) {
@@ -47,38 +44,26 @@ export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) 
 
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6 animate-fade-in">
-      <div className="flex items-center gap-2.5 mb-4">
-        <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
-          <HiOutlineClipboardDocumentList className="w-4.5 h-4.5 text-amber-400" />
-        </div>
-        <h3 className="text-base sm:text-lg font-bold text-zinc-100">Additional Fees</h3>
-      </div>
+      <h3 className="text-base sm:text-lg font-bold text-zinc-100 mb-4">Additional Fees</h3>
 
-      {/* Quick-add chips */}
       <div className="flex flex-wrap gap-2 mb-4">
-        {PRESET_FEES.map((preset) => {
-          const Icon = preset.icon
-          return (
-            <button
-              key={preset.name}
-              onClick={() => addPresetFee(preset.name)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-zinc-800 border border-zinc-700/50 text-zinc-300 hover:border-brand/50 hover:text-brand transition-all duration-200"
-            >
-              <Icon className="w-3.5 h-3.5" />
-              {preset.name}
-            </button>
-          )
-        })}
+        {PRESET_FEES.map((preset) => (
+          <button
+            key={preset.name}
+            onClick={() => addPresetFee(preset.name)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-zinc-800 border border-zinc-700/50 text-zinc-300 hover:border-brand/50 hover:text-brand transition-all duration-200"
+          >
+            {preset.name}
+          </button>
+        ))}
         <button
           onClick={() => setShowCustom(!showCustom)}
           className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-brand/10 border border-brand/30 text-brand hover:bg-brand/20 transition-all duration-200"
         >
-          <HiOutlinePlus className="w-3.5 h-3.5" />
-          Custom
+          + Custom
         </button>
       </div>
 
-      {/* Custom fee input */}
       {showCustom && (
         <div className="flex gap-2 mb-4 animate-fade-in">
           <input
@@ -109,7 +94,6 @@ export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) 
         </div>
       )}
 
-      {/* Fee cards */}
       {fees.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {fees.map((fee) => (
@@ -130,10 +114,10 @@ export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) 
               </div>
               <button
                 onClick={() => removeFee(fee.id)}
-                className="text-zinc-500 hover:text-red-400 transition-colors p-1 rounded hover:bg-red-400/10 flex-shrink-0"
+                className="text-zinc-500 hover:text-red-400 transition-colors p-1 rounded hover:bg-red-400/10 flex-shrink-0 text-lg leading-none"
                 aria-label="Remove fee"
               >
-                <HiOutlineXMark className="w-3.5 h-3.5" />
+                &times;
               </button>
             </div>
           ))}

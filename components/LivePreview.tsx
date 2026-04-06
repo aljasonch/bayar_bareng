@@ -2,7 +2,6 @@
 
 import { Person, FeeConfig } from '@/types'
 import { calculateBill } from '@/lib/calculate'
-import { HiOutlineReceiptPercent, HiOutlineEye } from 'react-icons/hi2'
 
 interface LivePreviewProps {
   people: Person[]
@@ -15,9 +14,6 @@ export default function LivePreview({ people, feeConfig }: LivePreviewProps) {
   if (!hasItems) {
     return (
       <div className="rounded-xl border border-white/10 bg-white/5 p-6 text-center">
-        <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-zinc-800 flex items-center justify-center">
-          <HiOutlineReceiptPercent className="w-6 h-6 text-zinc-500" />
-        </div>
         <p className="text-sm text-zinc-500">Add items to see the live preview</p>
       </div>
     )
@@ -27,8 +23,7 @@ export default function LivePreview({ people, feeConfig }: LivePreviewProps) {
 
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6 sticky top-6">
-      <h3 className="text-base sm:text-lg font-bold text-zinc-100 mb-4 flex items-center gap-2">
-        <HiOutlineEye className="w-5 h-5 text-brand" />
+      <h3 className="text-base sm:text-lg font-bold text-zinc-100 mb-4">
         Live Preview
       </h3>
 

@@ -1,7 +1,6 @@
 'use client'
 
 import { FeeConfig } from '@/types'
-import { HiOutlineTag, HiOutlineTruck, HiOutlineGift } from 'react-icons/hi2'
 
 interface FeeSettingsProps {
   feeConfig: FeeConfig
@@ -17,12 +16,7 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
     <div className="space-y-6 animate-fade-in">
       {/* Discount Section */}
       <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6">
-        <div className="flex items-center gap-2.5 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center">
-            <HiOutlineTag className="w-4.5 h-4.5 text-teal-400" />
-          </div>
-          <h3 className="text-base sm:text-lg font-bold text-zinc-100">Item Discount</h3>
-        </div>
+        <h3 className="text-base sm:text-lg font-bold text-zinc-100 mb-4">Item Discount</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div>
             <label className="text-xs text-zinc-400 font-semibold uppercase tracking-wider mb-1.5 block">Percentage</label>
@@ -55,12 +49,7 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
 
       {/* Delivery Fee Section */}
       <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6">
-        <div className="flex items-center gap-2.5 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
-            <HiOutlineTruck className="w-4.5 h-4.5 text-blue-400" />
-          </div>
-          <h3 className="text-base sm:text-lg font-bold text-zinc-100">Delivery Fee</h3>
-        </div>
+        <h3 className="text-base sm:text-lg font-bold text-zinc-100 mb-4">Delivery Fee</h3>
         <div>
           <label className="text-xs text-zinc-400 font-semibold uppercase tracking-wider mb-1.5 block">Amount (split equally)</label>
           <div className="relative">
@@ -78,12 +67,7 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
 
       {/* Cashback Section */}
       <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6">
-        <div className="flex items-center gap-2.5 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-            <HiOutlineGift className="w-4.5 h-4.5 text-purple-400" />
-          </div>
-          <h3 className="text-base sm:text-lg font-bold text-zinc-100">Cashback</h3>
-        </div>
+        <h3 className="text-base sm:text-lg font-bold text-zinc-100 mb-4">Cashback</h3>
 
         {/* Cashback Base Toggle */}
         <div className="mb-4">

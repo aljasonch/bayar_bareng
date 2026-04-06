@@ -11,29 +11,16 @@ import FeeSettings from '@/components/FeeSettings'
 import AdditionalFees from '@/components/AdditionalFees'
 import ResultCard from '@/components/ResultCard'
 import LivePreview from '@/components/LivePreview'
-import {
-  HiOutlineReceiptPercent,
-  HiOutlineUserGroup,
-  HiOutlineCog6Tooth,
-  HiOutlineDocumentText,
-  HiOutlineClock,
-  HiOutlinePlus,
-  HiOutlineArrowRight,
-  HiOutlineArrowLeft,
-  HiOutlineCheck,
-  HiOutlineArrowPath,
-} from 'react-icons/hi2'
 import { IoLogoWhatsapp } from 'react-icons/io5'
-import { FiSave } from 'react-icons/fi'
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 9)
 }
 
 const STEPS = [
-  { num: 1, label: 'People & Items', icon: HiOutlineUserGroup },
-  { num: 2, label: 'Fees & Discounts', icon: HiOutlineCog6Tooth },
-  { num: 3, label: 'Results', icon: HiOutlineDocumentText },
+  { num: 1, label: 'People & Items' },
+  { num: 2, label: 'Fees & Discounts' },
+  { num: 3, label: 'Results' },
 ]
 
 export default function Home() {
@@ -119,7 +106,6 @@ export default function Home() {
             href="/history"
             className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-brand transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5"
           >
-            <HiOutlineClock className="w-4 h-4" />
             <span className="hidden sm:inline">History</span>
           </Link>
         </div>
@@ -129,7 +115,6 @@ export default function Home() {
         {/* Step Navigation */}
         <div className="flex items-center justify-center gap-1 sm:gap-2 mb-6 sm:mb-8">
           {STEPS.map((s, i) => {
-            const Icon = s.icon
             return (
               <div key={s.num} className="flex items-center">
                 <button
@@ -144,9 +129,8 @@ export default function Home() {
                       : 'bg-zinc-800/50 text-zinc-500 border border-zinc-700/30'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <span>{s.num}</span>
                   <span className="hidden sm:inline">{s.label}</span>
-                  <span className="sm:hidden">{s.num}</span>
                 </button>
                 {i < STEPS.length - 1 && (
                   <div className={`w-6 sm:w-10 h-px mx-1 ${step > s.num ? 'bg-brand/50' : 'bg-zinc-700/30'}`} />
@@ -171,8 +155,7 @@ export default function Home() {
                     onClick={addPerson}
                     className="flex items-center gap-1.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-brand/10 border border-brand/30 text-brand text-xs sm:text-sm font-semibold hover:bg-brand/20 transition-all duration-200"
                   >
-                    <HiOutlinePlus className="w-4 h-4" />
-                    Add Person
+                    + Add Person
                   </button>
                 </div>
 
@@ -264,23 +247,12 @@ export default function Home() {
                         : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-zinc-700'
                     }`}
                   >
-                    {saved ? (
-                      <>
-                        <HiOutlineCheck className="w-5 h-5" />
-                        Saved!
-                      </>
-                    ) : (
-                      <>
-                        <FiSave className="w-5 h-5" />
-                        Save to History
-                      </>
-                    )}
+                    {saved ? 'Saved!' : 'Save to History'}
                   </button>
                   <button
                     onClick={handleReset}
                     className="px-6 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-zinc-100 font-semibold text-sm transition-all duration-200 border border-zinc-700 flex items-center gap-2"
                   >
-                    <HiOutlineArrowPath className="w-4 h-4" />
                     New Bill
                   </button>
                 </div>
@@ -302,7 +274,6 @@ export default function Home() {
                     className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-brand text-white font-bold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-orange-600 transition-all duration-200 shadow-lg shadow-brand/25"
                   >
                     Next: Fees & Discounts
-                    <HiOutlineArrowRight className="w-4 h-4" />
                   </button>
                 )}
                 {step === 2 && (
@@ -311,7 +282,6 @@ export default function Home() {
                       onClick={() => setStep(1)}
                       className="flex items-center gap-2 px-5 py-3 rounded-xl bg-zinc-800 text-zinc-300 font-semibold text-sm border border-zinc-700 hover:bg-zinc-700 transition-all duration-200"
                     >
-                      <HiOutlineArrowLeft className="w-4 h-4" />
                       Back
                     </button>
                     <button
@@ -319,7 +289,6 @@ export default function Home() {
                       className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-brand text-white font-bold text-sm hover:bg-orange-600 transition-all duration-200 shadow-lg shadow-brand/25"
                     >
                       Calculate
-                      <HiOutlineArrowRight className="w-4 h-4" />
                     </button>
                   </div>
                 )}
@@ -347,7 +316,6 @@ export default function Home() {
             className="w-full px-6 py-3.5 rounded-xl bg-brand text-white font-bold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-orange-600 transition-all duration-200 shadow-lg shadow-brand/25 flex items-center justify-center gap-2"
           >
             Next: Fees & Discounts
-            <HiOutlineArrowRight className="w-4 h-4" />
           </button>
         )}
         {step === 2 && (
@@ -356,14 +324,13 @@ export default function Home() {
               onClick={() => setStep(1)}
               className="px-4 py-3.5 rounded-xl bg-zinc-800 text-zinc-300 font-semibold text-sm border border-zinc-700 hover:bg-zinc-700 transition-all duration-200"
             >
-              <HiOutlineArrowLeft className="w-4 h-4" />
+              Back
             </button>
             <button
               onClick={handleCalculate}
               className="flex-1 px-6 py-3.5 rounded-xl bg-brand text-white font-bold text-sm hover:bg-orange-600 transition-all duration-200 shadow-lg shadow-brand/25 flex items-center justify-center gap-2"
             >
               Calculate
-              <HiOutlineArrowRight className="w-4 h-4" />
             </button>
           </div>
         )}
@@ -387,13 +354,13 @@ export default function Home() {
                   : 'bg-zinc-800 text-zinc-100 border border-zinc-700 hover:bg-zinc-700'
               }`}
             >
-              {saved ? <HiOutlineCheck className="w-4 h-4" /> : <FiSave className="w-4 h-4" />}
+              {saved ? 'Saved' : 'Save'}
             </button>
             <button
               onClick={handleReset}
               className="px-4 py-3.5 rounded-xl bg-zinc-800 text-zinc-400 font-bold text-sm border border-zinc-700 hover:bg-zinc-700 hover:text-zinc-100 transition-all duration-200"
             >
-              <HiOutlineArrowPath className="w-4 h-4" />
+              New
             </button>
           </div>
         )}
