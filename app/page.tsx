@@ -40,6 +40,8 @@ export default function Home() {
     cashbackBase: 'totalPayment',
   })
   const [splitDate, setSplitDate] = useState<string>(() => getTodayDateInputValue())
+  const [payerName, setPayerName] = useState('')
+  const [payerAccountNumber, setPayerAccountNumber] = useState('')
   const [result, setResult] = useState<BillResult | null>(null)
   const [saved, setSaved] = useState(false)
 
@@ -59,7 +61,7 @@ export default function Home() {
   }, [])
 
   const handleCalculate = () => {
-    const billResult = calculateBill(people, feeConfig, splitDate)
+    const billResult = calculateBill(people, feeConfig, splitDate, payerName, payerAccountNumber)
     setResult(billResult)
     setStep(3)
     setSaved(false)
@@ -87,12 +89,15 @@ export default function Home() {
       cashbackBase: 'totalPayment',
     })
     setSplitDate(getTodayDateInputValue())
+    setPayerName('')
+    setPayerAccountNumber('')
     setResult(null)
     setStep(1)
     setSaved(false)
   }
 
   const canProceedStep1 = people.some((p) => p.items.some((i) => i.price > 0))
+  const hasPayerName = payerName.trim().length > 0
 
   return (
     <div className="min-h-screen bg-zinc-950">
@@ -179,6 +184,34 @@ export default function Home() {
                     />
                   </div>
 
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-2">
+                      <label htmlFor="payer-name" className="text-xs text-zinc-400 font-semibold uppercase tracking-wider">
+                        Talangan
+                      </label>
+                      <p className="text-[11px] text-zinc-500">Isi nama yang menalangi, no rekening opsional</p>
+                    </div>
+
+                    <input
+                      id="payer-name"
+                      type="text"
+                      value={payerName}
+                      onChange={(e) => setPayerName(e.target.value)}
+                      placeholder="Contoh: Andi"
+                      className="w-full bg-zinc-800/80 rounded-lg px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-700/50 focus:border-brand/50 transition-colors"
+                    />
+
+                    <input
+                      id="payer-account-number"
+                      type="text"
+                      value={payerAccountNumber}
+                      onChange={(e) => setPayerAccountNumber(e.target.value)}
+                      placeholder="No rekening (opsional)"
+                      disabled={!hasPayerName}
+                      className="w-full bg-zinc-800/80 rounded-lg px-3 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-700/50 focus:border-brand/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+
                   {people.map((person, i) => (
                     <PersonCard
                       key={person.id}
@@ -219,6 +252,14 @@ export default function Home() {
                   <h2 className="text-xl sm:text-2xl font-extrabold text-zinc-100">Results</h2>
                   <p className="text-sm text-zinc-500 mt-0.5">Here&apos;s how much each person pays</p>
                   <p className="text-xs text-zinc-500 mt-1">Split date: {formatBillDate(result)}</p>
+                  {result.payerName && (
+                    <p className="text-xs text-zinc-500 mt-1">
+                      Ditalangi oleh <span className="text-zinc-200 font-semibold">{result.payerName}</span>
+                      {result.payerAccountNumber && (
+                        <span className="block mt-0.5 text-zinc-600">No. Rek: {result.payerAccountNumber}</span>
+                      )}
+                    </p>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

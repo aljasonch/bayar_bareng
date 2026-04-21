@@ -5,12 +5,23 @@ function generateId(): string {
   return Math.random().toString(36).substring(2, 9) + Date.now().toString(36)
 }
 
+function normalizeOptionalText(value?: string): string | undefined {
+  const normalized = value?.trim()
+  return normalized ? normalized : undefined
+}
+
 export function calculateBill(
   people: Person[],
   feeConfig: FeeConfig,
-  splitDate?: string
+  splitDate?: string,
+  payerName?: string,
+  payerAccountNumber?: string
 ): BillResult {
   const normalizedSplitDate = normalizeSplitDate(splitDate)
+  const normalizedPayerName = normalizeOptionalText(payerName)
+  const normalizedPayerAccountNumber = normalizedPayerName
+    ? normalizeOptionalText(payerAccountNumber)
+    : undefined
   const totalItems = people.reduce(
     (sum, p) => sum + p.items.reduce((s, i) => s + i.price, 0),
     0
@@ -21,6 +32,8 @@ export function calculateBill(
       id: generateId(),
       createdAt: new Date().toISOString(),
       splitDate: normalizedSplitDate,
+      payerName: normalizedPayerName,
+      payerAccountNumber: normalizedPayerAccountNumber,
       people,
       feeConfig,
       results: people.map((person) => ({
@@ -92,6 +105,8 @@ export function calculateBill(
     id: generateId(),
     createdAt: new Date().toISOString(),
     splitDate: normalizedSplitDate,
+    payerName: normalizedPayerName,
+    payerAccountNumber: normalizedPayerAccountNumber,
     people,
     feeConfig,
     results,

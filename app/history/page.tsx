@@ -101,6 +101,14 @@ export default function HistoryPage() {
                       })}
                     </span>
                   </div>
+                  {selectedResult.payerName && (
+                    <p className="text-xs text-zinc-500 -mt-1 mb-1">
+                      Ditalangi oleh <span className="text-zinc-200 font-semibold">{selectedResult.payerName}</span>
+                      {selectedResult.payerAccountNumber && (
+                        <span className="block mt-0.5 text-zinc-600">No. Rek: {selectedResult.payerAccountNumber}</span>
+                      )}
+                    </p>
+                  )}
                   <div className="space-y-3">
                     {selectedResult.results.map((r, i) => (
                       <ResultCard key={r.person.id} result={r} index={i} />
@@ -160,6 +168,14 @@ export default function HistoryPage() {
                       year: 'numeric',
                     })}
                   </p>
+                  {selectedResult.payerName && (
+                    <p className="text-xs text-zinc-500 mt-1">
+                      Ditalangi oleh <span className="text-zinc-200 font-semibold">{selectedResult.payerName}</span>
+                      {selectedResult.payerAccountNumber && (
+                        <span className="block mt-0.5 text-zinc-600">No. Rek: {selectedResult.payerAccountNumber}</span>
+                      )}
+                    </p>
+                  )}
                 </div>
                 <button
                   onClick={() => setSelectedResult(null)}

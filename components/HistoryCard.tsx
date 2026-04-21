@@ -32,6 +32,12 @@ export default function HistoryCard({ result, onDelete, onView }: HistoryCardPro
           <p className="text-sm text-zinc-300 mt-1">
             {result.people.length} {result.people.length === 1 ? 'person' : 'people'}
           </p>
+          {result.payerName && (
+            <p className="text-xs text-zinc-500 mt-1">
+              Talangan: <span className="text-zinc-300">{result.payerName}</span>
+              {result.payerAccountNumber ? ` · ${result.payerAccountNumber}` : ''}
+            </p>
+          )}
         </div>
         <button
           onClick={(e) => {

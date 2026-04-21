@@ -9,6 +9,12 @@ export function generateWhatsAppText(result: BillResult): string {
   const lines: string[] = []
   lines.push('*Bayar Bareng - Split Bill*')
   lines.push(`Tanggal split: ${formatBillDate(result)}`)
+  if (result.payerName) {
+    lines.push(`Ditalangi oleh: *${result.payerName}*`)
+    if (result.payerAccountNumber) {
+      lines.push(`No. Rek: ${result.payerAccountNumber}`)
+    }
+  }
   lines.push('')
 
   result.results.forEach((r: PersonResult) => {
