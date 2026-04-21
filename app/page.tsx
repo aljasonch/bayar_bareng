@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react'
 import Link from 'next/link'
 import { Person, FeeConfig, BillResult } from '@/types'
 import { calculateBill } from '@/lib/calculate'
+import { formatBillDate, getTodayDateInputValue } from '@/lib/date'
 import { saveToHistory } from '@/lib/history'
 import { getWhatsAppUrl } from '@/lib/whatsapp'
 import PersonCard from '@/components/PersonCard'
@@ -38,6 +39,7 @@ export default function Home() {
     cashbackMax: 0,
     cashbackBase: 'totalPayment',
   })
+  const [splitDate, setSplitDate] = useState<string>(() => getTodayDateInputValue())
   const [result, setResult] = useState<BillResult | null>(null)
   const [saved, setSaved] = useState(false)
 
@@ -57,7 +59,7 @@ export default function Home() {
   }, [])
 
   const handleCalculate = () => {
-    const billResult = calculateBill(people, feeConfig)
+    const billResult = calculateBill(people, feeConfig, splitDate)
     setResult(billResult)
     setStep(3)
     setSaved(false)
@@ -84,6 +86,7 @@ export default function Home() {
       cashbackMax: 0,
       cashbackBase: 'totalPayment',
     })
+    setSplitDate(getTodayDateInputValue())
     setResult(null)
     setStep(1)
     setSaved(false)
@@ -160,6 +163,22 @@ export default function Home() {
                 </div>
 
                 <div className="space-y-4">
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-2 mb-3">
+                      <label htmlFor="split-date" className="text-xs text-zinc-400 font-semibold uppercase tracking-wider">
+                        Split Date
+                      </label>
+                      <p className="text-[11px] text-zinc-500">This date will be saved and shared to WhatsApp</p>
+                    </div>
+                    <input
+                      id="split-date"
+                      type="date"
+                      value={splitDate}
+                      onChange={(e) => setSplitDate(e.target.value)}
+                      className="w-full bg-zinc-800/80 rounded-lg px-3 py-2.5 text-sm font-mono text-zinc-100 outline-none border border-zinc-700/50 focus:border-brand/50 transition-colors"
+                    />
+                  </div>
+
                   {people.map((person, i) => (
                     <PersonCard
                       key={person.id}
@@ -199,6 +218,7 @@ export default function Home() {
                 <div className="mb-4 sm:mb-6">
                   <h2 className="text-xl sm:text-2xl font-extrabold text-zinc-100">Results</h2>
                   <p className="text-sm text-zinc-500 mt-0.5">Here&apos;s how much each person pays</p>
+                  <p className="text-xs text-zinc-500 mt-1">Split date: {formatBillDate(result)}</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

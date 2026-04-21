@@ -1,6 +1,7 @@
 'use client'
 
 import { BillResult } from '@/types'
+import { formatBillDate } from '@/lib/date'
 
 interface HistoryCardProps {
   result: BillResult
@@ -9,13 +10,12 @@ interface HistoryCardProps {
 }
 
 export default function HistoryCard({ result, onDelete, onView }: HistoryCardProps) {
-  const date = new Date(result.createdAt)
-  const formattedDate = date.toLocaleDateString('id-ID', {
+  const formattedSplitDate = formatBillDate(result, {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
   })
-  const formattedTime = date.toLocaleTimeString('id-ID', {
+  const formattedSavedTime = new Date(result.createdAt).toLocaleTimeString('id-ID', {
     hour: '2-digit',
     minute: '2-digit',
   })
@@ -27,7 +27,8 @@ export default function HistoryCard({ result, onDelete, onView }: HistoryCardPro
     >
       <div className="flex items-start justify-between mb-3">
         <div>
-          <p className="text-xs text-zinc-500 font-mono">{formattedDate} · {formattedTime}</p>
+          <p className="text-xs text-zinc-500 font-mono">Split: {formattedSplitDate}</p>
+          <p className="text-[11px] text-zinc-600 font-mono mt-0.5">Saved {formattedSavedTime}</p>
           <p className="text-sm text-zinc-300 mt-1">
             {result.people.length} {result.people.length === 1 ? 'person' : 'people'}
           </p>

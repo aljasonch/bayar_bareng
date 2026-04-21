@@ -1,10 +1,16 @@
 import { Person, FeeConfig, PersonResult, BillResult } from '@/types'
+import { normalizeSplitDate } from '@/lib/date'
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 9) + Date.now().toString(36)
 }
 
-export function calculateBill(people: Person[], feeConfig: FeeConfig): BillResult {
+export function calculateBill(
+  people: Person[],
+  feeConfig: FeeConfig,
+  splitDate?: string
+): BillResult {
+  const normalizedSplitDate = normalizeSplitDate(splitDate)
   const totalItems = people.reduce(
     (sum, p) => sum + p.items.reduce((s, i) => s + i.price, 0),
     0
@@ -14,6 +20,7 @@ export function calculateBill(people: Person[], feeConfig: FeeConfig): BillResul
     return {
       id: generateId(),
       createdAt: new Date().toISOString(),
+      splitDate: normalizedSplitDate,
       people,
       feeConfig,
       results: people.map((person) => ({
@@ -84,6 +91,7 @@ export function calculateBill(people: Person[], feeConfig: FeeConfig): BillResul
   return {
     id: generateId(),
     createdAt: new Date().toISOString(),
+    splitDate: normalizedSplitDate,
     people,
     feeConfig,
     results,

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { BillResult } from '@/types'
+import { formatBillDate } from '@/lib/date'
 import { getHistory, deleteFromHistory } from '@/lib/history'
 import { getWhatsAppUrl } from '@/lib/whatsapp'
 import HistoryCard from '@/components/HistoryCard'
@@ -93,7 +94,7 @@ export default function HistoryPage() {
                   <div className="flex items-center gap-2 mb-2">
                     <h3 className="text-base font-bold text-zinc-100">Breakdown Detail</h3>
                     <span className="text-xs text-zinc-500 font-mono ml-auto">
-                      {new Date(selectedResult.createdAt).toLocaleDateString('id-ID', {
+                      {formatBillDate(selectedResult, {
                         day: 'numeric',
                         month: 'short',
                         year: 'numeric',
@@ -153,7 +154,7 @@ export default function HistoryPage() {
                 <div>
                   <h3 className="text-lg font-bold text-zinc-100">Full Breakdown</h3>
                   <p className="text-xs text-zinc-500 font-mono">
-                    {new Date(selectedResult.createdAt).toLocaleDateString('id-ID', {
+                    {formatBillDate(selectedResult, {
                       day: 'numeric',
                       month: 'long',
                       year: 'numeric',

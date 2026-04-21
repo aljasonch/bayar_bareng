@@ -1,4 +1,5 @@
 import { BillResult, PersonResult } from '@/types'
+import { formatBillDate } from '@/lib/date'
 
 function formatRp(amount: number): string {
   return 'Rp' + amount.toLocaleString('id-ID')
@@ -7,7 +8,7 @@ function formatRp(amount: number): string {
 export function generateWhatsAppText(result: BillResult): string {
   const lines: string[] = []
   lines.push('*Bayar Bareng - Split Bill*')
-  lines.push(`${new Date(result.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`)
+  lines.push(`Tanggal split: ${formatBillDate(result)}`)
   lines.push('')
 
   result.results.forEach((r: PersonResult) => {

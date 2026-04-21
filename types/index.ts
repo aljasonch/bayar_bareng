@@ -29,6 +29,7 @@ export type PersonResult = {
 export type BillResult = {
   id: string
   createdAt: string
+  splitDate?: string
   people: Person[]
   feeConfig: FeeConfig
   results: PersonResult[]
