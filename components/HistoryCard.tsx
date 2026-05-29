@@ -2,6 +2,8 @@
 
 import { BillResult } from '@/types'
 import { formatBillDate } from '@/lib/date'
+import { formatOutletName } from '@/lib/kopi-kenangan'
+import { formatRp } from '@/lib/item-display'
 
 interface HistoryCardProps {
   result: BillResult
@@ -22,7 +24,7 @@ export default function HistoryCard({ result, onDelete, onView }: HistoryCardPro
 
   return (
     <div
-      className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 transition-all duration-200 hover:border-brand/30 cursor-pointer animate-fade-in group"
+      className="rounded-lg border border-zinc-800 bg-zinc-950/80 p-4 sm:p-5 transition-all duration-200 hover:border-brand/40 cursor-pointer animate-fade-in group"
       onClick={() => onView(result)}
     >
       <div className="flex items-start justify-between mb-3">
@@ -32,16 +34,21 @@ export default function HistoryCard({ result, onDelete, onView }: HistoryCardPro
           <p className="text-sm text-zinc-300 mt-1">
             {result.people.length} {result.people.length === 1 ? 'person' : 'people'}
           </p>
+          {result.billMode === 'kopiKenangan' && (
+            <p className="text-xs text-brand mt-1">
+              Kopi Kenangan - {formatOutletName(result.kopiKenanganOutlet)}
+            </p>
+          )}
           {result.payerName && (
             <p className="text-xs text-zinc-500 mt-1">
               Talangan: <span className="text-zinc-300">{result.payerName}</span>
-              {result.payerAccountNumber ? ` · ${result.payerAccountNumber}` : ''}
+              {result.payerAccountNumber ? ` - ${result.payerAccountNumber}` : ''}
             </p>
           )}
         </div>
         <button
-          onClick={(e) => {
-            e.stopPropagation()
+          onClick={(event) => {
+            event.stopPropagation()
             onDelete(result.id)
           }}
           className="text-zinc-600 hover:text-red-400 transition-colors p-1.5 rounded-lg hover:bg-red-400/10 opacity-0 group-hover:opacity-100 text-sm"
@@ -53,28 +60,28 @@ export default function HistoryCard({ result, onDelete, onView }: HistoryCardPro
 
       <div className="flex items-end justify-between">
         <div className="flex -space-x-2">
-          {result.people.slice(0, 4).map((p, i) => (
+          {result.people.slice(0, 4).map((person, index) => (
             <div
-              key={p.id}
-              className="w-7 h-7 rounded-full bg-gradient-to-br from-brand to-orange-600 flex items-center justify-center text-[10px] font-bold text-white border-2 border-zinc-900"
-              title={p.name}
+              key={person.id}
+              className="w-7 h-7 rounded-md bg-brand flex items-center justify-center text-[10px] font-bold text-white border-2 border-zinc-950"
+              title={person.name}
             >
-              {p.name ? p.name[0].toUpperCase() : i + 1}
+              {person.name ? person.name[0].toUpperCase() : index + 1}
             </div>
           ))}
           {result.people.length > 4 && (
-            <div className="w-7 h-7 rounded-full bg-zinc-700 flex items-center justify-center text-[10px] font-bold text-zinc-300 border-2 border-zinc-900">
+            <div className="w-7 h-7 rounded-md bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-300 border-2 border-zinc-950">
               +{result.people.length - 4}
             </div>
           )}
         </div>
         <div className="text-right">
           <p className="font-mono text-lg font-bold text-brand">
-            Rp{result.totalFinal.toLocaleString('id-ID')}
+            {formatRp(result.totalFinal)}
           </p>
           {result.totalSaved > 0 && (
             <p className="font-mono text-xs text-teal-400">
-              Saved Rp{result.totalSaved.toLocaleString('id-ID')}
+              Saved {formatRp(result.totalSaved)}
             </p>
           )}
         </div>

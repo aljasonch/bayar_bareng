@@ -43,7 +43,7 @@ export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) 
   }
 
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6 animate-fade-in">
+    <div className="rounded-lg border border-zinc-800 bg-zinc-950/80 p-4 sm:p-5 animate-fade-in">
       <h3 className="text-base sm:text-lg font-bold text-zinc-100 mb-4">Additional Fees</h3>
 
       <div className="flex flex-wrap gap-2 mb-4">
@@ -51,14 +51,14 @@ export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) 
           <button
             key={preset.name}
             onClick={() => addPresetFee(preset.name)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-zinc-800 border border-zinc-700/50 text-zinc-300 hover:border-brand/50 hover:text-brand transition-all duration-200"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-brand/50 hover:text-brand transition-all duration-200"
           >
             {preset.name}
           </button>
         ))}
         <button
           onClick={() => setShowCustom(!showCustom)}
-          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-brand/10 border border-brand/30 text-brand hover:bg-brand/20 transition-all duration-200"
+          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold bg-brand text-white border border-brand hover:bg-orange-600 transition-all duration-200"
         >
           + Custom
         </button>
@@ -71,7 +71,7 @@ export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) 
             value={customName}
             onChange={(e) => setCustomName(e.target.value)}
             placeholder="Fee name"
-            className="flex-1 bg-zinc-800/80 rounded-lg px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-700/50 focus:border-brand/50 transition-colors"
+            className="flex-1 bg-zinc-900 rounded-lg px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors"
             onKeyDown={(e) => e.key === 'Enter' && addCustomFee()}
           />
           <div className="w-28 relative">
@@ -81,7 +81,7 @@ export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) 
               value={customAmount || ''}
               onChange={(e) => setCustomAmount(Number(e.target.value))}
               placeholder="0"
-              className="w-full bg-zinc-800/80 rounded-lg pl-9 pr-3 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-700/50 focus:border-brand/50 transition-colors text-right"
+              className="w-full bg-zinc-900 rounded-lg pl-9 pr-3 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors text-right"
               onKeyDown={(e) => e.key === 'Enter' && addCustomFee()}
             />
           </div>
@@ -99,7 +99,7 @@ export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) 
           {fees.map((fee) => (
             <div
               key={fee.id}
-              className="flex items-center gap-2 bg-zinc-800/60 rounded-lg px-3 py-2.5 border border-zinc-700/30 animate-fade-in"
+              className="flex items-center gap-2 bg-zinc-900 rounded-lg px-3 py-2.5 border border-zinc-800 animate-fade-in"
             >
               <span className="text-sm text-zinc-300 flex-1 truncate">{fee.name}</span>
               <div className="w-24 relative flex-shrink-0">
@@ -109,7 +109,7 @@ export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) 
                   value={fee.amount || ''}
                   onChange={(e) => updateFeeAmount(fee.id, Number(e.target.value))}
                   placeholder="0"
-                  className="w-full bg-zinc-900/80 rounded-md pl-7 pr-2 py-1.5 text-xs font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-700/50 focus:border-brand/50 transition-colors text-right"
+                  className="w-full bg-zinc-950 rounded-md pl-7 pr-2 py-1.5 text-xs font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors text-right"
                 />
               </div>
               <button

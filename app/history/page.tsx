@@ -6,6 +6,7 @@ import { BillResult } from '@/types'
 import { formatBillDate } from '@/lib/date'
 import { getHistory, deleteFromHistory } from '@/lib/history'
 import { getWhatsAppUrl } from '@/lib/whatsapp'
+import { formatOutletName } from '@/lib/kopi-kenangan'
 import HistoryCard from '@/components/HistoryCard'
 import ResultCard from '@/components/ResultCard'
 import { IoLogoWhatsapp } from 'react-icons/io5'
@@ -16,8 +17,12 @@ export default function HistoryPage() {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
-    setHistory(getHistory())
+    const timeoutId = window.setTimeout(() => {
+      setMounted(true)
+      setHistory(getHistory())
+    }, 0)
+
+    return () => window.clearTimeout(timeoutId)
   }, [])
 
   const handleDelete = (id: string) => {
@@ -28,32 +33,32 @@ export default function HistoryPage() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="min-h-screen bg-[#08090b] flex items-center justify-center">
         <div className="text-zinc-500 animate-pulse">Loading...</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-[#08090b] text-zinc-100">
       {/* Header */}
-      <header className="border-b border-white/5 bg-zinc-950/80 backdrop-blur-xl sticky top-0 z-50">
-        <div className="w-full max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between">
+      <header className="border-b border-zinc-800/80 bg-[#08090b]/90 backdrop-blur-xl sticky top-0 z-50">
+        <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link
               href="/"
-              className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-100 transition-colors p-1.5 rounded-lg hover:bg-white/5"
+              className="flex items-center gap-1.5 text-sm text-zinc-300 hover:text-white transition-colors px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-brand/50"
             >
               &larr;
             </Link>
             <div>
-              <h1 className="text-base sm:text-lg font-extrabold text-zinc-100 leading-tight">History</h1>
-              <p className="text-[10px] sm:text-xs text-zinc-500 leading-tight">{history.length} saved {history.length === 1 ? 'bill' : 'bills'}</p>
+              <h1 className="text-lg sm:text-xl font-extrabold text-zinc-100 leading-tight">History</h1>
+              <p className="text-xs text-zinc-500 leading-tight">{history.length} saved {history.length === 1 ? 'bill' : 'bills'}</p>
             </div>
           </div>
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-brand transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5"
+            className="flex items-center gap-1.5 text-sm text-zinc-300 hover:text-white transition-colors px-4 py-2 rounded-lg bg-brand border border-brand hover:bg-orange-600"
           >
             <span className="hidden sm:inline">New Bill</span>
             <span className="sm:hidden">+</span>
@@ -61,20 +66,20 @@ export default function HistoryPage() {
         </div>
       </header>
 
-      <main className="w-full max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {history.length === 0 ? (
           <div className="text-center py-16 sm:py-24 animate-fade-in">
             <h2 className="text-lg sm:text-xl font-bold text-zinc-300 mb-2">No history yet</h2>
             <p className="text-sm text-zinc-500 mb-6">Your saved split bills will appear here</p>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand text-white font-semibold text-sm hover:bg-orange-600 transition-all duration-200 shadow-lg shadow-brand/25"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-brand text-white font-semibold text-sm hover:bg-orange-600 transition-all duration-200 shadow-lg shadow-brand/20"
             >
               Start Splitting
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-[minmax(24rem,0.75fr)_minmax(0,1.25fr)] gap-5">
             {/* History List */}
             <div className="space-y-3">
               {history.map((h) => (
@@ -88,9 +93,9 @@ export default function HistoryPage() {
             </div>
 
             {/* Detail panel (desktop) */}
-            <div className="hidden lg:block">
+            <div className="hidden xl:block">
               {selectedResult ? (
-                <div className="sticky top-20 space-y-4 animate-fade-in">
+                <div className="sticky top-24 space-y-4 animate-fade-in">
                   <div className="flex items-center gap-2 mb-2">
                     <h3 className="text-base font-bold text-zinc-100">Breakdown Detail</h3>
                     <span className="text-xs text-zinc-500 font-mono ml-auto">
@@ -109,12 +114,20 @@ export default function HistoryPage() {
                       )}
                     </p>
                   )}
+                  {selectedResult.billMode === 'kopiKenangan' && (
+                    <p className="text-xs text-zinc-500 -mt-1 mb-1">
+                      Store: <span className="text-zinc-200 font-semibold">Kopi Kenangan</span>
+                      {selectedResult.kopiKenanganOutlet && (
+                        <span> - {formatOutletName(selectedResult.kopiKenanganOutlet)}</span>
+                      )}
+                    </p>
+                  )}
                   <div className="space-y-3">
                     {selectedResult.results.map((r, i) => (
                       <ResultCard key={r.person.id} result={r} index={i} />
                     ))}
                   </div>
-                  <div className="rounded-xl border border-brand/20 bg-brand/5 p-4">
+                  <div className="rounded-lg border border-brand/30 bg-brand/10 p-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs text-zinc-400">Total</p>
@@ -137,7 +150,7 @@ export default function HistoryPage() {
                     href={getWhatsAppUrl(selectedResult)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition-all duration-200 shadow-lg shadow-emerald-600/20"
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition-all duration-200 shadow-lg shadow-emerald-600/20"
                   >
                     <IoLogoWhatsapp className="w-5 h-5" />
                     Share via WhatsApp
@@ -156,7 +169,7 @@ export default function HistoryPage() {
 
         {/* Mobile detail modal */}
         {selectedResult && (
-          <div className="lg:hidden fixed inset-0 z-50 bg-zinc-950/95 backdrop-blur-md overflow-y-auto">
+          <div className="xl:hidden fixed inset-0 z-50 bg-[#08090b]/95 backdrop-blur-md overflow-y-auto">
             <div className="w-full max-w-screen-sm mx-auto px-4 py-6 pb-28">
               <div className="flex items-center justify-between mb-6">
                 <div>
@@ -176,6 +189,14 @@ export default function HistoryPage() {
                       )}
                     </p>
                   )}
+                  {selectedResult.billMode === 'kopiKenangan' && (
+                    <p className="text-xs text-zinc-500 mt-1">
+                      Store: <span className="text-zinc-200 font-semibold">Kopi Kenangan</span>
+                      {selectedResult.kopiKenanganOutlet && (
+                        <span> - {formatOutletName(selectedResult.kopiKenanganOutlet)}</span>
+                      )}
+                    </p>
+                  )}
                 </div>
                 <button
                   onClick={() => setSelectedResult(null)}
@@ -191,7 +212,7 @@ export default function HistoryPage() {
                 ))}
               </div>
 
-              <div className="mt-6 rounded-xl border border-brand/20 bg-brand/5 p-4">
+              <div className="mt-6 rounded-lg border border-brand/30 bg-brand/10 p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs text-zinc-400">Total</p>
@@ -215,14 +236,14 @@ export default function HistoryPage() {
                 href={getWhatsAppUrl(selectedResult)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full mt-4 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition-all duration-200"
+                className="w-full mt-4 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition-all duration-200"
               >
                 Share via WhatsApp
               </a>
 
               <button
                 onClick={() => setSelectedResult(null)}
-                className="w-full mt-3 px-6 py-3 rounded-xl bg-zinc-800 text-zinc-300 font-semibold text-sm border border-zinc-700 hover:bg-zinc-700 transition-all duration-200"
+                className="w-full mt-3 px-6 py-3 rounded-lg bg-zinc-900 text-zinc-300 font-semibold text-sm border border-zinc-800 hover:bg-zinc-800 transition-all duration-200"
               >
                 Close
               </button>
@@ -231,7 +252,7 @@ export default function HistoryPage() {
         )}
       </main>
 
-      <footer className="w-full max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-white/5 text-center">
+      <footer className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-zinc-800/80 text-center">
         <p className="text-zinc-500 text-sm">
           &copy; {new Date().getFullYear()} Bayar Bareng. All rights reserved.
         </p>

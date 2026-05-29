@@ -4,8 +4,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        mono: ['JetBrains Mono', 'Courier New', 'monospace'],
-        sans: ['Plus Jakarta Sans', 'sans-serif'],
+        mono: ['var(--font-jetbrains-mono)', 'Courier New', 'monospace'],
+        sans: ['var(--font-plus-jakarta-sans)', 'sans-serif'],
       },
       colors: {
         brand: '#FF6B35',

@@ -1,4 +1,11 @@
-import { Person, FeeConfig, PersonResult, BillResult } from '@/types'
+import {
+  BillMode,
+  KopiKenanganOutlet,
+  Person,
+  FeeConfig,
+  PersonResult,
+  BillResult,
+} from '@/types'
 import { normalizeSplitDate } from '@/lib/date'
 
 function generateId(): string {
@@ -15,7 +22,9 @@ export function calculateBill(
   feeConfig: FeeConfig,
   splitDate?: string,
   payerName?: string,
-  payerAccountNumber?: string
+  payerAccountNumber?: string,
+  billMode?: BillMode,
+  kopiKenanganOutlet?: KopiKenanganOutlet
 ): BillResult {
   const normalizedSplitDate = normalizeSplitDate(splitDate)
   const normalizedPayerName = normalizeOptionalText(payerName)
@@ -31,6 +40,8 @@ export function calculateBill(
     return {
       id: generateId(),
       createdAt: new Date().toISOString(),
+      billMode,
+      kopiKenanganOutlet,
       splitDate: normalizedSplitDate,
       payerName: normalizedPayerName,
       payerAccountNumber: normalizedPayerAccountNumber,
@@ -104,6 +115,8 @@ export function calculateBill(
   return {
     id: generateId(),
     createdAt: new Date().toISOString(),
+    billMode,
+    kopiKenanganOutlet,
     splitDate: normalizedSplitDate,
     payerName: normalizedPayerName,
     payerAccountNumber: normalizedPayerAccountNumber,

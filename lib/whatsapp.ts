@@ -1,14 +1,15 @@
 import { BillResult, PersonResult } from '@/types'
 import { formatBillDate } from '@/lib/date'
-
-function formatRp(amount: number): string {
-  return 'Rp' + amount.toLocaleString('id-ID')
-}
+import { formatOutletName } from '@/lib/kopi-kenangan'
+import { formatRp, getItemDetailLines, getItemLabel } from '@/lib/item-display'
 
 export function generateWhatsAppText(result: BillResult): string {
   const lines: string[] = []
   lines.push('*Bayar Bareng - Split Bill*')
   lines.push(`Tanggal split: ${formatBillDate(result)}`)
+  if (result.billMode === 'kopiKenangan') {
+    lines.push(`Store: Kopi Kenangan (${formatOutletName(result.kopiKenanganOutlet)})`)
+  }
   if (result.payerName) {
     lines.push(`Ditalangi oleh: *${result.payerName}*`)
     if (result.payerAccountNumber) {
@@ -20,7 +21,10 @@ export function generateWhatsAppText(result: BillResult): string {
   result.results.forEach((r: PersonResult) => {
     lines.push(`*${r.person.name || 'Tanpa Nama'}*`)
     r.person.items.forEach((item) => {
-      lines.push(`  - ${item.name || 'Item'}: ${formatRp(item.price)}`)
+      lines.push(`  - ${getItemLabel(item) || 'Item'}: ${formatRp(item.price)}`)
+      getItemDetailLines(item).forEach((line) => {
+        lines.push(`    ${line}`)
+      })
     })
     lines.push(`  Subtotal: ${formatRp(r.subtotal)}`)
     if (r.discountSaved > 0) lines.push(`  Diskon: -${formatRp(r.discountSaved)}`)

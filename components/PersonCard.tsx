@@ -46,10 +46,10 @@ export default function PersonCard({ person, index, onUpdate, onRemove, canRemov
   }
 
   return (
-    <div className="animate-fade-in rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6 transition-all duration-200 hover:border-brand/30">
+    <div className="animate-fade-in rounded-lg border border-zinc-800 bg-zinc-950/80 p-4 sm:p-5 transition-all duration-200 hover:border-zinc-700">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand to-orange-600 flex items-center justify-center font-bold text-sm sm:text-base text-white shadow-lg shadow-brand/20">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-brand flex items-center justify-center font-bold text-sm sm:text-base text-white shadow-lg shadow-brand/20">
             {index + 1}
           </div>
           <input
@@ -80,7 +80,7 @@ export default function PersonCard({ person, index, onUpdate, onRemove, canRemov
                 value={item.name}
                 onChange={(e) => updateItem(item.id, 'name', e.target.value)}
                 placeholder={`Item ${idx + 1}`}
-                className="w-full bg-zinc-800/80 rounded-lg px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-700/50 focus:border-brand/50 transition-colors"
+                className="w-full bg-zinc-900 rounded-lg px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors"
               />
             </div>
             <div className="w-28 sm:w-36 relative">
@@ -90,7 +90,7 @@ export default function PersonCard({ person, index, onUpdate, onRemove, canRemov
                 value={item.price || ''}
                 onChange={(e) => updateItem(item.id, 'price', Number(e.target.value))}
                 placeholder="0"
-                className="w-full bg-zinc-800/80 rounded-lg pl-9 pr-3 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-700/50 focus:border-brand/50 transition-colors text-right"
+                className="w-full bg-zinc-900 rounded-lg pl-9 pr-3 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors text-right"
               />
             </div>
             <button

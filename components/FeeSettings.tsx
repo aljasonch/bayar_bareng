@@ -13,9 +13,9 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 animate-fade-in">
       {/* Discount Section */}
-      <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6">
+      <div className="rounded-lg border border-zinc-800 bg-zinc-950/80 p-4 sm:p-5">
         <h3 className="text-base sm:text-lg font-bold text-zinc-100 mb-4">Item Discount</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div>
@@ -26,7 +26,7 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
                 value={feeConfig.discountPct || ''}
                 onChange={(e) => update('discountPct', Number(e.target.value))}
                 placeholder="0"
-                className="w-full bg-zinc-800/80 rounded-lg px-3 pr-10 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-700/50 focus:border-brand/50 transition-colors"
+                className="w-full bg-zinc-900 rounded-lg px-3 pr-10 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm font-mono">%</span>
             </div>
@@ -40,7 +40,7 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
                 value={feeConfig.discountMax || ''}
                 onChange={(e) => update('discountMax', Number(e.target.value))}
                 placeholder="No limit"
-                className="w-full bg-zinc-800/80 rounded-lg pl-9 pr-3 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-700/50 focus:border-brand/50 transition-colors"
+                className="w-full bg-zinc-900 rounded-lg pl-9 pr-3 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors"
               />
             </div>
           </div>
@@ -48,7 +48,7 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
       </div>
 
       {/* Delivery Fee Section */}
-      <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6">
+      <div className="rounded-lg border border-zinc-800 bg-zinc-950/80 p-4 sm:p-5">
         <h3 className="text-base sm:text-lg font-bold text-zinc-100 mb-4">Delivery Fee</h3>
         <div>
           <label className="text-xs text-zinc-400 font-semibold uppercase tracking-wider mb-1.5 block">Amount (split equally)</label>
@@ -59,20 +59,20 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
               value={feeConfig.deliveryFee || ''}
               onChange={(e) => update('deliveryFee', Number(e.target.value))}
               placeholder="0"
-              className="w-full bg-zinc-800/80 rounded-lg pl-9 pr-3 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-700/50 focus:border-brand/50 transition-colors"
+              className="w-full bg-zinc-900 rounded-lg pl-9 pr-3 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors"
             />
           </div>
         </div>
       </div>
 
       {/* Cashback Section */}
-      <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6">
+      <div className="rounded-lg border border-zinc-800 bg-zinc-950/80 p-4 sm:p-5 xl:col-span-1">
         <h3 className="text-base sm:text-lg font-bold text-zinc-100 mb-4">Cashback</h3>
 
         {/* Cashback Base Toggle */}
         <div className="mb-4">
           <label className="text-xs text-zinc-400 font-semibold uppercase tracking-wider mb-2 block">Calculated from</label>
-          <div className="inline-flex rounded-lg bg-zinc-800/80 border border-zinc-700/50 p-0.5">
+          <div className="inline-flex rounded-lg bg-zinc-900 border border-zinc-800 p-0.5">
             <button
               onClick={() => onUpdate({ ...feeConfig, cashbackBase: 'totalItem' })}
               className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all duration-200 ${feeConfig.cashbackBase === 'totalItem'
@@ -108,7 +108,7 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
                 value={feeConfig.cashbackPct || ''}
                 onChange={(e) => update('cashbackPct', Number(e.target.value))}
                 placeholder="0"
-                className="w-full bg-zinc-800/80 rounded-lg px-3 pr-10 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-700/50 focus:border-brand/50 transition-colors"
+                className="w-full bg-zinc-900 rounded-lg px-3 pr-10 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm font-mono">%</span>
             </div>
@@ -122,7 +122,7 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
                 value={feeConfig.cashbackMax || ''}
                 onChange={(e) => update('cashbackMax', Number(e.target.value))}
                 placeholder="No limit"
-                className="w-full bg-zinc-800/80 rounded-lg pl-9 pr-3 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-700/50 focus:border-brand/50 transition-colors"
+                className="w-full bg-zinc-900 rounded-lg pl-9 pr-3 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors"
               />
             </div>
           </div>
