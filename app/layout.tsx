@@ -14,7 +14,8 @@ const jetBrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: 'Bayar Bareng | Split Bill Calculator',
-  description: 'Split your bills easily with friends. Calculate discounts, delivery fees, cashback, and share the breakdown via WhatsApp.',
+  description:
+    'Split your bills easily with friends. Calculate discounts, delivery fees, cashback, and share the breakdown via WhatsApp.',
 }
 
 export default function RootLayout({
@@ -24,9 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${plusJakartaSans.variable} ${jetBrainsMono.variable}`}>
-      <body className="antialiased">
-        {children}
-      </body>
+      <body className="antialiased bg-paper text-ink selection:bg-accent/20">{children}</body>
     </html>
   )
 }

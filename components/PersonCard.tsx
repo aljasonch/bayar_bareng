@@ -1,6 +1,8 @@
 'use client'
 
 import { Person, Item } from '@/types'
+import { getPersonColor } from '@/lib/colors'
+import { IoCloseOutline, IoAddOutline, IoTrashOutline } from 'react-icons/io5'
 
 interface PersonCardProps {
   person: Person
@@ -16,10 +18,9 @@ function generateId(): string {
 
 export default function PersonCard({ person, index, onUpdate, onRemove, canRemove }: PersonCardProps) {
   const subtotal = person.items.reduce((s, i) => s + i.price, 0)
+  const color = getPersonColor(index)
 
-  const updateName = (name: string) => {
-    onUpdate({ ...person, name })
-  }
+  const updateName = (name: string) => onUpdate({ ...person, name })
 
   const addItem = () => {
     onUpdate({
@@ -31,89 +32,90 @@ export default function PersonCard({ person, index, onUpdate, onRemove, canRemov
   const updateItem = (itemId: string, field: keyof Item, value: string | number) => {
     onUpdate({
       ...person,
-      items: person.items.map((i) =>
-        i.id === itemId ? { ...i, [field]: value } : i
-      ),
+      items: person.items.map((i) => (i.id === itemId ? { ...i, [field]: value } : i)),
     })
   }
 
   const removeItem = (itemId: string) => {
     if (person.items.length <= 1) return
-    onUpdate({
-      ...person,
-      items: person.items.filter((i) => i.id !== itemId),
-    })
+    onUpdate({ ...person, items: person.items.filter((i) => i.id !== itemId) })
   }
 
   return (
-    <div className="animate-fade-in rounded-lg border border-zinc-800 bg-zinc-950/80 p-4 sm:p-5 transition-all duration-200 hover:border-zinc-700">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-brand flex items-center justify-center font-bold text-sm sm:text-base text-white shadow-lg shadow-brand/20">
-            {index + 1}
+    <div className="animate-fade-in card overflow-hidden">
+      {/* Header strip */}
+      <div className="flex items-center justify-between gap-3 px-4 sm:px-5 py-3.5 border-b border-line">
+        <div className="flex items-center gap-3 min-w-0">
+          <div
+            className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm text-white flex-shrink-0"
+            style={{ backgroundColor: color.base }}
+          >
+            {person.name ? person.name.charAt(0).toUpperCase() : index + 1}
           </div>
           <input
             type="text"
             value={person.name}
             onChange={(e) => updateName(e.target.value)}
             placeholder={`Person ${index + 1}`}
-            className="bg-transparent text-lg sm:text-xl font-bold text-zinc-100 placeholder:text-zinc-600 outline-none border-b border-transparent focus:border-brand/50 transition-colors pb-1 w-full max-w-[200px]"
+            className="bg-transparent text-base sm:text-lg font-bold text-ink placeholder:text-faint outline-none w-full min-w-0"
           />
         </div>
         {canRemove && (
           <button
             onClick={onRemove}
-            className="text-zinc-500 hover:text-red-400 transition-colors p-1.5 rounded-lg hover:bg-red-400/10 text-sm"
+            className="text-faint hover:text-rose-600 transition-colors p-1.5 rounded-lg hover:bg-rose-50 flex-shrink-0"
             aria-label="Remove person"
           >
-            Remove
+            <IoTrashOutline className="w-4 h-4" />
           </button>
         )}
       </div>
 
-      <div className="space-y-3">
+      {/* Items */}
+      <div className="px-4 sm:px-5 py-4 space-y-2.5">
         {person.items.map((item, idx) => (
-          <div key={item.id} className="flex gap-2 sm:gap-3 items-center animate-fade-in">
-            <div className="flex-1 min-w-0">
-              <input
-                type="text"
-                value={item.name}
-                onChange={(e) => updateItem(item.id, 'name', e.target.value)}
-                placeholder={`Item ${idx + 1}`}
-                className="w-full bg-zinc-900 rounded-lg px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors"
-              />
-            </div>
+          <div key={item.id} className="flex gap-2 items-center animate-fade-in">
+            <input
+              type="text"
+              value={item.name}
+              onChange={(e) => updateItem(item.id, 'name', e.target.value)}
+              placeholder={`Item ${idx + 1}`}
+              className="field flex-1 min-w-0"
+            />
             <div className="w-28 sm:w-36 relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs font-mono">Rp</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-faint text-xs font-mono">Rp</span>
               <input
                 type="number"
                 value={item.price || ''}
                 onChange={(e) => updateItem(item.id, 'price', Number(e.target.value))}
                 placeholder="0"
-                className="w-full bg-zinc-900 rounded-lg pl-9 pr-3 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors text-right"
+                className="field field-mono text-right pl-9"
               />
             </div>
             <button
               onClick={() => removeItem(item.id)}
               disabled={person.items.length <= 1}
-              className="text-zinc-600 hover:text-red-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors p-1 rounded-lg hover:bg-red-400/10 flex-shrink-0 text-lg leading-none"
+              className="text-faint2 hover:text-rose-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors p-1 rounded-md hover:bg-rose-50 flex-shrink-0"
               aria-label="Remove item"
             >
-              &times;
+              <IoCloseOutline className="w-5 h-5" />
             </button>
           </div>
         ))}
       </div>
 
-      <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/5">
+      {/* Footer */}
+      <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-t border-line bg-surface2/60">
         <button
           onClick={addItem}
-          className="text-brand hover:text-orange-400 text-sm font-semibold flex items-center gap-1.5 transition-colors"
+          className="inline-flex items-center gap-1 text-sm font-semibold transition-colors hover:opacity-70"
+          style={{ color: color.base }}
         >
-          + Add Item
+          <IoAddOutline className="w-4 h-4" />
+          Add item
         </button>
-        <span className="font-mono text-sm text-zinc-400">
-          Subtotal: <span className="text-zinc-100 font-bold">Rp{subtotal.toLocaleString('id-ID')}</span>
+        <span className="text-sm text-muted">
+          Subtotal <span className="font-mono font-bold text-ink ml-1">Rp{subtotal.toLocaleString('id-ID')}</span>
         </span>
       </div>
     </div>

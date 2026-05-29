@@ -13,26 +13,29 @@ html {
 }
 
 body {
-  @apply bg-zinc-950 text-zinc-100 font-sans;
+  @apply text-ink font-sans;
+  background-color: #f3f1fb;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-zinc-900;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-zinc-700 rounded-full;
+  background: #cdc7ec;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-zinc-600;
+  background: #b3a9e3;
 }
 
 /* Number input hide spinner */
@@ -47,19 +50,60 @@ input[type='number'] {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.3s ease-out forwards;
+  animation: fadeIn 0.25s ease-out forwards;
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-slide-up {
-  animation: slideUp 0.4s ease-out forwards;
+  animation: slideUp 0.35s ease-out forwards;
+}
+
+@keyframes growBar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.animate-grow-bar {
+  transform-origin: left;
+  animation: growBar 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Shared surfaces ----------------------------------------------------- */
+
+@layer components {
+  .card {
+    @apply bg-white border border-[#E6E2F7] rounded-2xl;
+    box-shadow: 0 1px 2px 0 rgba(34, 28, 74, 0.06);
+  }
+
+  .divider-dashed {
+    border-top: 1px dashed #ddd8f1;
+  }
+
+  /* Inputs */
+  .field {
+    @apply w-full bg-white rounded-lg px-3 py-2.5 text-sm text-ink placeholder:text-stone-400
+      border border-[#E0DCF2] outline-none transition-colors;
+  }
+  .field:focus {
+    @apply border-accent;
+    box-shadow: 0 0 0 3px rgba(91, 75, 224, 0.12);
+  }
+
+  .field-mono {
+    @apply font-mono;
+  }
+
+  .label {
+    @apply text-[11px] font-semibold uppercase tracking-wider text-[#8B83B8];
+  }
 }

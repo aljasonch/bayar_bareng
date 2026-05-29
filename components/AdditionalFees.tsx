@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { AdditionalFee } from '@/types'
+import { IoAddOutline, IoCloseOutline } from 'react-icons/io5'
 
 interface AdditionalFeesProps {
   fees: AdditionalFee[]
@@ -12,10 +13,7 @@ function generateId(): string {
   return Math.random().toString(36).substring(2, 9)
 }
 
-const PRESET_FEES = [
-  { name: 'Service Charge' },
-  { name: 'Biaya Platform/App' },
-]
+const PRESET_FEES = [{ name: 'Service Charge' }, { name: 'Biaya Platform/App' }]
 
 export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) {
   const [showCustom, setShowCustom] = useState(false)
@@ -34,33 +32,33 @@ export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) 
     setShowCustom(false)
   }
 
-  const removeFee = (id: string) => {
-    onUpdate(fees.filter((f) => f.id !== id))
-  }
+  const removeFee = (id: string) => onUpdate(fees.filter((f) => f.id !== id))
 
   const updateFeeAmount = (id: string, amount: number) => {
     onUpdate(fees.map((f) => (f.id === id ? { ...f, amount } : f)))
   }
 
   return (
-    <div className="rounded-lg border border-zinc-800 bg-zinc-950/80 p-4 sm:p-5 animate-fade-in">
-      <h3 className="text-base sm:text-lg font-bold text-zinc-100 mb-4">Additional Fees</h3>
+    <div className="card p-4 sm:p-5 animate-fade-in">
+      <h3 className="text-sm font-bold text-ink mb-4">Additional fees</h3>
 
       <div className="flex flex-wrap gap-2 mb-4">
         {PRESET_FEES.map((preset) => (
           <button
             key={preset.name}
             onClick={() => addPresetFee(preset.name)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-brand/50 hover:text-brand transition-all duration-200"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-[#E0DCF2] text-ink3 hover:border-accent hover:text-accent transition-all"
           >
+            <IoAddOutline className="w-3.5 h-3.5" />
             {preset.name}
           </button>
         ))}
         <button
           onClick={() => setShowCustom(!showCustom)}
-          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold bg-brand text-white border border-brand hover:bg-orange-600 transition-all duration-200"
+          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-accent text-white hover:bg-accentDark transition-all"
         >
-          + Custom
+          <IoAddOutline className="w-3.5 h-3.5" />
+          Custom
         </button>
       </div>
 
@@ -71,61 +69,59 @@ export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) 
             value={customName}
             onChange={(e) => setCustomName(e.target.value)}
             placeholder="Fee name"
-            className="flex-1 bg-zinc-900 rounded-lg px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors"
+            className="field flex-1"
             onKeyDown={(e) => e.key === 'Enter' && addCustomFee()}
           />
           <div className="w-28 relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs font-mono">Rp</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-faint text-xs font-mono">Rp</span>
             <input
               type="number"
               value={customAmount || ''}
               onChange={(e) => setCustomAmount(Number(e.target.value))}
               placeholder="0"
-              className="w-full bg-zinc-900 rounded-lg pl-9 pr-3 py-2.5 text-sm font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors text-right"
+              className="field field-mono text-right pl-9"
               onKeyDown={(e) => e.key === 'Enter' && addCustomFee()}
             />
           </div>
           <button
             onClick={addCustomFee}
-            className="px-3 py-2 rounded-lg bg-brand text-white text-sm font-semibold hover:bg-orange-600 transition-colors flex-shrink-0"
+            className="px-4 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accentDark transition-colors flex-shrink-0"
           >
             Add
           </button>
         </div>
       )}
 
-      {fees.length > 0 && (
+      {fees.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {fees.map((fee) => (
             <div
               key={fee.id}
-              className="flex items-center gap-2 bg-zinc-900 rounded-lg px-3 py-2.5 border border-zinc-800 animate-fade-in"
+              className="flex items-center gap-2 bg-surface2 rounded-lg px-3 py-2.5 border border-line2 animate-fade-in"
             >
-              <span className="text-sm text-zinc-300 flex-1 truncate">{fee.name}</span>
+              <span className="text-sm text-ink2 flex-1 truncate">{fee.name}</span>
               <div className="w-24 relative flex-shrink-0">
-                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-zinc-500 text-[10px] font-mono">Rp</span>
+                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-faint text-[10px] font-mono">Rp</span>
                 <input
                   type="number"
                   value={fee.amount || ''}
                   onChange={(e) => updateFeeAmount(fee.id, Number(e.target.value))}
                   placeholder="0"
-                  className="w-full bg-zinc-950 rounded-md pl-7 pr-2 py-1.5 text-xs font-mono text-zinc-100 placeholder:text-zinc-600 outline-none border border-zinc-800 focus:border-brand/60 transition-colors text-right"
+                  className="w-full bg-white rounded-md pl-7 pr-2 py-1.5 text-xs font-mono text-ink placeholder:text-faint outline-none border border-[#E0DCF2] focus:border-accent transition-colors text-right"
                 />
               </div>
               <button
                 onClick={() => removeFee(fee.id)}
-                className="text-zinc-500 hover:text-red-400 transition-colors p-1 rounded hover:bg-red-400/10 flex-shrink-0 text-lg leading-none"
+                className="text-faint hover:text-rose-600 transition-colors p-1 rounded hover:bg-rose-50 flex-shrink-0"
                 aria-label="Remove fee"
               >
-                &times;
+                <IoCloseOutline className="w-4 h-4" />
               </button>
             </div>
           ))}
         </div>
-      )}
-
-      {fees.length === 0 && (
-        <p className="text-xs text-zinc-600 italic">No additional fees added yet</p>
+      ) : (
+        <p className="text-xs text-faint italic">No additional fees added yet</p>
       )}
     </div>
   )
