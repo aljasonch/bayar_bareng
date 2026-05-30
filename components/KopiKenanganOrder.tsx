@@ -256,7 +256,7 @@ function KopiKenanganPersonCard({
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold border whitespace-nowrap transition-all ${
                   category === itemCategory
                     ? 'bg-accent text-white border-accent'
-                    : 'bg-white text-muted border-[#E0DCF2] hover:text-ink hover:border-accent/40'
+                    : 'bg-white text-muted border-line2 hover:text-ink hover:border-accent/40'
                 }`}
               >
                 {itemCategory}
@@ -275,7 +275,7 @@ function KopiKenanganPersonCard({
                   className={`min-h-[7.5rem] rounded-lg border p-3 text-left transition-all ${
                     selected
                       ? 'border-accent ring-1 ring-accent bg-accentSoft'
-                      : 'bg-white border-[#E0DCF2] hover:border-accent/40'
+                      : 'bg-white border-line2 hover:border-accent/40'
                   }`}
                 >
                   <p className="text-sm font-bold text-ink leading-snug">{menuItem.name}</p>
@@ -294,12 +294,12 @@ function KopiKenanganPersonCard({
                       )
                     })}
                     {menuItem.hasOneLiter && (
-                      <span className="text-[10px] rounded bg-teal-50 border border-teal-200 px-2 py-0.5 text-teal-700">
+                      <span className="text-[10px] rounded bg-surface border border-line2 px-2 py-0.5 text-ink3">
                         1L
                       </span>
                     )}
                     {menuItem.isBaristaChoice && (
-                      <span className="text-[10px] rounded bg-amber-50 border border-amber-200 px-2 py-0.5 text-amber-700">
+                      <span className="text-[10px] rounded bg-surface border border-line2 px-2 py-0.5 text-ink3">
                         Barista choice
                       </span>
                     )}
@@ -327,7 +327,7 @@ function KopiKenanganPersonCard({
                   {selectedItem.category}
                 </span>
                 {selectedItem.hasOneLiter && (
-                  <span className="text-[10px] rounded bg-teal-50 border border-teal-200 px-2 py-0.5 text-teal-700">
+                  <span className="text-[10px] rounded bg-surface border border-line2 px-2 py-0.5 text-ink3">
                     1L available
                   </span>
                 )}
@@ -355,7 +355,7 @@ function KopiKenanganPersonCard({
                     className={`min-h-14 rounded-lg border px-2 py-2 text-center transition-all ${
                       active
                         ? 'bg-accent text-white border-accent'
-                        : 'bg-white text-muted border-[#E0DCF2] hover:border-accent/40 disabled:opacity-40 disabled:cursor-not-allowed'
+                        : 'bg-white text-muted border-line2 hover:border-accent/40 disabled:opacity-40 disabled:cursor-not-allowed'
                     }`}
                   >
                     <span className="block text-sm font-extrabold">{size}</span>
@@ -388,7 +388,7 @@ function KopiKenanganPersonCard({
                     className={`min-h-9 rounded-lg px-2 text-[11px] font-semibold border transition-all ${
                       sweetness === option
                         ? 'bg-accent text-white border-accent'
-                        : 'bg-white text-muted border-[#E0DCF2] hover:text-ink'
+                        : 'bg-white text-muted border-line2 hover:text-ink'
                     }`}
                   >
                     {option}
@@ -407,7 +407,7 @@ function KopiKenanganPersonCard({
                     className={`min-h-9 rounded-lg px-2 text-[11px] font-semibold border transition-all ${
                       iceLevel === option
                         ? 'bg-accent text-white border-accent'
-                        : 'bg-white text-muted border-[#E0DCF2] hover:text-ink'
+                        : 'bg-white text-muted border-line2 hover:text-ink'
                     }`}
                   >
                     {option}
@@ -431,7 +431,7 @@ function KopiKenanganPersonCard({
                         className={`min-h-9 rounded-lg border px-2.5 py-2 flex items-center gap-2 cursor-pointer transition-all ${
                           checked
                             ? 'bg-accentSoft border-accent text-accent'
-                            : 'bg-white border-[#E0DCF2] text-muted hover:text-ink hover:border-accent/40'
+                            : 'bg-white border-line2 text-muted hover:text-ink hover:border-accent/40'
                         }`}
                       >
                         <input
@@ -610,7 +610,7 @@ export default function KopiKenanganOrder({
               className={`min-h-12 rounded-lg border px-3 py-2 text-left transition-all ${
                 outlet === 'normal'
                   ? 'bg-accent text-white border-accent'
-                  : 'bg-white text-muted border-[#E0DCF2] hover:text-ink hover:border-accent/40'
+                  : 'bg-white text-muted border-line2 hover:text-ink hover:border-accent/40'
               }`}
             >
               <span className="block text-sm font-bold">Normal</span>
@@ -622,7 +622,7 @@ export default function KopiKenanganOrder({
               className={`min-h-12 rounded-lg border px-3 py-2 text-left transition-all ${
                 outlet === 'mall'
                   ? 'bg-accent text-white border-accent'
-                  : 'bg-white text-muted border-[#E0DCF2] hover:text-ink hover:border-accent/40'
+                  : 'bg-white text-muted border-line2 hover:text-ink hover:border-accent/40'
               }`}
             >
               <span className="block text-sm font-bold">Mall</span>

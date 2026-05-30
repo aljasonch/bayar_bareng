@@ -14,7 +14,7 @@ html {
 
 body {
   @apply text-ink font-sans;
-  background-color: #f3f1fb;
+  background-color: #f5f3ec;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -30,12 +30,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cdc7ec;
+  background: #d6d0c3;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #b3a9e3;
+  background: #c2bbab;
 }
 
 /* Number input hide spinner */
@@ -81,22 +81,22 @@ input[type='number'] {
 
 @layer components {
   .card {
-    @apply bg-white border border-[#E6E2F7] rounded-2xl;
-    box-shadow: 0 1px 2px 0 rgba(34, 28, 74, 0.06);
+    @apply bg-white border border-line rounded-2xl;
+    box-shadow: 0 1px 2px 0 rgba(34, 32, 25, 0.05);
   }
 
   .divider-dashed {
-    border-top: 1px dashed #ddd8f1;
+    border-top: 1px dashed theme('colors.line2');
   }
 
   /* Inputs */
   .field {
-    @apply w-full bg-white rounded-lg px-3 py-2.5 text-sm text-ink placeholder:text-stone-400
-      border border-[#E0DCF2] outline-none transition-colors;
+    @apply w-full bg-white rounded-lg px-3 py-2.5 text-sm text-ink placeholder:text-faint
+      border border-line2 outline-none transition-colors;
   }
   .field:focus {
     @apply border-accent;
-    box-shadow: 0 0 0 3px rgba(91, 75, 224, 0.12);
+    box-shadow: 0 0 0 3px rgba(78, 106, 90, 0.15);
   }
 
   .field-mono {
@@ -104,6 +104,6 @@ input[type='number'] {
   }
 
   .label {
-    @apply text-[11px] font-semibold uppercase tracking-wider text-[#8B83B8];
+    @apply text-[11px] font-semibold uppercase tracking-wider text-muted;
   }
 }

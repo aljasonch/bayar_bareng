@@ -11,16 +11,16 @@ export type PersonColor = {
 }
 
 export const PERSON_PALETTE: PersonColor[] = [
-  { name: 'indigo', base: '#5B4BE0', soft: '#EDEAFB' },
-  { name: 'teal', base: '#0F9E8E', soft: '#CCF3EE' },
-  { name: 'amber', base: '#E08A1E', soft: '#FCEBCF' },
-  { name: 'rose', base: '#E0418A', soft: '#FBDCEC' },
-  { name: 'sky', base: '#2D8FE0', soft: '#D6EAFB' },
-  { name: 'violet', base: '#9B4BE0', soft: '#F0E2FB' },
-  { name: 'green', base: '#3FA34D', soft: '#DBF1DE' },
-  { name: 'coral', base: '#E0543C', soft: '#FBDFD9' },
-  { name: 'cyan', base: '#0FA0B5', soft: '#CFF0F5' },
-  { name: 'slate', base: '#5B6478', soft: '#E3E6ED' },
+  { name: 'pine', base: '#4E6A5A', soft: '#E5EBE6' },
+  { name: 'clay', base: '#A8674A', soft: '#F1E3DB' },
+  { name: 'ochre', base: '#B08A3F', soft: '#F0E8D4' },
+  { name: 'slate', base: '#5E6B79', soft: '#E4E7EB' },
+  { name: 'plum', base: '#7E5A6E', soft: '#EBE2E8' },
+  { name: 'teal', base: '#3F7C77', soft: '#DDEAE9' },
+  { name: 'sand', base: '#9A8C6B', soft: '#EDE9DE' },
+  { name: 'rust', base: '#9C5547', soft: '#EFE0DC' },
+  { name: 'moss', base: '#6E7A4B', soft: '#E8EADD' },
+  { name: 'denim', base: '#566A86', soft: '#E2E6EC' },
 ]
 
 /** Stable color for a person by their index in the list. */

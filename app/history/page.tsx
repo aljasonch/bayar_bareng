@@ -74,12 +74,12 @@ export default function HistoryPage() {
       </aside>
 
       {/* Mobile top bar */}
-      <header className="lg:hidden border-b border-[#E6E2F7] bg-paper/90 backdrop-blur-md sticky top-0 z-50">
+      <header className="lg:hidden border-b border-line bg-paper/90 backdrop-blur-md sticky top-0 z-50">
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <Link
               href="/"
-              className="h-8 w-8 rounded-lg border border-[#E0DCF2] bg-white flex items-center justify-center text-accent"
+              className="h-8 w-8 rounded-lg border border-line2 bg-white flex items-center justify-center text-accent"
             >
               <IoArrowBack className="w-4 h-4" />
             </Link>
@@ -187,7 +187,7 @@ export default function HistoryPage() {
                       href={getWhatsAppUrl(selectedResult)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm transition-all"
+                      className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-sm transition-all"
                     >
                       <IoLogoWhatsapp className="w-5 h-5" />
                       Share via WhatsApp
@@ -252,7 +252,7 @@ export default function HistoryPage() {
               href={getWhatsAppUrl(selectedResult)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full mt-4 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm transition-all"
+              className="w-full mt-4 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-sm transition-all"
             >
               <IoLogoWhatsapp className="w-5 h-5" />
               Share via WhatsApp
@@ -260,7 +260,7 @@ export default function HistoryPage() {
 
             <button
               onClick={() => setSelectedResult(null)}
-              className="w-full mt-3 px-6 py-3 rounded-xl bg-white text-ink3 font-semibold text-sm border border-[#E0DCF2] hover:bg-accentSoft transition-all"
+              className="w-full mt-3 px-6 py-3 rounded-xl bg-white text-ink3 font-semibold text-sm border border-line2 hover:bg-accentSoft transition-all"
             >
               Close
             </button>

@@ -47,7 +47,7 @@ export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) 
           <button
             key={preset.name}
             onClick={() => addPresetFee(preset.name)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-[#E0DCF2] text-ink3 hover:border-accent hover:text-accent transition-all"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-line2 text-ink3 hover:border-accent hover:text-accent transition-all"
           >
             <IoAddOutline className="w-3.5 h-3.5" />
             {preset.name}
@@ -107,7 +107,7 @@ export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) 
                   value={fee.amount || ''}
                   onChange={(e) => updateFeeAmount(fee.id, Number(e.target.value))}
                   placeholder="0"
-                  className="w-full bg-white rounded-md pl-7 pr-2 py-1.5 text-xs font-mono text-ink placeholder:text-faint outline-none border border-[#E0DCF2] focus:border-accent transition-colors text-right"
+                  className="w-full bg-white rounded-md pl-7 pr-2 py-1.5 text-xs font-mono text-ink placeholder:text-faint outline-none border border-line2 focus:border-accent transition-colors text-right"
                 />
               </div>
               <button

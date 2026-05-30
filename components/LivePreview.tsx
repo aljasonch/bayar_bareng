@@ -43,7 +43,7 @@ export default function LivePreview({ people, feeConfig, billMode, kopiKenanganO
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-base font-bold text-ink">Live preview</h3>
         <span className="flex items-center gap-1.5 text-[11px] text-faint">
-          <span className="h-1.5 w-1.5 rounded-full bg-teal-600" />
+          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
           Live
         </span>
       </div>
@@ -126,7 +126,7 @@ export default function LivePreview({ people, feeConfig, billMode, kopiKenanganO
         {result.totalSaved > 0 && (
           <div className="flex justify-between">
             <span className="text-sm text-muted">Total saved</span>
-            <span className="font-mono text-sm font-bold text-teal-700">
+            <span className="font-mono text-sm font-bold text-accent">
               Rp{result.totalSaved.toLocaleString('id-ID')}
             </span>
           </div>

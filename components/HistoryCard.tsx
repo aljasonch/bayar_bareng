@@ -40,7 +40,7 @@ export default function HistoryCard({ result, onDelete, onView, active }: Histor
             {result.people.length} {result.people.length === 1 ? 'person' : 'people'}
           </p>
           {result.billMode === 'kopiKenangan' && (
-            <p className="text-xs text-teal-700 mt-1 font-medium">
+            <p className="text-xs text-accent mt-1 font-medium">
               Kopi Kenangan - {formatOutletName(result.kopiKenanganOutlet)}
             </p>
           )}
@@ -84,7 +84,7 @@ export default function HistoryCard({ result, onDelete, onView, active }: Histor
         <div className="text-right">
           <p className="font-mono text-lg font-bold text-ink">{formatRp(result.totalFinal)}</p>
           {result.totalSaved > 0 && (
-            <p className="font-mono text-xs text-teal-700">Saved {formatRp(result.totalSaved)}</p>
+            <p className="font-mono text-xs text-accent">Saved {formatRp(result.totalSaved)}</p>
           )}
         </div>
       </div>

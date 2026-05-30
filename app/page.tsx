@@ -39,8 +39,8 @@ const STEPS: RailStep[] = [
 export default function Home() {
   const [step, setStep] = useState(1)
   const [people, setPeople] = useState<Person[]>([
-    { id: generateId(), name: '', items: [{ id: generateId(), name: '', price: 0 }] },
-    { id: generateId(), name: '', items: [{ id: generateId(), name: '', price: 0 }] },
+    { id: generateId(), name: '', items: [] },
+    { id: generateId(), name: '', items: [] },
   ])
   const [feeConfig, setFeeConfig] = useState<FeeConfig>({
     discountPct: 0,
@@ -62,7 +62,7 @@ export default function Home() {
   const addPerson = () => {
     setPeople([
       ...people,
-      { id: generateId(), name: '', items: [{ id: generateId(), name: '', price: 0 }] },
+      { id: generateId(), name: '', items: [] },
     ])
   }
 
@@ -98,8 +98,8 @@ export default function Home() {
 
   const handleReset = () => {
     setPeople([
-      { id: generateId(), name: '', items: [{ id: generateId(), name: '', price: 0 }] },
-      { id: generateId(), name: '', items: [{ id: generateId(), name: '', price: 0 }] },
+      { id: generateId(), name: '', items: [] },
+      { id: generateId(), name: '', items: [] },
     ])
     setFeeConfig({
       discountPct: 0,
@@ -141,7 +141,7 @@ export default function Home() {
       />
 
       {/* Mobile top bar */}
-      <header className="lg:hidden border-b border-[#E6E2F7] bg-paper/90 backdrop-blur-md sticky top-0 z-50">
+      <header className="lg:hidden border-b border-line bg-paper/90 backdrop-blur-md sticky top-0 z-50">
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="h-8 w-8 rounded-lg bg-sidebar text-white flex items-center justify-center font-mono font-black text-sm">
@@ -156,7 +156,7 @@ export default function Home() {
           </div>
           <Link
             href="/history"
-            className="flex items-center gap-1.5 text-sm font-medium text-accent px-3 py-2 rounded-lg border border-[#E0DCF2] bg-white"
+            className="flex items-center gap-1.5 text-sm font-medium text-accent px-3 py-2 rounded-lg border border-line2 bg-white"
           >
             <IoTimeOutline className="w-4 h-4" />
           </Link>
@@ -167,7 +167,7 @@ export default function Home() {
             <div
               key={s.num}
               className={`h-1.5 flex-1 rounded-full transition-colors ${
-                step >= s.num ? 'bg-accent' : 'bg-[#E0DCF2]'
+                step >= s.num ? 'bg-accent' : 'bg-line2'
               }`}
             />
           ))}
@@ -213,7 +213,7 @@ export default function Home() {
                               className={`rounded-xl border p-3 text-left transition-all ${
                                 billMode === 'general'
                                   ? 'bg-accent text-white border-accent'
-                                  : 'bg-white text-muted border-[#E0DCF2] hover:text-ink hover:border-accent/40'
+                                  : 'bg-white text-muted border-line2 hover:text-ink hover:border-accent/40'
                               }`}
                             >
                               <div className="flex items-center gap-2">
@@ -228,7 +228,7 @@ export default function Home() {
                               className={`rounded-xl border p-3 text-left transition-all ${
                                 billMode === 'kopiKenangan'
                                   ? 'bg-accent text-white border-accent'
-                                  : 'bg-white text-muted border-[#E0DCF2] hover:text-ink hover:border-accent/40'
+                                  : 'bg-white text-muted border-line2 hover:text-ink hover:border-accent/40'
                               }`}
                             >
                               <div className="flex items-center gap-2">
@@ -381,7 +381,7 @@ export default function Home() {
                       href={getWhatsAppUrl(result)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm transition-all"
+                      className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-sm transition-all"
                     >
                       <IoLogoWhatsapp className="w-5 h-5" />
                       Share via WhatsApp
@@ -391,8 +391,8 @@ export default function Home() {
                       disabled={saved}
                       className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all border ${
                         saved
-                          ? 'bg-teal-50 text-teal-700 border-teal-200 cursor-default'
-                          : 'bg-white hover:bg-accentSoft text-ink border-[#E0DCF2]'
+                          ? 'bg-accentSoft text-accent border-accent/30 cursor-default'
+                          : 'bg-white hover:bg-accentSoft text-ink border-line2'
                       }`}
                     >
                       {saved ? <IoCheckmarkCircle className="w-5 h-5" /> : null}
@@ -400,7 +400,7 @@ export default function Home() {
                     </button>
                     <button
                       onClick={handleReset}
-                      className="px-6 py-3 rounded-xl bg-white hover:bg-accentSoft text-ink3 hover:text-ink font-semibold text-sm transition-all border border-[#E0DCF2]"
+                      className="px-6 py-3 rounded-xl bg-white hover:bg-accentSoft text-ink3 hover:text-ink font-semibold text-sm transition-all border border-line2"
                     >
                       New bill
                     </button>
@@ -434,7 +434,7 @@ export default function Home() {
                     <div className="flex gap-3">
                       <button
                         onClick={() => setStep(1)}
-                        className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-ink3 font-semibold text-sm border border-[#E0DCF2] hover:bg-accentSoft transition-all"
+                        className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-ink3 font-semibold text-sm border border-line2 hover:bg-accentSoft transition-all"
                       >
                         <IoArrowBack className="w-4 h-4" />
                         Back
@@ -469,7 +469,7 @@ export default function Home() {
                 <>
                   <button
                     onClick={() => setStep(1)}
-                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-ink3 font-semibold text-sm border border-[#E0DCF2] hover:bg-accentSoft transition-all"
+                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-ink3 font-semibold text-sm border border-line2 hover:bg-accentSoft transition-all"
                   >
                     <IoArrowBack className="w-4 h-4" />
                     Back
@@ -485,7 +485,7 @@ export default function Home() {
             </div>
           )}
 
-          <footer className="mt-10 pt-6 border-t border-[#E6E2F7] text-center">
+          <footer className="mt-10 pt-6 border-t border-line text-center">
             <p className="text-muted text-sm">
               &copy; {new Date().getFullYear()} Bayar Bareng. All rights reserved.
             </p>
@@ -495,7 +495,7 @@ export default function Home() {
       </div>
 
       {/* Mobile sticky CTA */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-paper/95 backdrop-blur-md lg:hidden border-t border-[#E6E2F7] z-40">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-paper/95 backdrop-blur-md lg:hidden border-t border-line z-40">
         {step === 1 && (
           <button
             onClick={() => setStep(2)}
@@ -510,7 +510,7 @@ export default function Home() {
           <div className="flex gap-3">
             <button
               onClick={() => setStep(1)}
-              className="px-4 py-3.5 rounded-xl bg-white text-ink3 font-semibold text-sm border border-[#E0DCF2]"
+              className="px-4 py-3.5 rounded-xl bg-white text-ink3 font-semibold text-sm border border-line2"
             >
               <IoArrowBack className="w-4 h-4" />
             </button>
@@ -528,7 +528,7 @@ export default function Home() {
               href={getWhatsAppUrl(result)}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm transition-all"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm transition-all"
             >
               <IoLogoWhatsapp className="w-4 h-4" />
               WhatsApp
@@ -538,15 +538,15 @@ export default function Home() {
               disabled={saved}
               className={`px-4 py-3.5 rounded-xl font-bold text-sm transition-all border ${
                 saved
-                  ? 'bg-teal-50 text-teal-700 border-teal-200'
-                  : 'bg-white text-ink border-[#E0DCF2]'
+                  ? 'bg-accentSoft text-accent border-accent/30'
+                  : 'bg-white text-ink border-line2'
               }`}
             >
               {saved ? 'Saved' : 'Save'}
             </button>
             <button
               onClick={handleReset}
-              className="px-4 py-3.5 rounded-xl bg-white text-ink3 font-bold text-sm border border-[#E0DCF2] hover:text-ink transition-all"
+              className="px-4 py-3.5 rounded-xl bg-white text-ink3 font-bold text-sm border border-line2 hover:text-ink transition-all"
             >
               New
             </button>

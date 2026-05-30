@@ -37,7 +37,6 @@ export default function PersonCard({ person, index, onUpdate, onRemove, canRemov
   }
 
   const removeItem = (itemId: string) => {
-    if (person.items.length <= 1) return
     onUpdate({ ...person, items: person.items.filter((i) => i.id !== itemId) })
   }
 
@@ -73,35 +72,40 @@ export default function PersonCard({ person, index, onUpdate, onRemove, canRemov
 
       {/* Items */}
       <div className="px-4 sm:px-5 py-4 space-y-2.5">
-        {person.items.map((item, idx) => (
-          <div key={item.id} className="flex gap-2 items-center animate-fade-in">
-            <input
-              type="text"
-              value={item.name}
-              onChange={(e) => updateItem(item.id, 'name', e.target.value)}
-              placeholder={`Item ${idx + 1}`}
-              className="field flex-1 min-w-0"
-            />
-            <div className="w-28 sm:w-36 relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-faint text-xs font-mono">Rp</span>
-              <input
-                type="number"
-                value={item.price || ''}
-                onChange={(e) => updateItem(item.id, 'price', Number(e.target.value))}
-                placeholder="0"
-                className="field field-mono text-right pl-9"
-              />
-            </div>
-            <button
-              onClick={() => removeItem(item.id)}
-              disabled={person.items.length <= 1}
-              className="text-faint2 hover:text-rose-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors p-1 rounded-md hover:bg-rose-50 flex-shrink-0"
-              aria-label="Remove item"
-            >
-              <IoCloseOutline className="w-5 h-5" />
-            </button>
+        {person.items.length === 0 ? (
+          <div className="rounded-lg border border-dashed border-line2 py-5 text-center">
+            <p className="text-sm text-faint">No items yet. Add the first one below.</p>
           </div>
-        ))}
+        ) : (
+          person.items.map((item, idx) => (
+            <div key={item.id} className="flex gap-2 items-center animate-fade-in">
+              <input
+                type="text"
+                value={item.name}
+                onChange={(e) => updateItem(item.id, 'name', e.target.value)}
+                placeholder={`Item ${idx + 1}`}
+                className="field flex-1 min-w-0"
+              />
+              <div className="w-28 sm:w-36 relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-faint text-xs font-mono">Rp</span>
+                <input
+                  type="number"
+                  value={item.price || ''}
+                  onChange={(e) => updateItem(item.id, 'price', Number(e.target.value))}
+                  placeholder="0"
+                  className="field field-mono text-right pl-9"
+                />
+              </div>
+              <button
+                onClick={() => removeItem(item.id)}
+                className="text-faint2 hover:text-rose-600 transition-colors p-1 rounded-md hover:bg-rose-50 flex-shrink-0"
+                aria-label="Remove item"
+              >
+                <IoCloseOutline className="w-5 h-5" />
+              </button>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Footer */}

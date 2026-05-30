@@ -71,7 +71,7 @@ export default function ResultCard({ result, index, grandTotal }: ResultCardProp
           {result.discountSaved > 0 && (
             <div className="flex justify-between items-center">
               <span className="text-muted">Discount</span>
-              <span className="font-mono text-teal-700">-{formatRp(result.discountSaved)}</span>
+              <span className="font-mono text-accent">-{formatRp(result.discountSaved)}</span>
             </div>
           )}
           {result.deliveryShare > 0 && (
@@ -89,7 +89,7 @@ export default function ResultCard({ result, index, grandTotal }: ResultCardProp
           {result.cashbackSaved > 0 && (
             <div className="flex justify-between items-center">
               <span className="text-muted">Cashback</span>
-              <span className="font-mono text-teal-700">-{formatRp(result.cashbackSaved)}</span>
+              <span className="font-mono text-accent">-{formatRp(result.cashbackSaved)}</span>
             </div>
           )}
         </div>
