@@ -35,7 +35,7 @@ export default function HistoryPage() {
   if (!mounted) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-[#8B83B8] animate-pulse">Loading...</div>
+        <div className="text-muted animate-pulse">Loading...</div>
       </div>
     )
   }
@@ -85,7 +85,7 @@ export default function HistoryPage() {
             </Link>
             <div>
               <h1 className="text-sm font-extrabold text-ink leading-tight">History</h1>
-              <p className="text-[10px] text-[#8B83B8] leading-tight">
+              <p className="text-[10px] text-muted leading-tight">
                 {history.length} saved {history.length === 1 ? 'bill' : 'bills'}
               </p>
             </div>
@@ -104,13 +104,13 @@ export default function HistoryPage() {
         <main className="w-full max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-8">
           <div className="hidden lg:block mb-6">
             <h2 className="text-2xl font-extrabold text-ink tracking-tight">Saved bills</h2>
-            <p className="text-sm text-[#8B83B8] mt-0.5">Tap a bill to see the full breakdown</p>
+            <p className="text-sm text-muted mt-0.5">Tap a bill to see the full breakdown</p>
           </div>
 
           {history.length === 0 ? (
             <div className="text-center py-16 sm:py-24 animate-fade-in">
               <h2 className="text-lg sm:text-xl font-bold text-ink mb-2">No history yet</h2>
-              <p className="text-sm text-[#8B83B8] mb-6">Your saved split bills will appear here</p>
+              <p className="text-sm text-muted mb-6">Your saved split bills will appear here</p>
               <Link
                 href="/"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-semibold text-sm hover:bg-accentDark transition-all"
@@ -187,7 +187,7 @@ export default function HistoryPage() {
                       href={getWhatsAppUrl(selectedResult)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-sm transition-all"
+                      className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-whatsapp hover:bg-whatsappDark text-white font-semibold text-sm transition-all"
                     >
                       <IoLogoWhatsapp className="w-5 h-5" />
                       Share via WhatsApp
@@ -195,7 +195,7 @@ export default function HistoryPage() {
                   </div>
                 ) : (
                   <div className="sticky top-8 card p-10 text-center">
-                    <p className="text-sm text-[#8B83B8]">Select a bill to see the breakdown</p>
+                    <p className="text-sm text-muted">Select a bill to see the breakdown</p>
                   </div>
                 )}
               </div>
@@ -211,7 +211,7 @@ export default function HistoryPage() {
             <div className="flex items-center justify-between mb-5">
               <div>
                 <h3 className="text-lg font-bold text-ink">Full breakdown</h3>
-                <p className="text-xs text-[#8B83B8] font-mono">
+                <p className="text-xs text-muted font-mono">
                   {formatBillDate(selectedResult, { day: 'numeric', month: 'long', year: 'numeric' })}
                 </p>
               </div>
@@ -252,7 +252,7 @@ export default function HistoryPage() {
               href={getWhatsAppUrl(selectedResult)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full mt-4 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-sm transition-all"
+              className="w-full mt-4 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-whatsapp hover:bg-whatsappDark text-white font-semibold text-sm transition-all"
             >
               <IoLogoWhatsapp className="w-5 h-5" />
               Share via WhatsApp

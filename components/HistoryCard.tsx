@@ -56,7 +56,7 @@ export default function HistoryCard({ result, onDelete, onView, active }: Histor
             event.stopPropagation()
             onDelete(result.id)
           }}
-          className="text-faint2 hover:text-rose-600 transition-colors p-1.5 rounded-lg hover:bg-rose-50 opacity-0 group-hover:opacity-100"
+          className="text-faint2 hover:text-danger transition-colors p-1.5 rounded-lg hover:bg-dangerSoft opacity-0 group-hover:opacity-100"
           aria-label="Delete entry"
         >
           <IoTrashOutline className="w-4 h-4" />
@@ -100,7 +100,7 @@ export default function HistoryCard({ result, onDelete, onView, active }: Histor
                 style={{
                   width: `${(r.final / result.totalFinal) * 100}%`,
                   backgroundColor: getPersonColor(i).base,
-                  borderRight: '1.5px solid #fff',
+                  borderRight: '1.5px solid rgb(var(--color-white) / 1)',
                 }}
               />
             ))}

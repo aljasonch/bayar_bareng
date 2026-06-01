@@ -44,7 +44,7 @@ export default function SplitDistributionBar({ results, total }: SplitDistributi
               width: `${s.pct}%`,
               backgroundColor: s.color.base,
               animationDelay: `${i * 60}ms`,
-              borderRight: i < segments.length - 1 ? '2px solid #fff' : undefined,
+              borderRight: i < segments.length - 1 ? '2px solid rgb(var(--color-white) / 1)' : undefined,
             }}
             title={`${s.name}: ${formatRp(s.value)} (${s.pct.toFixed(0)}%)`}
           />

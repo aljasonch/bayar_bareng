@@ -62,7 +62,7 @@ export default function LivePreview({ people, feeConfig, billMode, kopiKenanganO
               style={{
                 width: `${(s.value / result.totalFinal) * 100}%`,
                 backgroundColor: s.color.base,
-                borderRight: '1.5px solid #fff',
+                borderRight: '1.5px solid rgb(var(--color-white) / 1)',
               }}
             />
           ))}

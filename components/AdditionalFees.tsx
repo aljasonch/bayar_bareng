@@ -112,7 +112,7 @@ export default function AdditionalFees({ fees, onUpdate }: AdditionalFeesProps) 
               </div>
               <button
                 onClick={() => removeFee(fee.id)}
-                className="text-faint hover:text-rose-600 transition-colors p-1 rounded hover:bg-rose-50 flex-shrink-0"
+                className="text-faint hover:text-danger transition-colors p-1 rounded hover:bg-dangerSoft flex-shrink-0"
                 aria-label="Remove fee"
               >
                 <IoCloseOutline className="w-4 h-4" />

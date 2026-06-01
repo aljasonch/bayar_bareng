@@ -75,7 +75,7 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
               className={`flex-1 px-3 py-2 rounded-md text-xs font-semibold transition-all ${
                 feeConfig.cashbackBase === 'totalItem'
                   ? 'bg-white text-accent shadow-card'
-                  : 'text-[#8B83B8] hover:text-ink'
+                  : 'text-muted hover:text-ink'
               }`}
             >
               Total item
@@ -85,7 +85,7 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
               className={`flex-1 px-3 py-2 rounded-md text-xs font-semibold transition-all ${
                 feeConfig.cashbackBase === 'totalPayment'
                   ? 'bg-white text-accent shadow-card'
-                  : 'text-[#8B83B8] hover:text-ink'
+                  : 'text-muted hover:text-ink'
               }`}
             >
               Total payment

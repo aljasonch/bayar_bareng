@@ -2,6 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-white: 255 255 255;
+  --color-ink: 34 32 25;
+  --color-ink2: 58 55 47;
+  --color-ink3: 87 83 74;
+  --color-muted: 132 127 115;
+  --color-faint: 168 162 148;
+  --color-faint2: 202 196 182;
+  --color-line: 232 228 219;
+  --color-line2: 226 221 210;
+  --color-surface: 240 238 231;
+  --color-surface2: 246 244 238;
+  --color-paper: 245 243 236;
+  --color-accent: 78 106 90;
+  --color-accent-dark: 62 86 72;
+  --color-accent-soft: 229 235 230;
+  --color-sidebar: 35 42 37;
+  --color-sidebar-hi: 47 56 47;
+  --color-danger: 166 65 65;
+  --color-danger-soft: 250 237 234;
+  --color-whatsapp: 21 128 61;
+  --color-whatsapp-dark: 22 101 52;
+  --color-scrollbar: 214 208 195;
+  --color-scrollbar-hover: 194 187 171;
+  --color-focus-ring: 78 106 90;
+  --shadow-card: 0 1px 2px 0 rgb(var(--color-ink) / 0.05);
+  --shadow-pop: 0 12px 30px -16px rgb(var(--color-ink) / 0.28);
+
+  --color-person-pine: 78 106 90;
+  --color-person-pine-soft: 229 235 230;
+  --color-person-clay: 168 103 74;
+  --color-person-clay-soft: 241 227 219;
+  --color-person-ochre: 176 138 63;
+  --color-person-ochre-soft: 240 232 212;
+  --color-person-slate: 94 107 121;
+  --color-person-slate-soft: 228 231 235;
+  --color-person-teal: 63 124 119;
+  --color-person-teal-soft: 221 234 233;
+  --color-person-sand: 154 140 107;
+  --color-person-sand-soft: 237 233 222;
+  --color-person-rust: 156 85 71;
+  --color-person-rust-soft: 239 224 220;
+  --color-person-moss: 110 122 75;
+  --color-person-moss-soft: 232 234 221;
+  --color-person-denim: 86 106 134;
+  --color-person-denim-soft: 226 230 236;
+  --color-person-stone: 108 103 93;
+  --color-person-stone-soft: 234 231 224;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -14,7 +64,7 @@ html {
 
 body {
   @apply text-ink font-sans;
-  background-color: #f5f3ec;
+  background-color: rgb(var(--color-paper) / 1);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -30,12 +80,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d6d0c3;
+  background: rgb(var(--color-scrollbar) / 1);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #c2bbab;
+  background: rgb(var(--color-scrollbar-hover) / 1);
 }
 
 /* Number input hide spinner */
@@ -82,11 +132,11 @@ input[type='number'] {
 @layer components {
   .card {
     @apply bg-white border border-line rounded-2xl;
-    box-shadow: 0 1px 2px 0 rgba(34, 32, 25, 0.05);
+    box-shadow: var(--shadow-card);
   }
 
   .divider-dashed {
-    border-top: 1px dashed theme('colors.line2');
+    border-top: 1px dashed rgb(var(--color-line2) / 1);
   }
 
   /* Inputs */
@@ -96,7 +146,7 @@ input[type='number'] {
   }
   .field:focus {
     @apply border-accent;
-    box-shadow: 0 0 0 3px rgba(78, 106, 90, 0.15);
+    box-shadow: 0 0 0 3px rgb(var(--color-focus-ring) / 0.15);
   }
 
   .field-mono {

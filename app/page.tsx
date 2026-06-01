@@ -149,7 +149,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-sm font-extrabold text-ink leading-tight">Bayar Bareng</h1>
-              <p className="text-[10px] text-[#8B83B8] leading-tight font-mono">
+              <p className="text-[10px] text-muted leading-tight font-mono">
                 Step {step} of 3 · Rp{runningTotal.toLocaleString('id-ID')}
               </p>
             </div>
@@ -176,7 +176,11 @@ export default function Home() {
 
       {/* Work area */}
       <div className="flex-1 min-w-0">
-        <main className="w-full max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-8 pb-28 lg:pb-12">
+        <main
+          className={`w-full max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-10 pt-6 sm:pt-8 ${
+            step !== 3 ? 'pb-28 lg:pb-32' : 'pb-28 lg:pb-12'
+          }`}
+        >
           <div className={step === 3 ? 'block' : 'grid grid-cols-1 2xl:grid-cols-[minmax(0,1fr)_22rem] gap-6'}>
             {/* Main column */}
             <div>
@@ -186,7 +190,7 @@ export default function Home() {
                   <div className="flex items-center justify-between gap-3 mb-5">
                     <div>
                       <h2 className="text-2xl font-extrabold text-ink tracking-tight">Order builder</h2>
-                      <p className="text-sm text-[#8B83B8] mt-0.5">
+                      <p className="text-sm text-muted mt-0.5">
                         {billMode === 'kopiKenangan' ? 'Kopi Kenangan catalog split' : 'Manual split bill'}
                       </p>
                     </div>
@@ -309,7 +313,7 @@ export default function Home() {
                 <div className="animate-fade-in">
                   <div className="mb-5">
                     <h2 className="text-2xl font-extrabold text-ink tracking-tight">Fees &amp; discounts</h2>
-                    <p className="text-sm text-[#8B83B8] mt-0.5">Discount, delivery, and cashback</p>
+                    <p className="text-sm text-muted mt-0.5">Discount, delivery, and cashback</p>
                   </div>
 
                   <FeeSettings feeConfig={feeConfig} onUpdate={setFeeConfig} />
@@ -328,10 +332,10 @@ export default function Home() {
                 <div className="animate-fade-in">
                   <div className="mb-5">
                     <h2 className="text-2xl font-extrabold text-ink tracking-tight">Results</h2>
-                    <p className="text-sm text-[#8B83B8] mt-0.5">Here&apos;s how much each person pays</p>
-                    <p className="text-xs text-[#8B83B8] mt-1">Split date: {formatBillDate(result)}</p>
+                    <p className="text-sm text-muted mt-0.5">Here&apos;s how much each person pays</p>
+                    <p className="text-xs text-muted mt-1">Split date: {formatBillDate(result)}</p>
                     {result.billMode === 'kopiKenangan' && (
-                      <p className="text-xs text-[#8B83B8] mt-1">
+                      <p className="text-xs text-muted mt-1">
                         Store: <span className="text-ink font-semibold">Kopi Kenangan</span>
                         {result.kopiKenanganOutlet && (
                           <span> - {formatOutletName(result.kopiKenanganOutlet)}</span>
@@ -339,10 +343,10 @@ export default function Home() {
                       </p>
                     )}
                     {result.payerName && (
-                      <p className="text-xs text-[#8B83B8] mt-1">
+                      <p className="text-xs text-muted mt-1">
                         Ditalangi oleh <span className="text-ink font-semibold">{result.payerName}</span>
                         {result.payerAccountNumber && (
-                          <span className="block mt-0.5 text-[#8B83B8]">No. Rek: {result.payerAccountNumber}</span>
+                          <span className="block mt-0.5 text-muted">No. Rek: {result.payerAccountNumber}</span>
                         )}
                       </p>
                     )}
@@ -381,7 +385,7 @@ export default function Home() {
                       href={getWhatsAppUrl(result)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-sm transition-all"
+                      className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-whatsapp hover:bg-whatsappDark text-white font-semibold text-sm transition-all"
                     >
                       <IoLogoWhatsapp className="w-5 h-5" />
                       Share via WhatsApp
@@ -419,80 +423,54 @@ export default function Home() {
                     billMode={billMode}
                     kopiKenanganOutlet={billMode === 'kopiKenangan' ? kopiKenanganOutlet : undefined}
                   />
-
-                  {step === 1 && (
-                    <button
-                      onClick={() => setStep(2)}
-                      disabled={!canProceedStep1}
-                      className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-bold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-accentDark transition-all"
-                    >
-                      Next: Fees &amp; discounts
-                      <IoArrowForward className="w-4 h-4" />
-                    </button>
-                  )}
-                  {step === 2 && (
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() => setStep(1)}
-                        className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-ink3 font-semibold text-sm border border-line2 hover:bg-accentSoft transition-all"
-                      >
-                        <IoArrowBack className="w-4 h-4" />
-                        Back
-                      </button>
-                      <button
-                        onClick={handleCalculate}
-                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-bold text-sm hover:bg-accentDark transition-all"
-                      >
-                        Calculate
-                      </button>
-                    </div>
-                  )}
                 </div>
               </div>
             )}
           </div>
 
-          {/* Desktop step nav for < 2xl (no inner sidebar visible) */}
-          {step !== 3 && (
-            <div className="hidden lg:flex 2xl:hidden gap-3 mt-6">
-              {step === 1 && (
-                <button
-                  onClick={() => setStep(2)}
-                  disabled={!canProceedStep1}
-                  className="ml-auto flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-accent text-white font-bold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-accentDark transition-all"
-                >
-                  Next: Fees &amp; discounts
-                  <IoArrowForward className="w-4 h-4" />
-                </button>
-              )}
-              {step === 2 && (
-                <>
-                  <button
-                    onClick={() => setStep(1)}
-                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-ink3 font-semibold text-sm border border-line2 hover:bg-accentSoft transition-all"
-                  >
-                    <IoArrowBack className="w-4 h-4" />
-                    Back
-                  </button>
-                  <button
-                    onClick={handleCalculate}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-bold text-sm hover:bg-accentDark transition-all"
-                  >
-                    Calculate
-                  </button>
-                </>
-              )}
-            </div>
-          )}
-
           <footer className="mt-10 pt-6 border-t border-line text-center">
             <p className="text-muted text-sm">
               &copy; {new Date().getFullYear()} Bayar Bareng. All rights reserved.
             </p>
-            <p className="text-[#8B83B8] text-xs mt-1 font-medium">@aljasonch</p>
+            <p className="text-faint text-xs mt-1 font-medium">@aljasonch</p>
           </footer>
         </main>
       </div>
+
+      {/* Desktop sticky CTA */}
+      {step !== 3 && (
+        <div className="hidden lg:flex fixed bottom-0 left-72 right-0 z-40 border-t border-line bg-paper/95 backdrop-blur-md">
+          <div className="w-full max-w-[1500px] mx-auto px-10 py-4 flex gap-3">
+            {step === 1 && (
+              <button
+                onClick={() => setStep(2)}
+                disabled={!canProceedStep1}
+                className="ml-auto flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-accent text-white font-bold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-accentDark transition-all"
+              >
+                Next: Fees &amp; discounts
+                <IoArrowForward className="w-4 h-4" />
+              </button>
+            )}
+            {step === 2 && (
+              <>
+                <button
+                  onClick={() => setStep(1)}
+                  className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-ink3 font-semibold text-sm border border-line2 hover:bg-accentSoft transition-all"
+                >
+                  <IoArrowBack className="w-4 h-4" />
+                  Back
+                </button>
+                <button
+                  onClick={handleCalculate}
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-bold text-sm hover:bg-accentDark transition-all"
+                >
+                  Calculate
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Mobile sticky CTA */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-paper/95 backdrop-blur-md lg:hidden border-t border-line z-40">
@@ -528,7 +506,7 @@ export default function Home() {
               href={getWhatsAppUrl(result)}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm transition-all"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-whatsapp hover:bg-whatsappDark text-white font-bold text-sm transition-all"
             >
               <IoLogoWhatsapp className="w-4 h-4" />
               WhatsApp

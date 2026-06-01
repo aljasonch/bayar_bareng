@@ -225,7 +225,7 @@ function KopiKenanganPersonCard({
           <button
             type="button"
             onClick={onRemove}
-            className="self-start sm:self-auto inline-flex items-center gap-1.5 text-faint hover:text-rose-600 transition-colors px-2 py-1.5 rounded-lg hover:bg-rose-50 text-sm"
+            className="self-start sm:self-auto inline-flex items-center gap-1.5 text-faint hover:text-danger transition-colors px-2 py-1.5 rounded-lg hover:bg-dangerSoft text-sm"
           >
             <IoTrashOutline className="w-4 h-4" />
             Remove
@@ -559,7 +559,7 @@ function KopiKenanganPersonCard({
                     <button
                       type="button"
                       onClick={() => removeItem(item.id)}
-                      className="text-faint hover:text-rose-600 transition-colors p-1.5 rounded-lg hover:bg-rose-50"
+                      className="text-faint hover:text-danger transition-colors p-1.5 rounded-lg hover:bg-dangerSoft"
                       aria-label="Remove item"
                     >
                       <IoTrashOutline className="w-4 h-4" />

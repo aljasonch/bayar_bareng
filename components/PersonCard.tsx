@@ -62,7 +62,7 @@ export default function PersonCard({ person, index, onUpdate, onRemove, canRemov
         {canRemove && (
           <button
             onClick={onRemove}
-            className="text-faint hover:text-rose-600 transition-colors p-1.5 rounded-lg hover:bg-rose-50 flex-shrink-0"
+            className="text-faint hover:text-danger transition-colors p-1.5 rounded-lg hover:bg-dangerSoft flex-shrink-0"
             aria-label="Remove person"
           >
             <IoTrashOutline className="w-4 h-4" />
@@ -98,7 +98,7 @@ export default function PersonCard({ person, index, onUpdate, onRemove, canRemov
               </div>
               <button
                 onClick={() => removeItem(item.id)}
-                className="text-faint2 hover:text-rose-600 transition-colors p-1 rounded-md hover:bg-rose-50 flex-shrink-0"
+                className="text-faint2 hover:text-danger transition-colors p-1 rounded-md hover:bg-dangerSoft flex-shrink-0"
                 aria-label="Remove item"
               >
                 <IoCloseOutline className="w-5 h-5" />
