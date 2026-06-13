@@ -4,52 +4,52 @@
 
 :root {
   --color-white: 255 255 255;
-  --color-ink: 34 32 25;
-  --color-ink2: 58 55 47;
-  --color-ink3: 87 83 74;
-  --color-muted: 132 127 115;
-  --color-faint: 168 162 148;
-  --color-faint2: 202 196 182;
-  --color-line: 232 228 219;
-  --color-line2: 226 221 210;
-  --color-surface: 240 238 231;
-  --color-surface2: 246 244 238;
-  --color-paper: 245 243 236;
-  --color-accent: 78 106 90;
-  --color-accent-dark: 62 86 72;
-  --color-accent-soft: 229 235 230;
-  --color-sidebar: 35 42 37;
-  --color-sidebar-hi: 47 56 47;
-  --color-danger: 166 65 65;
-  --color-danger-soft: 250 237 234;
+  --color-ink: 30 31 29;
+  --color-ink2: 55 56 52;
+  --color-ink3: 86 86 79;
+  --color-muted: 124 123 113;
+  --color-faint: 162 158 146;
+  --color-faint2: 205 199 184;
+  --color-line: 226 220 207;
+  --color-line2: 216 209 194;
+  --color-surface: 239 236 228;
+  --color-surface2: 247 245 239;
+  --color-paper: 244 241 234;
+  --color-accent: 67 81 72;
+  --color-accent-dark: 47 59 52;
+  --color-accent-soft: 229 233 227;
+  --color-sidebar: 30 32 30;
+  --color-sidebar-hi: 45 47 43;
+  --color-danger: 155 62 57;
+  --color-danger-soft: 249 237 234;
   --color-whatsapp: 21 128 61;
   --color-whatsapp-dark: 22 101 52;
   --color-scrollbar: 214 208 195;
   --color-scrollbar-hover: 194 187 171;
   --color-focus-ring: 78 106 90;
-  --shadow-card: 0 1px 2px 0 rgb(var(--color-ink) / 0.05);
-  --shadow-pop: 0 12px 30px -16px rgb(var(--color-ink) / 0.28);
+  --shadow-card: 0 1px 1px rgb(var(--color-ink) / 0.03), 0 18px 50px -34px rgb(var(--color-ink) / 0.28);
+  --shadow-pop: 0 18px 42px -24px rgb(var(--color-ink) / 0.32);
 
-  --color-person-pine: 78 106 90;
-  --color-person-pine-soft: 229 235 230;
-  --color-person-clay: 168 103 74;
-  --color-person-clay-soft: 241 227 219;
-  --color-person-ochre: 176 138 63;
-  --color-person-ochre-soft: 240 232 212;
-  --color-person-slate: 94 107 121;
-  --color-person-slate-soft: 228 231 235;
-  --color-person-teal: 63 124 119;
-  --color-person-teal-soft: 221 234 233;
-  --color-person-sand: 154 140 107;
-  --color-person-sand-soft: 237 233 222;
-  --color-person-rust: 156 85 71;
-  --color-person-rust-soft: 239 224 220;
-  --color-person-moss: 110 122 75;
-  --color-person-moss-soft: 232 234 221;
-  --color-person-denim: 86 106 134;
-  --color-person-denim-soft: 226 230 236;
-  --color-person-stone: 108 103 93;
-  --color-person-stone-soft: 234 231 224;
+  --color-person-pine: 67 81 72;
+  --color-person-pine-soft: 229 233 227;
+  --color-person-clay: 137 93 74;
+  --color-person-clay-soft: 239 229 222;
+  --color-person-ochre: 144 118 71;
+  --color-person-ochre-soft: 238 231 216;
+  --color-person-slate: 84 94 103;
+  --color-person-slate-soft: 227 231 233;
+  --color-person-teal: 66 103 99;
+  --color-person-teal-soft: 223 233 231;
+  --color-person-sand: 132 122 100;
+  --color-person-sand-soft: 236 232 222;
+  --color-person-rust: 132 79 69;
+  --color-person-rust-soft: 238 225 222;
+  --color-person-moss: 97 108 75;
+  --color-person-moss-soft: 230 234 222;
+  --color-person-denim: 80 91 112;
+  --color-person-denim-soft: 226 229 235;
+  --color-person-stone: 94 91 84;
+  --color-person-stone-soft: 231 228 222;
 }
 
 * {
@@ -64,7 +64,9 @@ html {
 
 body {
   @apply text-ink font-sans;
-  background-color: rgb(var(--color-paper) / 1);
+  background:
+    radial-gradient(circle at top left, rgb(var(--color-white) / 0.72), transparent 34rem),
+    linear-gradient(180deg, rgb(var(--color-paper) / 1), rgb(var(--color-surface) / 1));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -131,8 +133,25 @@ input[type='number'] {
 
 @layer components {
   .card {
-    @apply bg-white border border-line rounded-2xl;
+    @apply rounded-[1.35rem] border border-line bg-white/90;
     box-shadow: var(--shadow-card);
+  }
+
+  .sheet {
+    @apply rounded-[1.75rem] border border-line bg-surface2/85;
+    box-shadow: var(--shadow-card);
+  }
+
+  .button-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-ink px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accentDark;
+  }
+
+  .button-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-line2 bg-white px-4 py-2.5 text-sm font-semibold text-ink3 transition-colors hover:border-ink/25 hover:text-ink;
+  }
+
+  .icon-button {
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface hover:text-ink;
   }
 
   .divider-dashed {
@@ -141,8 +160,8 @@ input[type='number'] {
 
   /* Inputs */
   .field {
-    @apply w-full bg-white rounded-lg px-3 py-2.5 text-sm text-ink placeholder:text-faint
-      border border-line2 outline-none transition-colors;
+    @apply w-full rounded-xl border border-line2 bg-white px-3 py-2.5 text-sm text-ink placeholder:text-faint
+      outline-none transition-colors;
   }
   .field:focus {
     @apply border-accent;
@@ -154,6 +173,6 @@ input[type='number'] {
   }
 
   .label {
-    @apply text-[11px] font-semibold uppercase tracking-wider text-muted;
+    @apply text-[11px] font-semibold uppercase tracking-[0.16em] text-muted;
   }
 }

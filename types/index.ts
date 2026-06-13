@@ -36,7 +36,12 @@ export type Item = {
   isCustom?: boolean
 }
 
-export type Person = { id: string; name: string; items: Item[] }
+export type PersonProfile = {
+  id: string
+  name: string
+}
+
+export type Person = { id: string; profileId?: string; name: string; items: Item[] }
 
 export type AdditionalFee = { id: string; name: string; amount: number }
 

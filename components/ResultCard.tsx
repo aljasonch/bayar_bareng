@@ -18,36 +18,34 @@ export default function ResultCard({ result, index, grandTotal }: ResultCardProp
   const initial = (result.person.name || `P${index + 1}`).trim().charAt(0).toUpperCase()
 
   return (
-    <div
+    <article
       className="animate-slide-up card overflow-hidden"
       style={{ animationDelay: `${index * 70}ms` }}
     >
-      {/* Header */}
-      <div className="flex items-center gap-3 px-4 sm:px-5 py-3.5 border-b border-line">
+      <div className="flex items-center gap-3 border-b border-line px-4 py-4 sm:px-5">
         <div
-          className="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-base text-white flex-shrink-0"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-base font-semibold text-white"
           style={{ backgroundColor: color.base }}
         >
           {initial}
         </div>
         <div className="min-w-0">
-          <h3 className="text-base font-bold text-ink truncate">
+          <h3 className="truncate text-base font-semibold text-ink">
             {result.person.name || `Person ${index + 1}`}
           </h3>
           {sharePct !== null && (
-            <p className="text-xs text-faint">{sharePct.toFixed(0)}% of total</p>
+            <p className="text-xs text-muted">{sharePct.toFixed(0)}% of total</p>
           )}
         </div>
       </div>
 
       <div className="px-4 sm:px-5 py-4">
-        {/* Items */}
         <div className="space-y-1.5 mb-3 pb-3 divider-dashed">
           {result.person.items.map((item) => (
             <div key={item.id} className="text-sm">
               <div className="flex justify-between gap-2">
-                <span className="text-ink3 truncate">{getItemLabel(item) || 'Unnamed'}</span>
-                <span className="font-mono text-ink2 flex-shrink-0">{formatRp(item.price)}</span>
+                <span className="truncate text-ink3">{getItemLabel(item) || 'Unnamed'}</span>
+                <span className="shrink-0 font-mono text-ink2">{formatRp(item.price)}</span>
               </div>
               {getItemDetailLines(item).length > 0 && (
                 <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
@@ -62,7 +60,6 @@ export default function ResultCard({ result, index, grandTotal }: ResultCardProp
           ))}
         </div>
 
-        {/* Breakdown */}
         <div className="space-y-1.5 text-sm mb-3">
           <div className="flex justify-between">
             <span className="text-muted">Subtotal</span>
@@ -94,11 +91,10 @@ export default function ResultCard({ result, index, grandTotal }: ResultCardProp
           )}
         </div>
 
-        {/* Final */}
         <div className="pt-3 border-t border-line2">
           <div className="flex justify-between items-center">
-            <span className="text-sm font-semibold text-ink3">Total to pay</span>
-            <span className="text-lg font-bold font-mono" style={{ color: color.base }}>
+            <span className="text-sm font-semibold text-ink3">Amount due</span>
+            <span className="font-mono text-lg font-semibold" style={{ color: color.base }}>
               {formatRp(result.final)}
             </span>
           </div>
@@ -112,6 +108,6 @@ export default function ResultCard({ result, index, grandTotal }: ResultCardProp
           )}
         </div>
       </div>
-    </div>
+    </article>
   )
 }

@@ -29,10 +29,15 @@ export default function SplitDistributionBar({ results, total }: SplitDistributi
   if (segments.length === 0) return null
 
   return (
-    <div className="card p-4 sm:p-5">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-bold text-ink">Split distribution</h3>
-        <span className="text-xs text-faint">{segments.length} paying</span>
+    <section className="card p-4 sm:p-5">
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <p className="label">Distribution</p>
+          <h3 className="mt-1 text-base font-semibold text-ink">Share of total</h3>
+        </div>
+        <span className="rounded-full border border-line2 bg-white px-3 py-1 text-xs text-muted">
+          {segments.length} paying
+        </span>
       </div>
 
       <div className="flex h-3 w-full overflow-hidden rounded-full bg-surface">
@@ -51,18 +56,18 @@ export default function SplitDistributionBar({ results, total }: SplitDistributi
         ))}
       </div>
 
-      <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2.5">
+      <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {segments.map((s) => (
-          <div key={s.id} className="flex items-center gap-2 min-w-0">
+          <div key={s.id} className="flex min-w-0 items-center gap-2 rounded-xl border border-line bg-white/70 px-3 py-2">
             <span
-              className="h-2.5 w-2.5 rounded-sm flex-shrink-0"
+              className="h-2.5 w-2.5 flex-shrink-0 rounded-full"
               style={{ backgroundColor: s.color.base }}
             />
-            <span className="text-xs text-ink3 truncate flex-1">{s.name}</span>
-            <span className="text-xs font-mono text-faint flex-shrink-0">{s.pct.toFixed(0)}%</span>
+            <span className="flex-1 truncate text-xs text-ink3">{s.name}</span>
+            <span className="flex-shrink-0 font-mono text-xs text-muted">{s.pct.toFixed(0)}%</span>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   )
 }

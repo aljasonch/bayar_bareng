@@ -26,21 +26,21 @@ export default function HistoryCard({ result, onDelete, onView, active }: Histor
   })
 
   return (
-    <div
-      className={`card p-4 sm:p-5 transition-all cursor-pointer animate-fade-in group ${
-        active ? 'border-ink ring-1 ring-ink' : 'hover:border-line2'
+    <article
+      className={`card group cursor-pointer p-4 transition-all animate-fade-in sm:p-5 ${
+        active ? 'border-ink ring-1 ring-ink/70' : 'hover:border-ink/20'
       }`}
       onClick={() => onView(result)}
     >
-      <div className="flex items-start justify-between mb-3">
+      <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs text-muted font-mono">Split: {formattedSplitDate}</p>
-          <p className="text-[11px] text-faint font-mono mt-0.5">Saved {formattedSavedTime}</p>
-          <p className="text-sm text-ink2 mt-1">
+          <p className="label">{formattedSplitDate}</p>
+          <p className="mt-1 text-[11px] text-muted">Saved {formattedSavedTime}</p>
+          <p className="mt-2 text-sm font-medium text-ink2">
             {result.people.length} {result.people.length === 1 ? 'person' : 'people'}
           </p>
           {result.billMode === 'kopiKenangan' && (
-            <p className="text-xs text-accent mt-1 font-medium">
+            <p className="mt-1 text-xs font-medium text-muted">
               Kopi Kenangan - {formatOutletName(result.kopiKenanganOutlet)}
             </p>
           )}
@@ -56,19 +56,19 @@ export default function HistoryCard({ result, onDelete, onView, active }: Histor
             event.stopPropagation()
             onDelete(result.id)
           }}
-          className="text-faint2 hover:text-danger transition-colors p-1.5 rounded-lg hover:bg-dangerSoft opacity-0 group-hover:opacity-100"
+          className="icon-button opacity-100 hover:text-danger sm:opacity-0 sm:group-hover:opacity-100"
           aria-label="Delete entry"
         >
           <IoTrashOutline className="w-4 h-4" />
         </button>
       </div>
 
-      <div className="flex items-end justify-between">
+      <div className="flex items-end justify-between gap-3">
         <div className="flex -space-x-2">
           {result.people.slice(0, 4).map((person, index) => (
             <div
               key={person.id}
-              className="w-7 h-7 rounded-md flex items-center justify-center text-[10px] font-bold text-white border-2 border-white"
+              className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-[10px] font-semibold text-white"
               style={{ backgroundColor: getPersonColor(index).base }}
               title={person.name}
             >
@@ -76,15 +76,15 @@ export default function HistoryCard({ result, onDelete, onView, active }: Histor
             </div>
           ))}
           {result.people.length > 4 && (
-            <div className="w-7 h-7 rounded-md bg-surface flex items-center justify-center text-[10px] font-bold text-ink3 border-2 border-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-surface text-[10px] font-semibold text-ink3">
               +{result.people.length - 4}
             </div>
           )}
         </div>
         <div className="text-right">
-          <p className="font-mono text-lg font-bold text-ink">{formatRp(result.totalFinal)}</p>
+          <p className="font-mono text-lg font-semibold text-ink">{formatRp(result.totalFinal)}</p>
           {result.totalSaved > 0 && (
-            <p className="font-mono text-xs text-accent">Saved {formatRp(result.totalSaved)}</p>
+            <p className="font-mono text-xs text-muted">Saved {formatRp(result.totalSaved)}</p>
           )}
         </div>
       </div>
@@ -106,6 +106,6 @@ export default function HistoryCard({ result, onDelete, onView, active }: Histor
             ))}
         </div>
       )}
-    </div>
+    </article>
   )
 }

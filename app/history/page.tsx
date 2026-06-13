@@ -1,16 +1,76 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { BillResult } from '@/types'
 import { formatBillDate } from '@/lib/date'
-import { getHistory, deleteFromHistory } from '@/lib/history'
+import { deleteFromHistory, getHistory } from '@/lib/history'
 import { getWhatsAppUrl } from '@/lib/whatsapp'
 import { formatOutletName } from '@/lib/kopi-kenangan'
+import { formatRp } from '@/lib/item-display'
 import HistoryCard from '@/components/HistoryCard'
 import ResultCard from '@/components/ResultCard'
 import SplitDistributionBar from '@/components/SplitDistributionBar'
-import { IoLogoWhatsapp, IoArrowBack, IoAddOutline, IoClose } from 'react-icons/io5'
+import { IoAddOutline, IoArrowBack, IoClose, IoLogoWhatsapp } from 'react-icons/io5'
+
+function HistoryDetail({ result }: { result: BillResult }) {
+  return (
+    <div className="space-y-4 animate-fade-in">
+      <section className="rounded-[1.75rem] bg-ink p-5 text-white shadow-pop">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/50">Saved bill</p>
+            <p className="mt-2 font-mono text-3xl font-semibold tracking-tight">{formatRp(result.totalFinal)}</p>
+          </div>
+          <span className="rounded-full border border-white/10 px-3 py-1 font-mono text-xs text-white/60">
+            {formatBillDate(result, { day: 'numeric', month: 'short', year: 'numeric' })}
+          </span>
+        </div>
+
+        <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+            <p className="text-white/50">People</p>
+            <p className="mt-1 font-mono text-lg font-semibold">{result.people.length}</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+            <p className="text-white/50">Saved</p>
+            <p className="mt-1 font-mono text-lg font-semibold">{formatRp(result.totalSaved)}</p>
+          </div>
+        </div>
+
+        {result.payerName && (
+          <p className="mt-4 text-xs text-white/65">
+            Fronted by <span className="font-semibold text-white">{result.payerName}</span>
+            {result.payerAccountNumber ? `, ${result.payerAccountNumber}` : ''}
+          </p>
+        )}
+        {result.billMode === 'kopiKenangan' && (
+          <p className="mt-2 text-xs text-white/65">
+            Kopi Kenangan, {formatOutletName(result.kopiKenanganOutlet)} outlet
+          </p>
+        )}
+      </section>
+
+      <SplitDistributionBar results={result.results} total={result.totalFinal} />
+
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        {result.results.map((item, index) => (
+          <ResultCard key={item.person.id} result={item} index={index} grandTotal={result.totalFinal} />
+        ))}
+      </div>
+
+      <a
+        href={getWhatsAppUrl(result)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="button-primary w-full bg-whatsapp hover:bg-whatsappDark"
+      >
+        <IoLogoWhatsapp className="h-5 w-5" />
+        Share via WhatsApp
+      </a>
+    </div>
+  )
+}
 
 export default function HistoryPage() {
   const [history, setHistory] = useState<BillResult[]>([])
@@ -28,240 +88,112 @@ export default function HistoryPage() {
 
   const handleDelete = (id: string) => {
     deleteFromHistory(id)
-    setHistory(getHistory())
-    if (selectedResult?.id === id) setSelectedResult(null)
+    const entries = getHistory()
+    setHistory(entries)
+    if (selectedResult?.id === id) setSelectedResult(entries[0] ?? null)
   }
 
   if (!mounted) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-muted animate-pulse">Loading...</div>
+      <div className="flex min-h-screen items-center justify-center px-4">
+        <div className="card px-5 py-4 text-sm text-muted">Loading saved bills...</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen lg:flex">
-      {/* Desktop rail */}
-      <aside className="hidden lg:flex flex-col w-72 shrink-0 bg-sidebar text-white sticky top-0 h-screen px-5 py-6">
-        <div className="flex items-center gap-3 px-1">
-          <div className="h-10 w-10 rounded-xl bg-white text-sidebar flex items-center justify-center font-mono font-black text-lg">
-            B
-          </div>
-          <div>
-            <h1 className="text-base font-extrabold leading-tight">Bayar Bareng</h1>
-            <p className="text-[11px] text-white/50 leading-tight">Split bill workspace</p>
-          </div>
-        </div>
-
-        <div className="mt-9">
-          <p className="px-1 mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">
-            History
-          </p>
-          <div className="rounded-2xl bg-sidebarHi/70 border border-white/10 p-4">
-            <p className="font-mono text-3xl font-extrabold">{history.length}</p>
-            <p className="text-xs text-white/50 mt-0.5">saved {history.length === 1 ? 'bill' : 'bills'}</p>
-          </div>
-        </div>
-
-        <Link
-          href="/"
-          className="mt-auto flex items-center justify-center gap-2 rounded-xl px-4 py-3 bg-white text-sidebar text-sm font-bold transition-all hover:bg-white/90"
-        >
-          <IoAddOutline className="w-4 h-4" />
-          New bill
-        </Link>
-      </aside>
-
-      {/* Mobile top bar */}
-      <header className="lg:hidden border-b border-line bg-paper/90 backdrop-blur-md sticky top-0 z-50">
-        <div className="px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <Link
-              href="/"
-              className="h-8 w-8 rounded-lg border border-line2 bg-white flex items-center justify-center text-accent"
-            >
-              <IoArrowBack className="w-4 h-4" />
+    <div className="min-h-screen px-4 py-5 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-[1440px]">
+        <header className="flex flex-col gap-4 border-b border-line pb-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <Link href="/" className="flex h-11 w-11 items-center justify-center rounded-2xl border border-line2 bg-white text-ink transition-colors hover:border-ink/25">
+              <IoArrowBack className="h-5 w-5" />
             </Link>
             <div>
-              <h1 className="text-sm font-extrabold text-ink leading-tight">History</h1>
-              <p className="text-[10px] text-muted leading-tight">
-                {history.length} saved {history.length === 1 ? 'bill' : 'bills'}
-              </p>
+              <h1 className="text-xl font-semibold tracking-tight text-ink">History</h1>
+              <p className="text-sm text-muted">Review saved settlements and share them again.</p>
             </div>
           </div>
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 text-sm font-medium text-white px-3 py-2 rounded-lg bg-accent"
-          >
-            <IoAddOutline className="w-4 h-4" />
+          <Link href="/" className="button-primary">
+            <IoAddOutline className="h-4 w-4" />
+            New bill
           </Link>
-        </div>
-      </header>
+        </header>
 
-      {/* Work area */}
-      <div className="flex-1 min-w-0">
-        <main className="w-full max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-8">
-          <div className="hidden lg:block mb-6">
-            <h2 className="text-2xl font-extrabold text-ink tracking-tight">Saved bills</h2>
-            <p className="text-sm text-muted mt-0.5">Tap a bill to see the full breakdown</p>
+        <section className="mt-6 sheet p-4 sm:p-5 lg:p-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_18rem] md:items-end">
+            <div>
+              <p className="label">Saved workspace</p>
+              <h2 className="mt-2 text-3xl font-semibold tracking-[-0.035em] text-ink sm:text-4xl">
+                Bills you have already settled.
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted sm:text-base">
+                History is stored in this browser, matching the profile roster and current local-only workflow.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-line bg-white/75 px-4 py-3">
+              <p className="label">Total saved</p>
+              <p className="mt-1 font-mono text-3xl font-semibold text-ink">{history.length}</p>
+              <p className="mt-1 text-xs text-muted">{history.length === 1 ? 'bill' : 'bills'} in history</p>
+            </div>
           </div>
+        </section>
 
+        <main className="py-5">
           {history.length === 0 ? (
-            <div className="text-center py-16 sm:py-24 animate-fade-in">
-              <h2 className="text-lg sm:text-xl font-bold text-ink mb-2">No history yet</h2>
-              <p className="text-sm text-muted mb-6">Your saved split bills will appear here</p>
-              <Link
-                href="/"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-semibold text-sm hover:bg-accentDark transition-all"
-              >
-                Start splitting
+            <div className="card p-10 text-center animate-fade-in">
+              <h2 className="text-lg font-semibold text-ink">No saved bills yet</h2>
+              <p className="mx-auto mt-2 max-w-md text-sm text-muted">
+                Save a result after calculating a split, then it will appear here.
+              </p>
+              <Link href="/" className="button-primary mt-6">
+                Start a bill
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 xl:grid-cols-[minmax(22rem,0.8fr)_minmax(0,1.2fr)] gap-5">
-              {/* History list */}
+            <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(22rem,0.75fr)_minmax(0,1.25fr)]">
               <div className="space-y-3">
-                {history.map((h) => (
+                {history.map((item) => (
                   <HistoryCard
-                    key={h.id}
-                    result={h}
+                    key={item.id}
+                    result={item}
                     onDelete={handleDelete}
                     onView={setSelectedResult}
-                    active={selectedResult?.id === h.id}
+                    active={selectedResult?.id === item.id}
                   />
                 ))}
               </div>
 
-              {/* Detail panel (desktop) */}
               <div className="hidden xl:block">
-                {selectedResult ? (
-                  <div className="sticky top-8 space-y-4 animate-fade-in">
-                    <div className="rounded-2xl bg-sidebar text-white p-5">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="text-xs text-white/50 uppercase tracking-wider font-semibold">Total</p>
-                          <p className="text-3xl font-extrabold font-mono mt-1">
-                            Rp{selectedResult.totalFinal.toLocaleString('id-ID')}
-                          </p>
-                        </div>
-                        <span className="text-xs text-white/50 font-mono">
-                          {formatBillDate(selectedResult, { day: 'numeric', month: 'short', year: 'numeric' })}
-                        </span>
-                      </div>
-                      {selectedResult.totalSaved > 0 && (
-                        <p className="text-sm text-white/70 mt-3">
-                          Saved{' '}
-                          <span className="font-mono font-bold text-white">
-                            Rp{selectedResult.totalSaved.toLocaleString('id-ID')}
-                          </span>
-                        </p>
-                      )}
-                      {selectedResult.payerName && (
-                        <p className="text-xs text-white/60 mt-3">
-                          Ditalangi oleh <span className="font-semibold text-white">{selectedResult.payerName}</span>
-                          {selectedResult.payerAccountNumber && (
-                            <span className="block mt-0.5">No. Rek: {selectedResult.payerAccountNumber}</span>
-                          )}
-                        </p>
-                      )}
-                      {selectedResult.billMode === 'kopiKenangan' && (
-                        <p className="text-xs text-white/60 mt-2">
-                          Store: <span className="font-semibold text-white">Kopi Kenangan</span>
-                          {selectedResult.kopiKenanganOutlet && (
-                            <span> - {formatOutletName(selectedResult.kopiKenanganOutlet)}</span>
-                          )}
-                        </p>
-                      )}
-                    </div>
-
-                    <SplitDistributionBar results={selectedResult.results} total={selectedResult.totalFinal} />
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {selectedResult.results.map((r, i) => (
-                        <ResultCard key={r.person.id} result={r} index={i} grandTotal={selectedResult.totalFinal} />
-                      ))}
-                    </div>
-
-                    <a
-                      href={getWhatsAppUrl(selectedResult)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-whatsapp hover:bg-whatsappDark text-white font-semibold text-sm transition-all"
-                    >
-                      <IoLogoWhatsapp className="w-5 h-5" />
-                      Share via WhatsApp
-                    </a>
-                  </div>
-                ) : (
-                  <div className="sticky top-8 card p-10 text-center">
-                    <p className="text-sm text-muted">Select a bill to see the breakdown</p>
-                  </div>
-                )}
+                <div className="sticky top-5">
+                  {selectedResult ? (
+                    <HistoryDetail result={selectedResult} />
+                  ) : (
+                    <div className="card p-10 text-center text-sm text-muted">Select a bill to inspect it.</div>
+                  )}
+                </div>
               </div>
             </div>
           )}
         </main>
       </div>
 
-      {/* Mobile detail modal */}
-      {selectedResult && (
-        <div className="xl:hidden fixed inset-0 z-50 bg-paper/95 backdrop-blur-md overflow-y-auto">
-          <div className="w-full max-w-screen-sm mx-auto px-4 py-6 pb-28">
-            <div className="flex items-center justify-between mb-5">
+      {selectedResult && history.length > 0 && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-paper/95 px-4 py-5 backdrop-blur-md xl:hidden">
+          <div className="mx-auto max-w-screen-md pb-12">
+            <div className="mb-4 flex items-center justify-between gap-4">
               <div>
-                <h3 className="text-lg font-bold text-ink">Full breakdown</h3>
-                <p className="text-xs text-muted font-mono">
+                <p className="label">Full breakdown</p>
+                <h2 className="mt-1 text-lg font-semibold text-ink">
                   {formatBillDate(selectedResult, { day: 'numeric', month: 'long', year: 'numeric' })}
-                </p>
+                </h2>
               </div>
-              <button
-                onClick={() => setSelectedResult(null)}
-                className="text-muted hover:text-ink p-2 rounded-lg hover:bg-accentSoft transition-colors"
-              >
-                <IoClose className="w-5 h-5" />
+              <button type="button" onClick={() => setSelectedResult(null)} className="icon-button bg-white">
+                <IoClose className="h-5 w-5" />
               </button>
             </div>
-
-            <div className="rounded-2xl bg-sidebar text-white p-5 mb-4">
-              <p className="text-xs text-white/50 uppercase tracking-wider font-semibold">Total</p>
-              <p className="text-3xl font-extrabold font-mono mt-1">
-                Rp{selectedResult.totalFinal.toLocaleString('id-ID')}
-              </p>
-              {selectedResult.totalSaved > 0 && (
-                <p className="text-sm text-white/70 mt-2">
-                  Saved{' '}
-                  <span className="font-mono font-bold text-white">
-                    Rp{selectedResult.totalSaved.toLocaleString('id-ID')}
-                  </span>
-                </p>
-              )}
-            </div>
-
-            <div className="mb-4">
-              <SplitDistributionBar results={selectedResult.results} total={selectedResult.totalFinal} />
-            </div>
-
-            <div className="space-y-3">
-              {selectedResult.results.map((r, i) => (
-                <ResultCard key={r.person.id} result={r} index={i} grandTotal={selectedResult.totalFinal} />
-              ))}
-            </div>
-
-            <a
-              href={getWhatsAppUrl(selectedResult)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full mt-4 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-whatsapp hover:bg-whatsappDark text-white font-semibold text-sm transition-all"
-            >
-              <IoLogoWhatsapp className="w-5 h-5" />
-              Share via WhatsApp
-            </a>
-
-            <button
-              onClick={() => setSelectedResult(null)}
-              className="w-full mt-3 px-6 py-3 rounded-xl bg-white text-ink3 font-semibold text-sm border border-line2 hover:bg-accentSoft transition-all"
-            >
+            <HistoryDetail result={selectedResult} />
+            <button type="button" onClick={() => setSelectedResult(null)} className="button-secondary mt-4 w-full">
               Close
             </button>
           </div>

@@ -13,10 +13,10 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 animate-fade-in">
-      {/* Discount */}
+    <div className="grid grid-cols-1 gap-4 animate-fade-in xl:grid-cols-3">
       <div className="card p-4 sm:p-5">
-        <h3 className="text-sm font-bold text-ink mb-4">Item discount</h3>
+        <p className="label">Discount</p>
+        <h3 className="mb-4 mt-1 text-base font-semibold text-ink">Item discount</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="label mb-1.5 block">Percentage</label>
@@ -47,9 +47,9 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
         </div>
       </div>
 
-      {/* Delivery */}
       <div className="card p-4 sm:p-5">
-        <h3 className="text-sm font-bold text-ink mb-4">Delivery fee</h3>
+        <p className="label">Shared fee</p>
+        <h3 className="mb-4 mt-1 text-base font-semibold text-ink">Delivery fee</h3>
         <label className="label mb-1.5 block">Amount (split equally)</label>
         <div className="relative">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-faint text-xs font-mono">Rp</span>
@@ -63,18 +63,18 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
         </div>
       </div>
 
-      {/* Cashback */}
       <div className="card p-4 sm:p-5">
-        <h3 className="text-sm font-bold text-ink mb-4">Cashback</h3>
+        <p className="label">Savings</p>
+        <h3 className="mb-4 mt-1 text-base font-semibold text-ink">Cashback</h3>
 
         <div className="mb-4">
           <label className="label mb-2 block">Calculated from</label>
-          <div className="inline-flex rounded-lg bg-accentSoft p-0.5 w-full">
+          <div className="inline-flex w-full rounded-xl border border-line bg-surface2 p-1">
             <button
               onClick={() => onUpdate({ ...feeConfig, cashbackBase: 'totalItem' })}
-              className={`flex-1 px-3 py-2 rounded-md text-xs font-semibold transition-all ${
+              className={`flex-1 rounded-lg px-3 py-2 text-xs font-semibold transition-all ${
                 feeConfig.cashbackBase === 'totalItem'
-                  ? 'bg-white text-accent shadow-card'
+                  ? 'bg-white text-ink shadow-card'
                   : 'text-muted hover:text-ink'
               }`}
             >
@@ -82,9 +82,9 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
             </button>
             <button
               onClick={() => onUpdate({ ...feeConfig, cashbackBase: 'totalPayment' })}
-              className={`flex-1 px-3 py-2 rounded-md text-xs font-semibold transition-all ${
+              className={`flex-1 rounded-lg px-3 py-2 text-xs font-semibold transition-all ${
                 feeConfig.cashbackBase === 'totalPayment'
-                  ? 'bg-white text-accent shadow-card'
+                  ? 'bg-white text-ink shadow-card'
                   : 'text-muted hover:text-ink'
               }`}
             >

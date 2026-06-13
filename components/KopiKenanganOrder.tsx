@@ -13,7 +13,6 @@ import {
 import {
   IceLevelOption,
   Item,
-  ItemModifier,
   KopiKenanganOutlet,
   KopiKenanganSize,
   Person,
@@ -139,7 +138,7 @@ function KopiKenanganPersonCard({
   const unitPrice = basePrice + outletAdjustment + modifierTotal
   const totalPrice = unitPrice * quantity
 
-  const updateName = (name: string) => onUpdate({ ...person, name })
+  const updateName = (name: string) => onUpdate({ ...person, profileId: undefined, name })
 
   const addCatalogItem = () => {
     const item: Item = {
@@ -203,29 +202,33 @@ function KopiKenanganPersonCard({
   }
 
   return (
-    <div className="animate-fade-in card overflow-hidden">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-5 py-3.5 border-b border-line">
-        <div className="flex items-center gap-3 min-w-0">
+    <article className="animate-fade-in card overflow-hidden">
+      <div className="flex flex-col gap-3 border-b border-line px-4 py-4 sm:flex-row sm:items-start sm:justify-between sm:px-5">
+        <div className="flex min-w-0 items-center gap-3">
           <div
-            className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm text-white flex-shrink-0"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white"
             style={{ backgroundColor: color.base }}
           >
             {person.name ? person.name.charAt(0).toUpperCase() : index + 1}
           </div>
-          <input
-            type="text"
-            value={person.name}
-            onChange={(event) => updateName(event.target.value)}
-            placeholder={`Person ${index + 1}`}
-            className="bg-transparent text-base sm:text-lg font-bold text-ink placeholder:text-faint outline-none w-full min-w-0"
-          />
+          <div className="min-w-0 flex-1">
+            <input
+              type="text"
+              value={person.name}
+              onChange={(event) => updateName(event.target.value)}
+              placeholder={`Person ${index + 1}`}
+              className="w-full min-w-0 bg-transparent text-base font-semibold text-ink outline-none placeholder:text-faint sm:text-lg"
+            />
+            <p className="mt-0.5 text-xs text-muted">
+              {person.profileId ? 'Saved profile' : 'One-off bill person'}
+            </p>
+          </div>
         </div>
         {canRemove && (
           <button
             type="button"
             onClick={onRemove}
-            className="self-start sm:self-auto inline-flex items-center gap-1.5 text-faint hover:text-danger transition-colors px-2 py-1.5 rounded-lg hover:bg-dangerSoft text-sm"
+            className="button-secondary self-start px-3 py-2 text-xs hover:text-danger"
           >
             <IoTrashOutline className="w-4 h-4" />
             Remove
@@ -233,7 +236,7 @@ function KopiKenanganPersonCard({
         )}
       </div>
 
-      <div className="p-4 sm:p-5 grid grid-cols-1 xl:grid-cols-[minmax(34rem,1.45fr)_minmax(22rem,0.7fr)] gap-4">
+      <div className="grid grid-cols-1 gap-4 p-4 sm:p-5 xl:grid-cols-[minmax(34rem,1.45fr)_minmax(22rem,0.7fr)]">
         {/* Catalog */}
         <div className="space-y-3">
           <div className="relative">
@@ -243,7 +246,7 @@ function KopiKenanganPersonCard({
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search Kopi Kenangan menu"
-              className="field pl-10 py-3"
+              className="field py-3 pl-10"
             />
           </div>
 
@@ -272,10 +275,10 @@ function KopiKenanganPersonCard({
                   key={menuItem.id}
                   type="button"
                   onClick={() => setSelectedItemId(menuItem.id)}
-                  className={`min-h-[7.5rem] rounded-lg border p-3 text-left transition-all ${
-                    selected
-                      ? 'border-accent ring-1 ring-accent bg-accentSoft'
-                      : 'bg-white border-line2 hover:border-accent/40'
+                    className={`min-h-[7.5rem] rounded-2xl border p-3 text-left transition-all ${
+                      selected
+                      ? 'border-ink bg-accentSoft ring-1 ring-ink/10'
+                      : 'border-line2 bg-white hover:border-ink/25'
                   }`}
                 >
                   <p className="text-sm font-bold text-ink leading-snug">{menuItem.name}</p>
@@ -317,7 +320,7 @@ function KopiKenanganPersonCard({
         </div>
 
         {/* Configurator */}
-        <div className="rounded-xl border border-line2 bg-surface2 p-4 space-y-4 xl:sticky xl:top-24 xl:self-start xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
+        <div className="space-y-4 rounded-[1.35rem] border border-line bg-surface2/80 p-4 xl:sticky xl:top-5 xl:max-h-[calc(100vh-3rem)] xl:self-start xl:overflow-y-auto">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="label">Selected</p>
@@ -575,7 +578,7 @@ function KopiKenanganPersonCard({
           </div>
         )}
       </div>
-    </div>
+    </article>
   )
 }
 
@@ -588,15 +591,16 @@ export default function KopiKenanganOrder({
   onRemovePerson,
 }: KopiKenanganOrderProps) {
   return (
-    <div className="space-y-4">
+    <section className="space-y-5">
       <div className="card p-4 sm:p-5">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-lg bg-surface border border-line2 flex items-center justify-center flex-shrink-0">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-line2 bg-surface">
               <IoStorefrontOutline className="w-5 h-5 text-ink" />
             </div>
             <div>
-              <h3 className="text-base font-extrabold text-ink">Store Kopi Kenangan</h3>
+              <p className="label">Catalog source</p>
+              <h3 className="mt-1 text-base font-semibold text-ink">Kopi Kenangan order</h3>
               <p className="text-xs text-muted mt-0.5">
                 Mall store adds Rp2.000 to each base drink. Modifiers keep their normal price.
               </p>
@@ -632,32 +636,42 @@ export default function KopiKenanganOrder({
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-end justify-between gap-3">
         <div>
-          <h3 className="text-base font-extrabold text-ink">Orders</h3>
+          <p className="label">Orders</p>
+          <h3 className="mt-1 text-xl font-semibold tracking-tight text-ink">People in this split</h3>
           <p className="text-xs text-muted">{KOPI_KENANGAN_MENU.length} catalog drinks plus modifiers</p>
         </div>
         <button
           type="button"
           onClick={onAddPerson}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accentDark transition-all"
+          className="button-secondary"
         >
           <IoAdd className="w-4 h-4" />
-          Add person
+          One-off person
         </button>
       </div>
 
-      {people.map((person, index) => (
-        <KopiKenanganPersonCard
-          key={person.id}
-          person={person}
-          index={index}
-          outlet={outlet}
-          onUpdate={(updatedPerson) => onUpdatePerson(index, updatedPerson)}
-          onRemove={() => onRemovePerson(index)}
-          canRemove={people.length > 1}
-        />
-      ))}
-    </div>
+      {people.length === 0 ? (
+        <div className="card border-dashed p-8 text-center">
+          <h3 className="text-base font-semibold text-ink">No one in the order yet</h3>
+          <p className="mx-auto mt-2 max-w-md text-sm text-muted">
+            Add a saved name from the roster, or create a one-off person for this Kopi Kenangan split.
+          </p>
+        </div>
+      ) : (
+        people.map((person, index) => (
+          <KopiKenanganPersonCard
+            key={person.id}
+            person={person}
+            index={index}
+            outlet={outlet}
+            onUpdate={(updatedPerson) => onUpdatePerson(index, updatedPerson)}
+            onRemove={() => onRemovePerson(index)}
+            canRemove={people.length > 0}
+          />
+        ))
+      )}
+    </section>
   )
 }

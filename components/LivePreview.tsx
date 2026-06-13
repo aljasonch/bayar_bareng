@@ -19,7 +19,8 @@ export default function LivePreview({ people, feeConfig, billMode, kopiKenanganO
   if (!hasItems) {
     return (
       <div className="card p-6 text-center">
-        <p className="text-sm text-faint">Add items to see the live preview</p>
+        <p className="label">Live preview</p>
+        <p className="mt-2 text-sm text-muted">Add items to see the split before calculating.</p>
       </div>
     )
   }
@@ -39,22 +40,25 @@ export default function LivePreview({ people, feeConfig, billMode, kopiKenanganO
     .filter((s) => s.value > 0)
 
   return (
-    <div className="card p-4 sm:p-5 sticky top-24">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-base font-bold text-ink">Live preview</h3>
-        <span className="flex items-center gap-1.5 text-[11px] text-faint">
+    <aside className="card sticky top-5 p-4 sm:p-5">
+      <div className="mb-4 flex items-center justify-between">
+        <div>
+          <p className="label">Live preview</p>
+          <h3 className="mt-1 text-base font-semibold text-ink">Running settlement</h3>
+        </div>
+        <span className="flex items-center gap-1.5 text-[11px] text-muted">
           <span className="h-1.5 w-1.5 rounded-full bg-accent" />
           Live
         </span>
       </div>
       {billMode === 'kopiKenangan' && (
-        <p className="text-xs text-faint -mt-2 mb-4">
+        <p className="-mt-2 mb-4 text-xs text-muted">
           Kopi Kenangan - {formatOutletName(kopiKenanganOutlet)}
         </p>
       )}
 
       {paying.length > 0 && result.totalFinal > 0 && (
-        <div className="flex h-2 w-full overflow-hidden rounded-full bg-surface mb-4">
+        <div className="mb-4 flex h-2 w-full overflow-hidden rounded-full bg-surface">
           {paying.map((s) => (
             <div
               key={s.id}
@@ -69,27 +73,27 @@ export default function LivePreview({ people, feeConfig, billMode, kopiKenanganO
         </div>
       )}
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         {result.results.map((r, i) => {
           const color = getPersonColor(i)
           return (
-            <div key={r.person.id} className="py-2 border-b border-line last:border-0">
-              <div className="flex justify-between items-center gap-2">
-                <div className="flex items-center gap-2 min-w-0">
+            <div key={r.person.id} className="rounded-2xl border border-line bg-white/70 p-3">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex min-w-0 items-center gap-2">
                   <div
-                    className="w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0"
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white"
                     style={{ backgroundColor: color.base }}
                   >
                     {r.person.name ? r.person.name.charAt(0).toUpperCase() : i + 1}
                   </div>
-                  <span className="text-sm text-ink3 truncate">{r.person.name || `Person ${i + 1}`}</span>
+                  <span className="truncate text-sm font-medium text-ink3">{r.person.name || `Person ${i + 1}`}</span>
                 </div>
-                <span className="font-mono text-sm font-bold text-ink flex-shrink-0 ml-2">
+                <span className="ml-2 shrink-0 font-mono text-sm font-semibold text-ink">
                   Rp{r.final.toLocaleString('id-ID')}
                 </span>
               </div>
               {r.person.items.length > 0 && (
-                <div className="mt-2 ml-8 space-y-1">
+                <div className="mt-2 ml-9 space-y-1">
                   {r.person.items.slice(0, 2).map((item) => (
                     <div key={item.id} className="text-[11px] text-faint">
                       <p className="truncate text-muted">{getItemLabel(item)}</p>
@@ -116,7 +120,7 @@ export default function LivePreview({ people, feeConfig, billMode, kopiKenanganO
         })}
       </div>
 
-      <div className="mt-4 pt-3 border-t border-line2 space-y-1.5">
+      <div className="mt-4 space-y-1.5 border-t border-line2 pt-3">
         <div className="flex justify-between">
           <span className="text-sm text-muted">Total</span>
           <span className="font-mono text-sm font-bold text-ink">
@@ -132,6 +136,6 @@ export default function LivePreview({ people, feeConfig, billMode, kopiKenanganO
           </div>
         )}
       </div>
-    </div>
+    </aside>
   )
 }
