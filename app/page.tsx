@@ -444,9 +444,20 @@ export default function Home() {
                     </p>
                   )}
                 </div>
-                <button type="button" onClick={handleReset} className="button-secondary">
-                  New bill
-                </button>
+                <div className="grid w-full grid-cols-1 gap-2 sm:w-auto sm:grid-cols-2">
+                  <a
+                    href={getWhatsAppUrl(result)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="button-primary bg-whatsapp hover:bg-whatsappDark"
+                  >
+                    <IoLogoWhatsapp className="h-5 w-5" />
+                    Share WhatsApp
+                  </a>
+                  <button type="button" onClick={handleReset} className="button-secondary">
+                    New bill
+                  </button>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(20rem,0.8fr)_minmax(0,1.2fr)]">
