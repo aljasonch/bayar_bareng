@@ -449,7 +449,7 @@ export default function Home() {
                     href={getWhatsAppUrl(result)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="button-primary bg-whatsapp hover:bg-whatsappDark"
+                    className="button-whatsapp"
                   >
                     <IoLogoWhatsapp className="h-5 w-5" />
                     Share WhatsApp
@@ -474,6 +474,15 @@ export default function Home() {
                       <p className="mt-1 font-mono text-lg font-semibold">{formatRp(result.totalSaved)}</p>
                     </div>
                   </div>
+                  <a
+                    href={getWhatsAppUrl(result)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="button-whatsapp mt-5 min-h-12 w-full"
+                  >
+                    <IoLogoWhatsapp className="h-5 w-5" />
+                    Share split via WhatsApp
+                  </a>
                 </section>
                 <SplitDistributionBar results={result.results} total={result.totalFinal} />
               </div>
@@ -489,7 +498,7 @@ export default function Home() {
                   href={getWhatsAppUrl(result)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="button-primary bg-whatsapp hover:bg-whatsappDark lg:col-span-2"
+                  className="button-whatsapp lg:col-span-2"
                 >
                   <IoLogoWhatsapp className="h-5 w-5" />
                   Share via WhatsApp
@@ -545,7 +554,7 @@ export default function Home() {
               href={getWhatsAppUrl(result)}
               target="_blank"
               rel="noopener noreferrer"
-              className="button-primary min-h-12 bg-whatsapp hover:bg-whatsappDark"
+              className="button-whatsapp min-h-12"
             >
               <IoLogoWhatsapp className="h-5 w-5" />
               WhatsApp

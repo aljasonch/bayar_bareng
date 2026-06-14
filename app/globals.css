@@ -150,6 +150,15 @@ input[type='number'] {
     @apply inline-flex items-center justify-center gap-2 rounded-xl border border-line2 bg-white px-4 py-2.5 text-sm font-semibold text-ink3 transition-colors hover:border-ink/25 hover:text-ink;
   }
 
+  .button-whatsapp {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition-colors;
+    background-color: rgb(var(--color-whatsapp) / 1);
+  }
+
+  .button-whatsapp:hover {
+    background-color: rgb(var(--color-whatsapp-dark) / 1);
+  }
+
   .icon-button {
     @apply inline-flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface hover:text-ink;
   }
