@@ -262,7 +262,7 @@ export default function Home() {
           </div>
         </section>
 
-        <main className={step !== 3 ? 'pb-28 pt-5 lg:pb-32' : 'pb-32 pt-5'}>
+        <main className={step !== 3 ? 'pb-28 pt-5 lg:pb-32' : 'pb-10 pt-5'}>
           {step === 1 && (
             <div className="grid grid-cols-1 gap-5 xl:grid-cols-[24rem_minmax(0,1fr)]">
               <div className="xl:sticky xl:top-5 xl:self-start">
@@ -444,20 +444,9 @@ export default function Home() {
                     </p>
                   )}
                 </div>
-                <div className="grid w-full grid-cols-1 gap-2 sm:w-auto sm:grid-cols-2">
-                  <a
-                    href={getWhatsAppUrl(result)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="button-whatsapp"
-                  >
-                    <IoLogoWhatsapp className="h-5 w-5" />
-                    Share WhatsApp
-                  </a>
-                  <button type="button" onClick={handleReset} className="button-secondary">
-                    New bill
-                  </button>
-                </div>
+                <button type="button" onClick={handleReset} className="button-secondary">
+                  New bill
+                </button>
               </div>
 
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(20rem,0.8fr)_minmax(0,1.2fr)]">
@@ -474,15 +463,6 @@ export default function Home() {
                       <p className="mt-1 font-mono text-lg font-semibold">{formatRp(result.totalSaved)}</p>
                     </div>
                   </div>
-                  <a
-                    href={getWhatsAppUrl(result)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="button-whatsapp mt-5 min-h-12 w-full"
-                  >
-                    <IoLogoWhatsapp className="h-5 w-5" />
-                    Share split via WhatsApp
-                  </a>
                 </section>
                 <SplitDistributionBar results={result.results} total={result.totalFinal} />
               </div>
@@ -498,7 +478,7 @@ export default function Home() {
                   href={getWhatsAppUrl(result)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="button-whatsapp lg:col-span-2"
+                  className="button-primary bg-whatsapp hover:bg-whatsappDark lg:col-span-2"
                 >
                   <IoLogoWhatsapp className="h-5 w-5" />
                   Share via WhatsApp
@@ -543,33 +523,6 @@ export default function Home() {
                 </button>
               </>
             )}
-          </div>
-        </div>
-      )}
-
-      {step === 3 && result && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper/95 px-4 py-3 backdrop-blur-md sm:px-6 lg:px-8">
-          <div className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)_auto] gap-2 sm:grid-cols-[minmax(0,1fr)_auto_auto]">
-            <a
-              href={getWhatsAppUrl(result)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="button-whatsapp min-h-12"
-            >
-              <IoLogoWhatsapp className="h-5 w-5" />
-              WhatsApp
-            </a>
-            <button
-              type="button"
-              onClick={handleSave}
-              disabled={saved}
-              className="button-secondary min-h-12 px-4 disabled:cursor-default disabled:border-accent/30 disabled:bg-accentSoft disabled:text-accent"
-            >
-              {saved ? 'Saved' : 'Save'}
-            </button>
-            <button type="button" onClick={handleReset} className="button-secondary hidden min-h-12 px-4 sm:inline-flex">
-              New bill
-            </button>
           </div>
         </div>
       )}
