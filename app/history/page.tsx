@@ -5,13 +5,13 @@ import Link from 'next/link'
 import { BillResult } from '@/types'
 import { formatBillDate } from '@/lib/date'
 import { deleteFromHistory, getHistory } from '@/lib/history'
-import { getWhatsAppUrl } from '@/lib/whatsapp'
 import { formatOutletName } from '@/lib/kopi-kenangan'
 import { formatRp } from '@/lib/item-display'
 import HistoryCard from '@/components/HistoryCard'
 import ResultCard from '@/components/ResultCard'
 import SplitDistributionBar from '@/components/SplitDistributionBar'
-import { IoAddOutline, IoArrowBack, IoClose, IoLogoWhatsapp } from 'react-icons/io5'
+import WhatsAppActions from '@/components/WhatsAppActions'
+import { IoAddOutline, IoArrowBack, IoClose } from 'react-icons/io5'
 
 function HistoryDetail({ result }: { result: BillResult }) {
   return (
@@ -59,15 +59,12 @@ function HistoryDetail({ result }: { result: BillResult }) {
         ))}
       </div>
 
-      <a
-        href={getWhatsAppUrl(result)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="button-primary w-full bg-whatsapp hover:bg-whatsappDark"
-      >
-        <IoLogoWhatsapp className="h-5 w-5" />
-        Share via WhatsApp
-      </a>
+      <WhatsAppActions
+        result={result}
+        className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+        copyClassName="button-primary bg-whatsapp hover:bg-whatsappDark"
+        whatsappClassName="button-secondary"
+      />
     </div>
   )
 }

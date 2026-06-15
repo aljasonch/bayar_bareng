@@ -7,7 +7,6 @@ import { calculateBill } from '@/lib/calculate'
 import { formatBillDate, getTodayDateInputValue } from '@/lib/date'
 import { saveToHistory } from '@/lib/history'
 import { createProfile, getProfiles, saveProfiles } from '@/lib/profiles'
-import { getWhatsAppUrl } from '@/lib/whatsapp'
 import { formatOutletName } from '@/lib/kopi-kenangan'
 import { formatRp } from '@/lib/item-display'
 import AdditionalFees from '@/components/AdditionalFees'
@@ -18,12 +17,12 @@ import PeopleProfiles from '@/components/PeopleProfiles'
 import PersonCard from '@/components/PersonCard'
 import ResultCard from '@/components/ResultCard'
 import SplitDistributionBar from '@/components/SplitDistributionBar'
+import WhatsAppActions from '@/components/WhatsAppActions'
 import {
   IoArrowBack,
   IoArrowForward,
   IoCafeOutline,
   IoCheckmarkCircle,
-  IoLogoWhatsapp,
   IoPeopleOutline,
   IoReceiptOutline,
   IoTimeOutline,
@@ -473,16 +472,13 @@ export default function Home() {
                 ))}
               </div>
 
-              <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
-                <a
-                  href={getWhatsAppUrl(result)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="button-primary bg-whatsapp hover:bg-whatsappDark lg:col-span-2"
-                >
-                  <IoLogoWhatsapp className="h-5 w-5" />
-                  Share via WhatsApp
-                </a>
+              <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+                <WhatsAppActions
+                  result={result}
+                  className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+                  copyClassName="button-primary bg-whatsapp hover:bg-whatsappDark"
+                  whatsappClassName="button-secondary"
+                />
                 <button
                   type="button"
                   onClick={handleSave}

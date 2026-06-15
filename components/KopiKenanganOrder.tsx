@@ -301,6 +301,16 @@ function KopiKenanganPersonCard({
                         1L
                       </span>
                     )}
+                    {menuItem.isNew && (
+                      <span className="text-[10px] rounded bg-accentSoft border border-accent/20 px-2 py-0.5 text-accent">
+                        New
+                      </span>
+                    )}
+                    {menuItem.isLimitedTime && (
+                      <span className="text-[10px] rounded bg-surface border border-line2 px-2 py-0.5 text-ink3">
+                        Limited
+                      </span>
+                    )}
                     {menuItem.isBaristaChoice && (
                       <span className="text-[10px] rounded bg-surface border border-line2 px-2 py-0.5 text-ink3">
                         Barista choice
@@ -332,6 +342,16 @@ function KopiKenanganPersonCard({
                 {selectedItem.hasOneLiter && (
                   <span className="text-[10px] rounded bg-surface border border-line2 px-2 py-0.5 text-ink3">
                     1L available
+                  </span>
+                )}
+                {selectedItem.isNew && (
+                  <span className="text-[10px] rounded bg-accentSoft border border-accent/20 px-2 py-0.5 text-accent">
+                    New
+                  </span>
+                )}
+                {selectedItem.isLimitedTime && (
+                  <span className="text-[10px] rounded bg-surface border border-line2 px-2 py-0.5 text-ink3">
+                    Limited
                   </span>
                 )}
               </div>
@@ -602,7 +622,7 @@ export default function KopiKenanganOrder({
               <p className="label">Catalog source</p>
               <h3 className="mt-1 text-base font-semibold text-ink">Kopi Kenangan order</h3>
               <p className="text-xs text-muted mt-0.5">
-                Mall store adds Rp2.000 to each base drink. Modifiers keep their normal price.
+                Direct menu prices. Mall store adds Rp2.000 to each base drink; delivery apps may differ.
               </p>
             </div>
           </div>
@@ -618,7 +638,7 @@ export default function KopiKenanganOrder({
               }`}
             >
               <span className="block text-sm font-bold">Normal</span>
-              <span className="block text-[11px] opacity-80">Menu price</span>
+              <span className="block text-[11px] opacity-80">Direct menu</span>
             </button>
             <button
               type="button"

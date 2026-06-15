@@ -8,6 +8,8 @@ import {
 
 export type KopiKenanganCategory =
   | 'Coffee'
+  | 'Toffee Nut Series'
+  | 'Blueberry Series'
   | 'OATSIDE Series'
   | 'Kenangan Frappe'
   | 'Chocolate & Sweets'
@@ -21,6 +23,8 @@ export type KopiKenanganCatalogItem = {
   prices: Partial<Record<KopiKenanganSize, number>>
   hasOneLiter?: boolean
   isBaristaChoice?: boolean
+  isNew?: boolean
+  isLimitedTime?: boolean
 }
 
 export const KOPI_KENANGAN_MALL_ADJUSTMENT = 2000
@@ -33,6 +37,8 @@ export const ICE_LEVEL_OPTIONS: IceLevelOption[] = ['Normal', 'Less Ice', 'No Ic
 
 export const KOPI_KENANGAN_CATEGORIES: KopiKenanganCategory[] = [
   'Coffee',
+  'Toffee Nut Series',
+  'Blueberry Series',
   'OATSIDE Series',
   'Kenangan Frappe',
   'Chocolate & Sweets',
@@ -145,6 +151,62 @@ export const KOPI_KENANGAN_MENU: KopiKenanganCatalogItem[] = [
     name: 'Vanilla/Hazelnut/Caramel Latte',
     category: 'Coffee',
     prices: { R: price(26), L: price(34), J: price(43) },
+  },
+  {
+    id: 'toffee-nut-latte',
+    name: 'Toffee Nut Latte',
+    category: 'Toffee Nut Series',
+    prices: { R: price(19), L: price(26), J: price(36) },
+    isNew: true,
+    isLimitedTime: true,
+  },
+  {
+    id: 'toffee-nut-aren-latte',
+    name: 'Toffee Nut Aren Latte',
+    category: 'Toffee Nut Series',
+    prices: { R: price(21), L: price(28), J: price(38) },
+    isNew: true,
+    isLimitedTime: true,
+  },
+  {
+    id: 'toffee-nut-oat-latte',
+    name: 'Toffee Nut Oat Latte',
+    category: 'Toffee Nut Series',
+    prices: { R: price(22), L: price(29), J: price(39) },
+    isNew: true,
+    isLimitedTime: true,
+  },
+  {
+    id: 'blueberry-americano',
+    name: 'Blueberry Americano',
+    category: 'Blueberry Series',
+    prices: { R: price(19), L: price(26), J: price(36) },
+    isNew: true,
+    isLimitedTime: true,
+  },
+  {
+    id: 'blueberry-frappe',
+    name: 'Blueberry Frappe',
+    category: 'Blueberry Series',
+    prices: { R: price(23), L: price(30), J: price(40) },
+    isNew: true,
+    isLimitedTime: true,
+  },
+  {
+    id: 'Chocoberry-frappe',
+    name: 'Chocoberry Frappe',
+    category: 'Blueberry Series',
+    prices: { R: price(27), L: price(34), J: price(44) },
+    isNew: true,
+    isLimitedTime: true,
+  },
+  {
+    id: 'Coffeberry-frappe',
+    name: 'Coffeberry Frappe',
+    category: 'Blueberry Series',
+    prices: { R: price(25), L: price(32), J: price(42) },
+    isNew: true,
+    isLimitedTime: true,
   },
   {
     id: 'oatside-kopi-kenangan-mantan',

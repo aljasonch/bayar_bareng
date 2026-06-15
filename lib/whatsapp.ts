@@ -48,7 +48,6 @@ export function generateWhatsAppText(result: BillResult): string {
     lines.push(`Total hemat: ${formatRp(result.totalSaved)}`)
   }
   lines.push('')
-  lines.push('_Dihitung pakai Bayar Bareng_')
 
   return lines.join('\n')
 }
