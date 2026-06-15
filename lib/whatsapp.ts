@@ -47,7 +47,6 @@ export function generateWhatsAppText(result: BillResult): string {
   if (result.totalSaved > 0) {
     lines.push(`Total hemat: ${formatRp(result.totalSaved)}`)
   }
-  lines.push('')
 
   return lines.join('\n')
 }
