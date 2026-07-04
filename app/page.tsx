@@ -18,24 +18,15 @@ import PersonCard from '@/components/PersonCard'
 import ResultCard from '@/components/ResultCard'
 import SplitDistributionBar from '@/components/SplitDistributionBar'
 import WhatsAppActions from '@/components/WhatsAppActions'
-import {
-  IoArrowBack,
-  IoArrowForward,
-  IoCafeOutline,
-  IoCheckmarkCircle,
-  IoPeopleOutline,
-  IoReceiptOutline,
-  IoTimeOutline,
-} from 'react-icons/io5'
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 9)
 }
 
 const STEPS = [
-  { num: 1, title: 'Build', description: 'People and items' },
-  { num: 2, title: 'Adjust', description: 'Fees and discounts' },
-  { num: 3, title: 'Settle', description: 'Final amounts' },
+  { num: 1, title: 'Catat', description: 'orang & pesanan' },
+  { num: 2, title: 'Sesuaikan', description: 'diskon & biaya' },
+  { num: 3, title: 'Tagih', description: 'hasil akhir' },
 ]
 
 const EMPTY_FEE_CONFIG: FeeConfig = {
@@ -59,16 +50,6 @@ function createPerson(profile?: PersonProfile): Person {
     name: profile?.name ?? '',
     items: [],
   }
-}
-
-function Metric({ label, value, subtext }: { label: string; value: string; subtext?: string }) {
-  return (
-    <div className="rounded-2xl border border-line bg-white/75 px-4 py-3">
-      <p className="label">{label}</p>
-      <p className="mt-1 font-mono text-xl font-semibold tracking-tight text-ink">{value}</p>
-      {subtext && <p className="mt-1 text-xs text-muted">{subtext}</p>}
-    </div>
-  )
 }
 
 export default function Home() {
@@ -201,65 +182,68 @@ export default function Home() {
   return (
     <div className="min-h-screen px-4 py-5 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-[1440px]">
-        <header className="flex flex-col gap-4 border-b border-line pb-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <div>
-              <h1 className="text-xl font-semibold tracking-tight text-ink">Bayar Bareng</h1>
-              <p className="text-sm text-muted">A quieter workspace for shared bills.</p>
-            </div>
+        <header className="flex items-baseline justify-between gap-4 pb-4">
+          <div>
+            <h1 className="font-mono text-lg font-bold uppercase tracking-[0.14em] text-ink">
+              Bayar Bareng
+            </h1>
+            <p className="mt-0.5 text-sm text-muted">Kalkulator patungan — catat, bagi, tagih.</p>
           </div>
-          <div className="flex items-center gap-2">
-            <Link href="/history" className="button-secondary">
-              <IoTimeOutline className="h-4 w-4" />
-              History
-            </Link>
-          </div>
+          <Link href="/history" className="button-secondary shrink-0">
+            Riwayat
+          </Link>
         </header>
 
-        <section className="mt-6 sheet overflow-hidden p-4 sm:p-5 lg:p-6">
-          <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_28rem]">
-            <div>
-              <p className="label">Current bill</p>
-              <div className="mt-2 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-                <div>
-                  <h2 className="max-w-3xl text-3xl font-semibold tracking-[-0.035em] text-ink sm:text-4xl">
-                    Build the split once. Reuse the people every time.
-                  </h2>
-                  <p className="mt-3 max-w-2xl text-sm leading-6 text-muted sm:text-base">
-                    Saved names live in your browser. Bills still keep their own names, so history stays readable even after the roster changes.
-                  </p>
-                </div>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:min-w-[28rem]">
-                  <Metric label="People" value={people.length.toString()} subtext="in this split" />
-                  <Metric label="Items" value={itemCount.toString()} subtext="entered now" />
-                  <Metric label="Subtotal" value={formatRp(runningTotal)} subtext="before fees" />
-                </div>
-              </div>
-            </div>
-
-            <nav className="grid grid-cols-3 gap-2 rounded-3xl border border-line bg-white/70 p-2">
-              {STEPS.map((item) => {
-                const active = step === item.num
-                const disabled = !canOpenStep(item.num)
-                return (
-                  <button
-                    key={item.num}
-                    type="button"
-                    onClick={() => openStep(item.num)}
-                    disabled={disabled}
-                    className={`rounded-2xl px-3 py-3 text-left transition-all disabled:cursor-not-allowed disabled:opacity-45 ${
-                      active ? 'bg-ink text-white shadow-pop' : 'text-muted hover:bg-surface2 hover:text-ink'
-                    }`}
-                  >
-                    <span className="block font-mono text-[11px] opacity-70">0{item.num}</span>
-                    <span className="mt-1 block text-sm font-semibold">{item.title}</span>
-                    <span className="hidden text-xs opacity-70 sm:block">{item.description}</span>
-                  </button>
-                )
-              })}
-            </nav>
+        {/* Step tabs: the flow itself is the navigation. */}
+        <nav className="card overflow-hidden">
+          <div className="grid grid-cols-3">
+            {STEPS.map((item, i) => {
+              const active = step === item.num
+              const done = canOpenStep(item.num) && step > item.num
+              const disabled = !canOpenStep(item.num)
+              return (
+                <button
+                  key={item.num}
+                  type="button"
+                  onClick={() => openStep(item.num)}
+                  disabled={disabled}
+                  className={`px-3 py-3 text-left transition-colors disabled:cursor-not-allowed sm:px-4 ${
+                    i > 0 ? 'border-l border-rule' : ''
+                  } ${
+                    active
+                      ? 'bg-ink text-paper'
+                      : disabled
+                        ? 'text-faint'
+                        : 'text-muted hover:bg-paper2 hover:text-ink'
+                  }`}
+                >
+                  <span className="block font-mono text-xs font-bold uppercase tracking-[0.14em] sm:text-sm">
+                    {done ? '✓ ' : ''}
+                    {item.title}
+                  </span>
+                  <span className={`mt-0.5 hidden text-xs sm:block ${active ? 'text-paper/60' : 'text-faint'}`}>
+                    {item.description}
+                  </span>
+                </button>
+              )
+            })}
           </div>
-        </section>
+
+          {/* Running counter tape — hidden on settle, where the receipt takes over. */}
+          {step !== 3 && (
+            <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1 border-t border-rule bg-paper2 px-3 py-2 font-mono text-xs sm:px-4">
+              <span className="text-muted">
+                ORANG <span className="font-bold text-ink">{people.length}</span>
+              </span>
+              <span className="text-muted">
+                ITEM <span className="font-bold text-ink">{itemCount}</span>
+              </span>
+              <span className="ml-auto text-muted">
+                SUBTOTAL <span className="font-bold text-ink">{formatRp(runningTotal)}</span>
+              </span>
+            </div>
+          )}
+        </nav>
 
         <main className={step !== 3 ? 'pb-28 pt-5 lg:pb-32' : 'pb-10 pt-5'}>
           {step === 1 && (
@@ -280,41 +264,45 @@ export default function Home() {
                 <section className="card p-4 sm:p-5">
                   <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(21rem,0.9fr)]">
                     <div>
-                      <p className="label">Split type</p>
+                      <p className="label">Jenis nota</p>
                       <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                        <button
-                          type="button"
-                          onClick={() => setBillMode('general')}
-                          className={`rounded-2xl border p-4 text-left transition-all ${
-                            billMode === 'general'
-                              ? 'border-ink bg-ink text-white'
-                              : 'border-line2 bg-white text-muted hover:border-ink/25 hover:text-ink'
-                          }`}
-                        >
-                          <IoReceiptOutline className="h-5 w-5" />
-                          <span className="mt-3 block text-sm font-semibold">General bill</span>
-                          <span className="mt-1 block text-xs opacity-70">Manual item entry</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setBillMode('kopiKenangan')}
-                          className={`rounded-2xl border p-4 text-left transition-all ${
-                            billMode === 'kopiKenangan'
-                              ? 'border-ink bg-ink text-white'
-                              : 'border-line2 bg-white text-muted hover:border-ink/25 hover:text-ink'
-                          }`}
-                        >
-                          <IoCafeOutline className="h-5 w-5" />
-                          <span className="mt-3 block text-sm font-semibold">Kopi Kenangan</span>
-                          <span className="mt-1 block text-xs opacity-70">Catalog with modifiers</span>
-                        </button>
+                        {(
+                          [
+                            { mode: 'general' as BillMode, title: 'Nota umum', desc: 'Tulis item & harga manual' },
+                            { mode: 'kopiKenangan' as BillMode, title: 'Kopi Kenangan', desc: 'Menu resmi + modifier' },
+                          ]
+                        ).map((option) => {
+                          const active = billMode === option.mode
+                          return (
+                            <button
+                              key={option.mode}
+                              type="button"
+                              onClick={() => setBillMode(option.mode)}
+                              className={`flex items-start gap-3 rounded-sm border p-3.5 text-left transition-colors ${
+                                active
+                                  ? 'border-ink bg-paper2'
+                                  : 'border-rule2 bg-paper text-muted hover:border-ink hover:text-ink'
+                              }`}
+                            >
+                              <span
+                                className={`mt-1 h-2.5 w-2.5 shrink-0 border border-ink ${active ? 'bg-ink' : 'bg-transparent'}`}
+                              />
+                              <span>
+                                <span className={`block text-sm font-semibold ${active ? 'text-ink' : ''}`}>
+                                  {option.title}
+                                </span>
+                                <span className="mt-0.5 block text-xs text-muted">{option.desc}</span>
+                              </span>
+                            </button>
+                          )
+                        })}
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <div>
                         <label htmlFor="split-date" className="label mb-2 block">
-                          Split date
+                          Tanggal
                         </label>
                         <input
                           id="split-date"
@@ -326,14 +314,14 @@ export default function Home() {
                       </div>
                       <div className="space-y-2">
                         <label htmlFor="payer-name" className="label block">
-                          Fronted by
+                          Ditalangi oleh
                         </label>
                         <input
                           id="payer-name"
                           type="text"
                           value={payerName}
                           onChange={(event) => setPayerName(event.target.value)}
-                          placeholder="Name, optional"
+                          placeholder="Nama (opsional)"
                           className="field"
                         />
                         <input
@@ -341,7 +329,7 @@ export default function Home() {
                           type="text"
                           value={payerAccountNumber}
                           onChange={(event) => setPayerAccountNumber(event.target.value)}
-                          placeholder="Account number, optional"
+                          placeholder="No. rekening (opsional)"
                           disabled={!hasPayerName}
                           className="field field-mono disabled:cursor-not-allowed disabled:opacity-50"
                         />
@@ -354,20 +342,20 @@ export default function Home() {
                   <section className="space-y-3">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                       <div>
-                        <p className="label">Bill lines</p>
-                        <h2 className="mt-1 text-xl font-semibold tracking-tight text-ink">People in this split</h2>
+                        <p className="label">Entri nota</p>
+                        <h2 className="mt-1 text-xl font-semibold tracking-tight text-ink">Orang di nota ini</h2>
                       </div>
                       <button type="button" onClick={addManualPerson} className="button-secondary">
-                        <IoPeopleOutline className="h-4 w-4" />
-                        Add one-off person
+                        + Orang baru
                       </button>
                     </div>
 
                     {people.length === 0 ? (
-                      <div className="card border-dashed p-8 text-center">
-                        <h3 className="text-base font-semibold text-ink">No one in the split yet</h3>
+                      <div className="rounded-sm border border-dashed border-rule2 bg-paper/60 p-8 text-center">
+                        <h3 className="text-base font-semibold text-ink">Nota masih kosong</h3>
                         <p className="mx-auto mt-2 max-w-md text-sm text-muted">
-                          Add a saved name from the roster, or create a one-off person for this bill.
+                          Pilih nama dari roster di samping, atau tekan “+ Orang baru” untuk orang yang cuma ikut
+                          nota ini.
                         </p>
                       </div>
                     ) : (
@@ -403,9 +391,11 @@ export default function Home() {
             <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_24rem]">
               <div className="space-y-5">
                 <div>
-                  <p className="label">Adjustments</p>
-                  <h2 className="mt-1 text-2xl font-semibold tracking-tight text-ink">Fees and discounts</h2>
-                  <p className="mt-1 text-sm text-muted">Add delivery, service charges, discounts, and cashback before settling.</p>
+                  <p className="label">Penyesuaian</p>
+                  <h2 className="mt-1 text-2xl font-semibold tracking-tight text-ink">Diskon & biaya</h2>
+                  <p className="mt-1 text-sm text-muted">
+                    Masukkan ongkir, service charge, diskon, atau cashback sebelum dibagi.
+                  </p>
                 </div>
                 <FeeSettings feeConfig={feeConfig} onUpdate={setFeeConfig} />
                 <AdditionalFees
@@ -426,68 +416,110 @@ export default function Home() {
 
           {step === 3 && result && (
             <div className="space-y-5 animate-fade-in">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div className="flex items-end justify-between gap-3">
                 <div>
-                  <p className="label">Settlement</p>
-                  <h2 className="mt-1 text-2xl font-semibold tracking-tight text-ink">Final split</h2>
-                  <p className="mt-1 text-sm text-muted">Split date: {formatBillDate(result)}</p>
-                  {result.billMode === 'kopiKenangan' && (
-                    <p className="mt-1 text-sm text-muted">
-                      Kopi Kenangan, {formatOutletName(result.kopiKenanganOutlet)} outlet
-                    </p>
-                  )}
-                  {result.payerName && (
-                    <p className="mt-1 text-sm text-muted">
-                      Fronted by <span className="font-semibold text-ink">{result.payerName}</span>
-                      {result.payerAccountNumber ? `, ${result.payerAccountNumber}` : ''}
-                    </p>
-                  )}
+                  <p className="label">Hasil akhir</p>
+                  <h2 className="mt-1 text-2xl font-semibold tracking-tight text-ink">Tagihan siap dikirim</h2>
                 </div>
                 <button type="button" onClick={handleReset} className="button-secondary">
-                  New bill
+                  Nota baru
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(20rem,0.8fr)_minmax(0,1.2fr)]">
-                <section className="rounded-[1.75rem] bg-ink p-5 text-white shadow-pop">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/50">Total payment</p>
-                  <p className="mt-2 font-mono text-4xl font-semibold tracking-tight">{formatRp(result.totalFinal)}</p>
-                  <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                      <p className="text-white/50">People</p>
-                      <p className="mt-1 font-mono text-lg font-semibold">{result.people.length}</p>
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(19rem,23rem)_minmax(0,1fr)] lg:items-start">
+                {/* The printed receipt: summary of the whole split. */}
+                <div className="receipt-frame lg:sticky lg:top-5">
+                  <section className="receipt px-5 pt-5">
+                    <div className="text-center">
+                      <p className="font-mono text-sm font-bold uppercase tracking-[0.2em] text-ink">
+                        Bayar Bareng
+                      </p>
+                      <p className="mt-1 font-mono text-xs text-muted">nota pembagian</p>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                      <p className="text-white/50">Saved</p>
-                      <p className="mt-1 font-mono text-lg font-semibold">{formatRp(result.totalSaved)}</p>
+
+                    <div className="perforation mt-4 space-y-1 pt-3 font-mono text-xs text-muted">
+                      <div className="flex justify-between gap-2">
+                        <span>TANGGAL</span>
+                        <span className="text-ink2">{formatBillDate(result)}</span>
+                      </div>
+                      {result.billMode === 'kopiKenangan' && (
+                        <div className="flex justify-between gap-2">
+                          <span>STORE</span>
+                          <span className="text-ink2">
+                            Kopi Kenangan · {formatOutletName(result.kopiKenanganOutlet)}
+                          </span>
+                        </div>
+                      )}
+                      {result.payerName && (
+                        <div className="flex justify-between gap-2">
+                          <span>DITALANGI</span>
+                          <span className="text-ink2">
+                            {result.payerName}
+                            {result.payerAccountNumber ? ` · ${result.payerAccountNumber}` : ''}
+                          </span>
+                        </div>
+                      )}
                     </div>
+
+                    <div className="perforation mt-3 space-y-2 pt-3">
+                      {result.results.map((item, index) => (
+                        <div key={item.person.id} className="flex items-baseline font-mono text-sm">
+                          <span className="truncate text-ink2">
+                            {item.person.name || `Orang ${index + 1}`}
+                          </span>
+                          <span className="dots" aria-hidden />
+                          <span className="shrink-0 font-semibold text-ink">{formatRp(item.final)}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="rule-total mt-4 pt-3">
+                      <div className="flex items-baseline justify-between gap-3">
+                        <span className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-ink">
+                          Total
+                        </span>
+                        <span className="font-mono text-3xl font-bold tracking-tight text-ink">
+                          {formatRp(result.totalFinal)}
+                        </span>
+                      </div>
+                      {result.totalSaved > 0 && (
+                        <div className="mt-1 flex items-baseline justify-between gap-3 font-mono text-xs">
+                          <span className="text-muted">hemat</span>
+                          <span className="font-semibold text-stamp">-{formatRp(result.totalSaved)}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex min-h-14 items-center justify-between gap-3 pb-4 pt-3">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-faint">
+                        {result.people.length} orang · dihitung otomatis
+                      </p>
+                      {saved && <span className="stamp animate-stamp-in">Tersimpan</span>}
+                    </div>
+                  </section>
+                </div>
+
+                <div className="space-y-5">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+                    <WhatsAppActions result={result} />
+                    <button
+                      type="button"
+                      onClick={handleSave}
+                      disabled={saved}
+                      className="button-secondary disabled:cursor-default disabled:border-stamp/40 disabled:text-stamp"
+                    >
+                      {saved ? 'Tersimpan di riwayat' : 'Simpan ke riwayat'}
+                    </button>
                   </div>
-                </section>
-                <SplitDistributionBar results={result.results} total={result.totalFinal} />
-              </div>
 
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {result.results.map((item, index) => (
-                  <ResultCard key={item.person.id} result={item} index={index} grandTotal={result.totalFinal} />
-                ))}
-              </div>
+                  <SplitDistributionBar results={result.results} total={result.totalFinal} />
 
-              <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-                <WhatsAppActions
-                  result={result}
-                  className="grid grid-cols-1 gap-3 sm:grid-cols-2"
-                  copyClassName="button-primary bg-whatsapp hover:bg-whatsappDark"
-                  whatsappClassName="button-secondary"
-                />
-                <button
-                  type="button"
-                  onClick={handleSave}
-                  disabled={saved}
-                  className="button-secondary disabled:cursor-default disabled:border-accent/30 disabled:bg-accentSoft disabled:text-accent"
-                >
-                  {saved ? <IoCheckmarkCircle className="h-5 w-5" /> : null}
-                  {saved ? 'Saved' : 'Save to history'}
-                </button>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    {result.results.map((item, index) => (
+                      <ResultCard key={item.person.id} result={item} index={index} grandTotal={result.totalFinal} />
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -495,7 +527,7 @@ export default function Home() {
       </div>
 
       {step !== 3 && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper/90 px-4 py-3 backdrop-blur-md sm:px-6 lg:px-8">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-paper/95 px-4 py-3 backdrop-blur-sm sm:px-6 lg:px-8">
           <div className="mx-auto flex max-w-[1440px] gap-3">
             {step === 1 && (
               <button
@@ -504,18 +536,16 @@ export default function Home() {
                 disabled={!canProceedStep1}
                 className="button-primary ml-auto min-h-12 px-6 disabled:cursor-not-allowed disabled:opacity-40"
               >
-                Continue to adjustments
-                <IoArrowForward className="h-4 w-4" />
+                Lanjut: diskon & biaya →
               </button>
             )}
             {step === 2 && (
               <>
                 <button type="button" onClick={() => setStep(1)} className="button-secondary min-h-12 px-5">
-                  <IoArrowBack className="h-4 w-4" />
-                  Back
+                  ← Kembali
                 </button>
                 <button type="button" onClick={handleCalculate} className="button-primary min-h-12 flex-1">
-                  Calculate split
+                  Hitung pembagian
                 </button>
               </>
             )}

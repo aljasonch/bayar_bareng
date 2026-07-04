@@ -27,27 +27,29 @@ export default function HistoryCard({ result, onDelete, onView, active }: Histor
 
   return (
     <article
-      className={`card group cursor-pointer p-4 transition-all animate-fade-in sm:p-5 ${
-        active ? 'border-ink ring-1 ring-ink/70' : 'hover:border-ink/20'
+      className={`card group animate-fade-in cursor-pointer p-4 transition-colors sm:p-5 ${
+        active ? 'border-ink' : 'hover:border-ink'
       }`}
       onClick={() => onView(result)}
     >
-      <div className="mb-4 flex items-start justify-between gap-3">
+      <div className="mb-3 flex items-start justify-between gap-3">
         <div>
-          <p className="label">{formattedSplitDate}</p>
-          <p className="mt-1 text-[11px] text-muted">Saved {formattedSavedTime}</p>
-          <p className="mt-2 text-sm font-medium text-ink2">
-            {result.people.length} {result.people.length === 1 ? 'person' : 'people'}
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-ink">
+            {formattedSplitDate}
           </p>
+          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-faint">
+            disimpan {formattedSavedTime}
+          </p>
+          <p className="mt-2 text-sm text-ink2">{result.people.length} orang</p>
           {result.billMode === 'kopiKenangan' && (
-            <p className="mt-1 text-xs font-medium text-muted">
-              Kopi Kenangan - {formatOutletName(result.kopiKenanganOutlet)}
+            <p className="mt-0.5 text-xs text-muted">
+              Kopi Kenangan · {formatOutletName(result.kopiKenanganOutlet)}
             </p>
           )}
           {result.payerName && (
-            <p className="text-xs text-muted mt-1">
+            <p className="mt-0.5 text-xs text-muted">
               Talangan: <span className="text-ink2">{result.payerName}</span>
-              {result.payerAccountNumber ? ` - ${result.payerAccountNumber}` : ''}
+              {result.payerAccountNumber ? ` · ${result.payerAccountNumber}` : ''}
             </p>
           )}
         </div>
@@ -56,19 +58,19 @@ export default function HistoryCard({ result, onDelete, onView, active }: Histor
             event.stopPropagation()
             onDelete(result.id)
           }}
-          className="icon-button opacity-100 hover:text-danger sm:opacity-0 sm:group-hover:opacity-100"
-          aria-label="Delete entry"
+          className="icon-button opacity-100 hover:text-stamp sm:opacity-0 sm:group-hover:opacity-100"
+          aria-label="Hapus nota"
         >
           <IoTrashOutline className="w-4 h-4" />
         </button>
       </div>
 
       <div className="flex items-end justify-between gap-3">
-        <div className="flex -space-x-2">
+        <div className="flex gap-1">
           {result.people.slice(0, 4).map((person, index) => (
             <div
               key={person.id}
-              className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-[10px] font-semibold text-white"
+              className="flex h-7 w-7 items-center justify-center rounded-sm text-[10px] font-semibold text-white"
               style={{ backgroundColor: getPersonColor(index).base }}
               title={person.name}
             >
@@ -76,21 +78,21 @@ export default function HistoryCard({ result, onDelete, onView, active }: Histor
             </div>
           ))}
           {result.people.length > 4 && (
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-surface text-[10px] font-semibold text-ink3">
+            <div className="flex h-7 w-7 items-center justify-center rounded-sm bg-paper2 font-mono text-[10px] font-semibold text-ink3">
               +{result.people.length - 4}
             </div>
           )}
         </div>
         <div className="text-right">
-          <p className="font-mono text-lg font-semibold text-ink">{formatRp(result.totalFinal)}</p>
+          <p className="font-mono text-lg font-bold text-ink">{formatRp(result.totalFinal)}</p>
           {result.totalSaved > 0 && (
-            <p className="font-mono text-xs text-muted">Saved {formatRp(result.totalSaved)}</p>
+            <p className="font-mono text-xs text-stamp">hemat {formatRp(result.totalSaved)}</p>
           )}
         </div>
       </div>
 
       {result.totalFinal > 0 && result.results.length > 0 && (
-        <div className="mt-3 flex h-1.5 w-full overflow-hidden rounded-full bg-surface">
+        <div className="mt-3 flex h-1 w-full overflow-hidden bg-paper2">
           {result.results
             .filter((r) => r.final > 0)
             .map((r, i) => (
@@ -100,7 +102,7 @@ export default function HistoryCard({ result, onDelete, onView, active }: Histor
                 style={{
                   width: `${(r.final / result.totalFinal) * 100}%`,
                   backgroundColor: getPersonColor(i).base,
-                  borderRight: '1.5px solid rgb(var(--color-white) / 1)',
+                  borderRight: '1.5px solid rgb(var(--color-paper) / 1)',
                 }}
               />
             ))}

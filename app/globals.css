@@ -2,33 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ------------------------------------------------------------------
+   Bayar Bareng — "Nota Kasir"
+   Paper, ink, hairline rules, one stamp-red accent.
+   WhatsApp green appears only on the share CTA.
+------------------------------------------------------------------- */
+
 :root {
   --color-white: 255 255 255;
-  --color-ink: 30 31 29;
-  --color-ink2: 55 56 52;
-  --color-ink3: 86 86 79;
-  --color-muted: 124 123 113;
-  --color-faint: 162 158 146;
-  --color-faint2: 205 199 184;
-  --color-line: 226 220 207;
-  --color-line2: 216 209 194;
-  --color-surface: 239 236 228;
-  --color-surface2: 247 245 239;
-  --color-paper: 244 241 234;
-  --color-accent: 67 81 72;
-  --color-accent-dark: 47 59 52;
-  --color-accent-soft: 229 233 227;
-  --color-sidebar: 30 32 30;
-  --color-sidebar-hi: 45 47 43;
-  --color-danger: 155 62 57;
-  --color-danger-soft: 249 237 234;
-  --color-whatsapp: 21 128 61;
-  --color-whatsapp-dark: 22 101 52;
-  --color-scrollbar: 214 208 195;
-  --color-scrollbar-hover: 194 187 171;
-  --color-focus-ring: 78 106 90;
-  --shadow-card: 0 1px 1px rgb(var(--color-ink) / 0.03), 0 18px 50px -34px rgb(var(--color-ink) / 0.28);
-  --shadow-pop: 0 18px 42px -24px rgb(var(--color-ink) / 0.32);
+  --color-counter: 231 232 228; /* page background: the counter the receipt sits on */
+  --color-paper: 252 252 250; /* receipt paper surfaces */
+  --color-paper2: 245 245 242; /* inset zones inside a card */
+  --color-ink: 26 28 26;
+  --color-ink2: 58 61 57;
+  --color-ink3: 92 96 90;
+  --color-muted: 118 122 114;
+  --color-faint: 160 163 154;
+  --color-rule: 212 214 207; /* hairline rules */
+  --color-rule2: 186 189 180; /* stronger rules, input borders */
+  --color-stamp: 178 56 44; /* stempel red: save stamp, discounts, destructive */
+  --color-stamp-soft: 246 233 230;
+  --color-wa: 21 128 61;
+  --color-wa-dark: 22 101 52;
+  --color-scrollbar: 200 202 195;
+  --color-scrollbar-hover: 178 181 172;
+
+  --shadow-receipt: 0 1px 2px rgb(var(--color-ink) / 0.06), 0 14px 28px -18px rgb(var(--color-ink) / 0.35);
 
   --color-person-pine: 67 81 72;
   --color-person-pine-soft: 229 233 227;
@@ -63,12 +62,15 @@ html {
 }
 
 body {
-  @apply text-ink font-sans;
-  background:
-    radial-gradient(circle at top left, rgb(var(--color-white) / 0.72), transparent 34rem),
-    linear-gradient(180deg, rgb(var(--color-paper) / 1), rgb(var(--color-surface) / 1));
+  @apply bg-counter font-sans text-ink;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'tnum' 1;
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--color-ink));
+  outline-offset: 2px;
 }
 
 /* Custom scrollbar */
@@ -83,7 +85,6 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: rgb(var(--color-scrollbar) / 1);
-  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -101,71 +102,133 @@ input[type='number'] {
 }
 
 /* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-.animate-fade-in {
-  animation: fadeIn 0.25s ease-out forwards;
-}
+  .animate-fade-in {
+    animation: fadeIn 0.25s ease-out forwards;
+  }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-.animate-slide-up {
-  animation: slideUp 0.35s ease-out forwards;
-}
+  .animate-slide-up {
+    animation: slideUp 0.35s ease-out forwards;
+  }
 
-@keyframes growBar {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
+  @keyframes growBar {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
 
-.animate-grow-bar {
-  transform-origin: left;
-  animation: growBar 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+  .animate-grow-bar {
+    transform-origin: left;
+    animation: growBar 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
 
-/* Shared surfaces ----------------------------------------------------- */
+  @keyframes stampIn {
+    from { opacity: 0; transform: rotate(-6deg) scale(1.4); }
+    to { opacity: 1; transform: rotate(-6deg) scale(1); }
+  }
+
+  .animate-stamp-in {
+    animation: stampIn 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+}
 
 @layer components {
+  /* Surfaces --------------------------------------------------------- */
+
   .card {
-    @apply rounded-[1.35rem] border border-line bg-white/90;
-    box-shadow: var(--shadow-card);
+    @apply rounded border border-rule bg-paper;
   }
 
-  .sheet {
-    @apply rounded-[1.75rem] border border-line bg-surface2/85;
-    box-shadow: var(--shadow-card);
+  /* The printed receipt: paper shadow + zigzag tear along the bottom.
+     .receipt-frame carries the drop-shadow so it follows the masked shape. */
+  .receipt-frame {
+    filter: drop-shadow(0 2px 3px rgb(var(--color-ink) / 0.08))
+      drop-shadow(0 16px 22px rgb(var(--color-ink) / 0.13));
   }
+
+  .receipt {
+    --tooth: 14px;
+    background: rgb(var(--color-paper));
+    padding-bottom: var(--tooth);
+    -webkit-mask: conic-gradient(from -45deg at bottom, #0000 90deg, #000 0) 50% / var(--tooth) 100%;
+    mask: conic-gradient(from -45deg at bottom, #0000 90deg, #000 0) 50% / var(--tooth) 100%;
+  }
+
+  /* Rules ------------------------------------------------------------ */
+
+  .perforation {
+    border-top: 1px dashed rgb(var(--color-rule2) / 1);
+  }
+
+  .rule-total {
+    border-top: 3px double rgb(var(--color-ink) / 0.75);
+  }
+
+  /* Dot leader between a label and an amount, receipt style */
+  .dots {
+    flex: 1 1 auto;
+    min-width: 0.75rem;
+    margin: 0 0.4rem;
+    border-bottom: 2px dotted rgb(var(--color-rule2) / 1);
+    transform: translateY(-0.28em);
+  }
+
+  /* Stamp ------------------------------------------------------------ */
+
+  .stamp {
+    @apply inline-flex items-center justify-center border-2 border-stamp px-3 py-1 font-mono text-xs font-bold uppercase tracking-[0.18em] text-stamp;
+    border-radius: 3px;
+    transform: rotate(-6deg);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0.25'/%3E%3C/filter%3E%3Crect width='120' height='120' fill='black'/%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+    -webkit-mask-size: 120px 120px;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0.25'/%3E%3C/filter%3E%3Crect width='120' height='120' fill='black'/%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+    mask-size: 120px 120px;
+  }
+
+  /* Buttons ------------------------------------------------------------
+     Labels set in mono caps: register-key lettering. */
 
   .button-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-ink px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accentDark;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-sm bg-ink px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-paper transition-colors hover:bg-ink2;
   }
 
   .button-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-line2 bg-white px-4 py-2.5 text-sm font-semibold text-ink3 transition-colors hover:border-ink/25 hover:text-ink;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-sm border border-rule2 bg-paper px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-ink3 transition-colors hover:border-ink hover:text-ink;
+  }
+
+  .button-wa {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-sm bg-wa px-5 py-3 font-mono text-sm font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-waDark;
   }
 
   .icon-button {
-    @apply inline-flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface hover:text-ink;
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-sm text-muted transition-colors hover:bg-paper2 hover:text-ink;
   }
 
-  .divider-dashed {
-    border-top: 1px dashed rgb(var(--color-line2) / 1);
-  }
+  /* Inputs ------------------------------------------------------------ */
 
-  /* Inputs */
   .field {
-    @apply w-full rounded-xl border border-line2 bg-white px-3 py-2.5 text-sm text-ink placeholder:text-faint
-      outline-none transition-colors;
+    @apply w-full rounded-sm border border-rule2 bg-white px-3 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-faint;
   }
   .field:focus {
-    @apply border-accent;
-    box-shadow: 0 0 0 3px rgb(var(--color-focus-ring) / 0.15);
+    @apply border-ink;
+    box-shadow: 0 0 0 2px rgb(var(--color-ink) / 0.08);
+  }
+
+  /* Writing-on-a-line input for ledger entry rows */
+  .field-line {
+    @apply w-full border-b border-rule2 bg-transparent px-1 py-2 text-sm text-ink outline-none transition-colors placeholder:text-faint;
+  }
+  .field-line:focus {
+    @apply border-ink;
   }
 
   .field-mono {
@@ -173,6 +236,6 @@ input[type='number'] {
   }
 
   .label {
-    @apply text-[11px] font-semibold uppercase tracking-[0.16em] text-muted;
+    @apply font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted;
   }
 }

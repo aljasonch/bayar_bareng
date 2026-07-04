@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { BillResult } from '@/types'
 import { generateWhatsAppText, getWhatsAppUrl } from '@/lib/whatsapp'
-import { IoCheckmarkCircle, IoCopyOutline, IoLogoWhatsapp } from 'react-icons/io5'
+import { IoCheckmark, IoCopyOutline, IoLogoWhatsapp } from 'react-icons/io5'
 
 type CopyState = 'idle' | 'copied' | 'failed'
 
@@ -38,11 +38,16 @@ async function copyTextToClipboard(text: string): Promise<void> {
   }
 }
 
+/**
+ * The natural end of the flow: send the breakdown to the group chat.
+ * Opening WhatsApp with the prefilled message is the primary action;
+ * copying the text is the fallback.
+ */
 export default function WhatsAppActions({
   result,
-  className = 'grid grid-cols-1 gap-3 sm:grid-cols-2',
-  copyClassName = 'button-primary bg-whatsapp hover:bg-whatsappDark',
-  whatsappClassName = 'button-secondary',
+  className = 'grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]',
+  copyClassName = 'button-secondary min-h-12',
+  whatsappClassName = 'button-wa',
 }: WhatsAppActionsProps) {
   const [copyState, setCopyState] = useState<CopyState>('idle')
 
@@ -64,14 +69,6 @@ export default function WhatsAppActions({
 
   return (
     <div className={className}>
-      <button type="button" onClick={handleCopy} className={copyClassName}>
-        {copyState === 'copied' ? (
-          <IoCheckmarkCircle className="h-5 w-5" />
-        ) : (
-          <IoCopyOutline className="h-5 w-5" />
-        )}
-        {copyState === 'copied' ? 'Copied WA message' : 'Copy WA message'}
-      </button>
       <a
         href={getWhatsAppUrl(result)}
         target="_blank"
@@ -79,11 +76,15 @@ export default function WhatsAppActions({
         className={whatsappClassName}
       >
         <IoLogoWhatsapp className="h-5 w-5" />
-        Open WhatsApp
+        Kirim via WhatsApp
       </a>
+      <button type="button" onClick={handleCopy} className={copyClassName}>
+        {copyState === 'copied' ? <IoCheckmark className="h-4 w-4" /> : <IoCopyOutline className="h-4 w-4" />}
+        {copyState === 'copied' ? 'Tersalin' : 'Salin pesan'}
+      </button>
       {copyState === 'failed' && (
-        <p className="text-xs text-danger sm:col-span-2">
-          Could not copy automatically. Try opening WhatsApp instead.
+        <p className="text-xs text-stamp sm:col-span-2">
+          Gagal menyalin otomatis. Pakai tombol “Kirim via WhatsApp” saja.
         </p>
       )}
     </div>

@@ -3,7 +3,7 @@
 import { Person, Item } from '@/types'
 import { getPersonColor } from '@/lib/colors'
 import { formatRp } from '@/lib/item-display'
-import { IoCloseOutline, IoAddOutline, IoTrashOutline } from 'react-icons/io5'
+import { IoCloseOutline, IoTrashOutline } from 'react-icons/io5'
 
 interface PersonCardProps {
   person: Person
@@ -43,86 +43,88 @@ export default function PersonCard({ person, index, onUpdate, onRemove, canRemov
 
   return (
     <article className="animate-fade-in card overflow-hidden">
-      <div className="flex flex-col gap-3 border-b border-line px-4 py-4 sm:flex-row sm:items-start sm:justify-between sm:px-5">
-        <div className="flex min-w-0 flex-1 items-center gap-3">
-          <div
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white"
-            style={{ backgroundColor: color.base }}
-          >
-            {person.name ? person.name.charAt(0).toUpperCase() : index + 1}
-          </div>
-          <div className="min-w-0 flex-1">
-            <input
-              type="text"
-              value={person.name}
-              onChange={(e) => updateName(e.target.value)}
-              placeholder={`Person ${index + 1}`}
-              className="w-full min-w-0 bg-transparent text-base font-semibold text-ink outline-none placeholder:text-faint sm:text-lg"
-            />
-            <p className="mt-0.5 text-xs text-muted">
-              {person.profileId ? 'Saved profile' : 'One-off bill person'}
-            </p>
-          </div>
+      <div className="flex items-start gap-3 border-b border-rule px-4 py-3.5 sm:px-5">
+        <div
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm text-sm font-semibold text-white"
+          style={{ backgroundColor: color.base }}
+        >
+          {person.name ? person.name.charAt(0).toUpperCase() : index + 1}
+        </div>
+        <div className="min-w-0 flex-1">
+          <input
+            type="text"
+            value={person.name}
+            onChange={(e) => updateName(e.target.value)}
+            placeholder={`Orang ${index + 1}`}
+            className="field-line w-full min-w-0 border-transparent px-0 py-1 text-base font-semibold hover:border-rule2 sm:text-lg"
+          />
+          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
+            {person.profileId ? 'dari roster' : 'hanya nota ini'}
+          </p>
         </div>
         {canRemove && (
           <button
             onClick={onRemove}
-            className="icon-button self-start hover:text-danger"
-            aria-label="Remove person"
+            className="icon-button self-start hover:text-stamp"
+            aria-label="Hapus orang ini"
           >
             <IoTrashOutline className="w-4 h-4" />
           </button>
         )}
       </div>
 
-      <div className="space-y-2.5 px-4 py-4 sm:px-5">
-        {person.items.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-line2 bg-surface2/50 py-5 text-center">
-            <p className="text-sm text-muted">No items yet. Add the first item below.</p>
-          </div>
-        ) : (
-          person.items.map((item, idx) => (
-            <div key={item.id} className="animate-fade-in grid grid-cols-[minmax(0,1fr)_7.5rem_auto] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_9rem_auto]">
-              <input
-                type="text"
-                value={item.name}
-                onChange={(e) => updateItem(item.id, 'name', e.target.value)}
-                placeholder={`Item ${idx + 1}`}
-                className="field min-w-0"
-              />
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-xs text-faint">Rp</span>
-                <input
-                  type="number"
-                  value={item.price || ''}
-                  onChange={(e) => updateItem(item.id, 'price', Number(e.target.value))}
-                  placeholder="0"
-                  className="field field-mono text-right pl-9"
-                />
-              </div>
-              <button
-                onClick={() => removeItem(item.id)}
-                className="icon-button hover:text-danger"
-                aria-label="Remove item"
-              >
-                <IoCloseOutline className="w-5 h-5" />
-              </button>
+      {/* Entry lines, written against the red ledger margin. */}
+      <div className="px-4 py-3 sm:px-5">
+        <div className="border-l border-stamp/35 pl-3 sm:pl-4">
+          {person.items.length === 0 ? (
+            <p className="py-3 text-sm text-muted">Belum ada item. Tulis pesanan pertama di bawah.</p>
+          ) : (
+            <div className="space-y-1">
+              {person.items.map((item, idx) => (
+                <div
+                  key={item.id}
+                  className="animate-fade-in grid grid-cols-[minmax(0,1fr)_7.5rem_auto] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_9rem_auto]"
+                >
+                  <input
+                    type="text"
+                    value={item.name}
+                    onChange={(e) => updateItem(item.id, 'name', e.target.value)}
+                    placeholder={`Item ${idx + 1}`}
+                    className="field-line min-w-0"
+                  />
+                  <div className="flex items-baseline gap-1">
+                    <span className="font-mono text-xs text-faint">Rp</span>
+                    <input
+                      type="number"
+                      value={item.price || ''}
+                      onChange={(e) => updateItem(item.id, 'price', Number(e.target.value))}
+                      placeholder="0"
+                      className="field-line field-mono min-w-0 text-right"
+                    />
+                  </div>
+                  <button
+                    onClick={() => removeItem(item.id)}
+                    className="icon-button h-8 w-8 hover:text-stamp"
+                    aria-label="Hapus item"
+                  >
+                    <IoCloseOutline className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
             </div>
-          ))
-        )}
+          )}
+        </div>
       </div>
 
-      <div className="flex items-center justify-between border-t border-line bg-surface2/60 px-4 py-3 sm:px-5">
+      <div className="flex items-baseline justify-between gap-3 border-t border-rule bg-paper2 px-4 py-3 sm:px-5">
         <button
           onClick={addItem}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold transition-colors hover:opacity-75"
-          style={{ color: color.base }}
+          className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-ink transition-opacity hover:opacity-70"
         >
-          <IoAddOutline className="w-4 h-4" />
-          Add item
+          + Tambah item
         </button>
-        <span className="text-sm text-muted">
-          Subtotal <span className="ml-1 font-mono font-semibold text-ink">{formatRp(subtotal)}</span>
+        <span className="font-mono text-xs text-muted">
+          Subtotal <span className="ml-1 text-sm font-bold text-ink">{formatRp(subtotal)}</span>
         </span>
       </div>
     </article>

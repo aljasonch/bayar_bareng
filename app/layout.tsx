@@ -1,21 +1,22 @@
 import type { Metadata } from 'next'
-import { JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google'
+import { Archivo, IBM_Plex_Mono } from 'next/font/google'
 import './globals.css'
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const archivo = Archivo({
   subsets: ['latin'],
-  variable: '--font-plus-jakarta-sans',
+  variable: '--font-archivo',
 })
 
-const jetBrainsMono = JetBrains_Mono({
+const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
-  variable: '--font-jetbrains-mono',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-plex-mono',
 })
 
 export const metadata: Metadata = {
-  title: 'Bayar Bareng | Split Bill Calculator',
+  title: 'Bayar Bareng — Kalkulator Patungan',
   description:
-    'Split your bills easily with friends. Calculate discounts, delivery fees, cashback, and share the breakdown via WhatsApp.',
+    'Catat pesanan tiap orang, hitung diskon, ongkir, dan cashback, lalu tagih lewat WhatsApp. Split bill tanpa salah hitung.',
 }
 
 export default function RootLayout({
@@ -24,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${plusJakartaSans.variable} ${jetBrainsMono.variable}`}>
-      <body className="antialiased bg-paper text-ink selection:bg-accent/20">{children}</body>
+    <html lang="id" className={`${archivo.variable} ${plexMono.variable}`}>
+      <body className="antialiased selection:bg-stamp/20">{children}</body>
     </html>
   )
 }

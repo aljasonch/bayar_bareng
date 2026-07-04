@@ -19,7 +19,7 @@ export default function SplitDistributionBar({ results, total }: SplitDistributi
   const segments = results
     .map((r, i) => ({
       id: r.person.id,
-      name: r.person.name || `Person ${i + 1}`,
+      name: r.person.name || `Orang ${i + 1}`,
       value: r.final,
       pct: (r.final / total) * 100,
       color: getPersonColor(i),
@@ -30,17 +30,15 @@ export default function SplitDistributionBar({ results, total }: SplitDistributi
 
   return (
     <section className="card p-4 sm:p-5">
-      <div className="mb-4 flex items-start justify-between gap-3">
+      <div className="mb-3 flex items-baseline justify-between gap-3">
         <div>
-          <p className="label">Distribution</p>
-          <h3 className="mt-1 text-base font-semibold text-ink">Share of total</h3>
+          <p className="label">Porsi</p>
+          <h3 className="mt-1 text-base font-semibold text-ink">Bagian tiap orang</h3>
         </div>
-        <span className="rounded-full border border-line2 bg-white px-3 py-1 text-xs text-muted">
-          {segments.length} paying
-        </span>
+        <span className="font-mono text-xs text-muted">{segments.length} bayar</span>
       </div>
 
-      <div className="flex h-3 w-full overflow-hidden rounded-full bg-surface">
+      <div className="flex h-3 w-full overflow-hidden bg-paper2">
         {segments.map((s, i) => (
           <div
             key={s.id}
@@ -49,18 +47,18 @@ export default function SplitDistributionBar({ results, total }: SplitDistributi
               width: `${s.pct}%`,
               backgroundColor: s.color.base,
               animationDelay: `${i * 60}ms`,
-              borderRight: i < segments.length - 1 ? '2px solid rgb(var(--color-white) / 1)' : undefined,
+              borderRight: i < segments.length - 1 ? '2px solid rgb(var(--color-paper) / 1)' : undefined,
             }}
             title={`${s.name}: ${formatRp(s.value)} (${s.pct.toFixed(0)}%)`}
           />
         ))}
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-3 grid grid-cols-1 gap-x-4 gap-y-1.5 sm:grid-cols-2 lg:grid-cols-3">
         {segments.map((s) => (
-          <div key={s.id} className="flex min-w-0 items-center gap-2 rounded-xl border border-line bg-white/70 px-3 py-2">
+          <div key={s.id} className="flex min-w-0 items-baseline gap-2">
             <span
-              className="h-2.5 w-2.5 flex-shrink-0 rounded-full"
+              className="h-2 w-2 flex-shrink-0 self-center"
               style={{ backgroundColor: s.color.base }}
             />
             <span className="flex-1 truncate text-xs text-ink3">{s.name}</span>

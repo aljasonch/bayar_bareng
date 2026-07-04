@@ -3,7 +3,7 @@
 import { Person, FeeConfig, BillMode, KopiKenanganOutlet } from '@/types'
 import { calculateBill } from '@/lib/calculate'
 import { formatOutletName } from '@/lib/kopi-kenangan'
-import { getItemDetailLines, getItemLabel } from '@/lib/item-display'
+import { formatRp, getItemLabel } from '@/lib/item-display'
 import { getPersonColor } from '@/lib/colors'
 
 interface LivePreviewProps {
@@ -19,8 +19,8 @@ export default function LivePreview({ people, feeConfig, billMode, kopiKenanganO
   if (!hasItems) {
     return (
       <div className="card p-6 text-center">
-        <p className="label">Live preview</p>
-        <p className="mt-2 text-sm text-muted">Add items to see the split before calculating.</p>
+        <p className="label">Pratinjau</p>
+        <p className="mt-2 text-sm text-muted">Isi item dulu, hitungannya muncul di sini.</p>
       </div>
     )
   }
@@ -41,24 +41,24 @@ export default function LivePreview({ people, feeConfig, billMode, kopiKenanganO
 
   return (
     <aside className="card sticky top-5 p-4 sm:p-5">
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-3 flex items-center justify-between">
         <div>
-          <p className="label">Live preview</p>
-          <h3 className="mt-1 text-base font-semibold text-ink">Running settlement</h3>
+          <p className="label">Pratinjau</p>
+          <h3 className="mt-1 text-base font-semibold text-ink">Hitungan berjalan</h3>
         </div>
-        <span className="flex items-center gap-1.5 text-[11px] text-muted">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-          Live
+        <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted">
+          <span className="h-1.5 w-1.5 rounded-full bg-wa" />
+          live
         </span>
       </div>
       {billMode === 'kopiKenangan' && (
-        <p className="-mt-2 mb-4 text-xs text-muted">
-          Kopi Kenangan - {formatOutletName(kopiKenanganOutlet)}
+        <p className="-mt-1 mb-3 font-mono text-xs text-muted">
+          Kopi Kenangan · {formatOutletName(kopiKenanganOutlet)}
         </p>
       )}
 
       {paying.length > 0 && result.totalFinal > 0 && (
-        <div className="mb-4 flex h-2 w-full overflow-hidden rounded-full bg-surface">
+        <div className="mb-4 flex h-2 w-full overflow-hidden bg-paper2">
           {paying.map((s) => (
             <div
               key={s.id}
@@ -66,52 +66,36 @@ export default function LivePreview({ people, feeConfig, billMode, kopiKenanganO
               style={{
                 width: `${(s.value / result.totalFinal) * 100}%`,
                 backgroundColor: s.color.base,
-                borderRight: '1.5px solid rgb(var(--color-white) / 1)',
+                borderRight: '1.5px solid rgb(var(--color-paper) / 1)',
               }}
             />
           ))}
         </div>
       )}
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         {result.results.map((r, i) => {
           const color = getPersonColor(i)
           return (
-            <div key={r.person.id} className="rounded-2xl border border-line bg-white/70 p-3">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex min-w-0 items-center gap-2">
-                  <div
-                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white"
-                    style={{ backgroundColor: color.base }}
-                  >
-                    {r.person.name ? r.person.name.charAt(0).toUpperCase() : i + 1}
-                  </div>
-                  <span className="truncate text-sm font-medium text-ink3">{r.person.name || `Person ${i + 1}`}</span>
-                </div>
-                <span className="ml-2 shrink-0 font-mono text-sm font-semibold text-ink">
-                  Rp{r.final.toLocaleString('id-ID')}
-                </span>
+            <div key={r.person.id}>
+              <div className="flex items-baseline font-mono text-sm">
+                <span
+                  className="mr-2 inline-block h-2 w-2 shrink-0 self-center"
+                  style={{ backgroundColor: color.base }}
+                />
+                <span className="truncate text-ink2">{r.person.name || `Orang ${i + 1}`}</span>
+                <span className="dots" aria-hidden />
+                <span className="shrink-0 font-semibold text-ink">{formatRp(r.final)}</span>
               </div>
               {r.person.items.length > 0 && (
-                <div className="mt-2 ml-9 space-y-1">
+                <div className="ml-4 mt-0.5 space-y-0.5">
                   {r.person.items.slice(0, 2).map((item) => (
-                    <div key={item.id} className="text-[11px] text-faint">
-                      <p className="truncate text-muted">{getItemLabel(item)}</p>
-                      {getItemDetailLines(item)
-                        .filter(
-                          (line) =>
-                            line.startsWith('Upgrade') || line.startsWith('Syrup') || line.startsWith('Add-ons')
-                        )
-                        .slice(0, 2)
-                        .map((line) => (
-                          <p key={line} className="truncate">
-                            {line}
-                          </p>
-                        ))}
-                    </div>
+                    <p key={item.id} className="truncate font-mono text-[11px] text-faint">
+                      {getItemLabel(item)}
+                    </p>
                   ))}
                   {r.person.items.length > 2 && (
-                    <p className="text-[11px] text-faint">+{r.person.items.length - 2} more items</p>
+                    <p className="font-mono text-[11px] text-faint">+{r.person.items.length - 2} item lagi</p>
                   )}
                 </div>
               )}
@@ -120,19 +104,15 @@ export default function LivePreview({ people, feeConfig, billMode, kopiKenanganO
         })}
       </div>
 
-      <div className="mt-4 space-y-1.5 border-t border-line2 pt-3">
-        <div className="flex justify-between">
-          <span className="text-sm text-muted">Total</span>
-          <span className="font-mono text-sm font-bold text-ink">
-            Rp{result.totalFinal.toLocaleString('id-ID')}
-          </span>
+      <div className="rule-total mt-4 pt-3">
+        <div className="flex items-baseline justify-between">
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-ink">Total</span>
+          <span className="font-mono text-lg font-bold text-ink">{formatRp(result.totalFinal)}</span>
         </div>
         {result.totalSaved > 0 && (
-          <div className="flex justify-between">
-            <span className="text-sm text-muted">Total saved</span>
-            <span className="font-mono text-sm font-bold text-accent">
-              Rp{result.totalSaved.toLocaleString('id-ID')}
-            </span>
+          <div className="mt-0.5 flex items-baseline justify-between font-mono text-xs">
+            <span className="text-muted">hemat</span>
+            <span className="font-semibold text-stamp">-{formatRp(result.totalSaved)}</span>
           </div>
         )}
       </div>

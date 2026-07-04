@@ -15,42 +15,43 @@ export default function ResultCard({ result, index, grandTotal }: ResultCardProp
   const color = getPersonColor(index)
   const sharePct =
     grandTotal && grandTotal > 0 ? Math.min(100, (result.final / grandTotal) * 100) : null
-  const initial = (result.person.name || `P${index + 1}`).trim().charAt(0).toUpperCase()
+  const initial = (result.person.name || `O${index + 1}`).trim().charAt(0).toUpperCase()
 
   return (
     <article
       className="animate-slide-up card overflow-hidden"
       style={{ animationDelay: `${index * 70}ms` }}
     >
-      <div className="flex items-center gap-3 border-b border-line px-4 py-4 sm:px-5">
+      <div className="flex items-center gap-3 border-b border-rule px-4 py-3 sm:px-5">
         <div
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-base font-semibold text-white"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm text-sm font-semibold text-white"
           style={{ backgroundColor: color.base }}
         >
           {initial}
         </div>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <h3 className="truncate text-base font-semibold text-ink">
-            {result.person.name || `Person ${index + 1}`}
+            {result.person.name || `Orang ${index + 1}`}
           </h3>
-          {sharePct !== null && (
-            <p className="text-xs text-muted">{sharePct.toFixed(0)}% of total</p>
-          )}
         </div>
+        {sharePct !== null && (
+          <span className="shrink-0 font-mono text-xs text-muted">{sharePct.toFixed(0)}%</span>
+        )}
       </div>
 
-      <div className="px-4 sm:px-5 py-4">
-        <div className="space-y-1.5 mb-3 pb-3 divider-dashed">
+      <div className="px-4 py-4 sm:px-5">
+        <div className="mb-3 space-y-1.5 border-b border-dashed border-rule2 pb-3">
           {result.person.items.map((item) => (
-            <div key={item.id} className="text-sm">
-              <div className="flex justify-between gap-2">
-                <span className="truncate text-ink3">{getItemLabel(item) || 'Unnamed'}</span>
-                <span className="shrink-0 font-mono text-ink2">{formatRp(item.price)}</span>
+            <div key={item.id}>
+              <div className="flex items-baseline font-mono text-sm">
+                <span className="truncate text-ink3">{getItemLabel(item) || 'Tanpa nama'}</span>
+                <span className="dots" aria-hidden />
+                <span className="shrink-0 text-ink2">{formatRp(item.price)}</span>
               </div>
               {getItemDetailLines(item).length > 0 && (
-                <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
+                <div className="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5">
                   {getItemDetailLines(item).map((line) => (
-                    <span key={line} className="text-[11px] text-faint">
+                    <span key={line} className="font-mono text-[11px] text-faint">
                       {line}
                     </span>
                   ))}
@@ -60,48 +61,46 @@ export default function ResultCard({ result, index, grandTotal }: ResultCardProp
           ))}
         </div>
 
-        <div className="space-y-1.5 text-sm mb-3">
-          <div className="flex justify-between">
+        <div className="mb-3 space-y-1 font-mono text-sm">
+          <div className="flex items-baseline justify-between">
             <span className="text-muted">Subtotal</span>
-            <span className="font-mono text-ink2">{formatRp(result.subtotal)}</span>
+            <span className="text-ink2">{formatRp(result.subtotal)}</span>
           </div>
           {result.discountSaved > 0 && (
-            <div className="flex justify-between items-center">
-              <span className="text-muted">Discount</span>
-              <span className="font-mono text-accent">-{formatRp(result.discountSaved)}</span>
+            <div className="flex items-baseline justify-between">
+              <span className="text-muted">Diskon</span>
+              <span className="text-stamp">-{formatRp(result.discountSaved)}</span>
             </div>
           )}
           {result.deliveryShare > 0 && (
-            <div className="flex justify-between items-center">
-              <span className="text-muted">Delivery</span>
-              <span className="font-mono text-ink2">+{formatRp(result.deliveryShare)}</span>
+            <div className="flex items-baseline justify-between">
+              <span className="text-muted">Ongkir</span>
+              <span className="text-ink2">+{formatRp(result.deliveryShare)}</span>
             </div>
           )}
           {result.additionalFeesShare > 0 && (
-            <div className="flex justify-between items-center">
-              <span className="text-muted">Add. fees</span>
-              <span className="font-mono text-ink2">+{formatRp(result.additionalFeesShare)}</span>
+            <div className="flex items-baseline justify-between">
+              <span className="text-muted">Biaya lain</span>
+              <span className="text-ink2">+{formatRp(result.additionalFeesShare)}</span>
             </div>
           )}
           {result.cashbackSaved > 0 && (
-            <div className="flex justify-between items-center">
+            <div className="flex items-baseline justify-between">
               <span className="text-muted">Cashback</span>
-              <span className="font-mono text-accent">-{formatRp(result.cashbackSaved)}</span>
+              <span className="text-stamp">-{formatRp(result.cashbackSaved)}</span>
             </div>
           )}
         </div>
 
-        <div className="pt-3 border-t border-line2">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-semibold text-ink3">Amount due</span>
-            <span className="font-mono text-lg font-semibold" style={{ color: color.base }}>
-              {formatRp(result.final)}
-            </span>
+        <div className="rule-total pt-2.5">
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-ink">Bayar</span>
+            <span className="font-mono text-xl font-bold text-ink">{formatRp(result.final)}</span>
           </div>
           {sharePct !== null && (
-            <div className="mt-2.5 h-1.5 w-full rounded-full bg-surface overflow-hidden">
+            <div className="mt-2.5 h-1 w-full overflow-hidden bg-paper2">
               <div
-                className="h-full rounded-full animate-grow-bar"
+                className="h-full animate-grow-bar"
                 style={{ width: `${sharePct}%`, backgroundColor: color.base }}
               />
             </div>

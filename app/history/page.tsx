@@ -11,45 +11,77 @@ import HistoryCard from '@/components/HistoryCard'
 import ResultCard from '@/components/ResultCard'
 import SplitDistributionBar from '@/components/SplitDistributionBar'
 import WhatsAppActions from '@/components/WhatsAppActions'
-import { IoAddOutline, IoArrowBack, IoClose } from 'react-icons/io5'
+import { IoClose } from 'react-icons/io5'
 
 function HistoryDetail({ result }: { result: BillResult }) {
   return (
-    <div className="space-y-4 animate-fade-in">
-      <section className="rounded-[1.75rem] bg-ink p-5 text-white shadow-pop">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/50">Saved bill</p>
-            <p className="mt-2 font-mono text-3xl font-semibold tracking-tight">{formatRp(result.totalFinal)}</p>
+    <div className="animate-fade-in space-y-4">
+      {/* The saved receipt, reprinted. */}
+      <div className="receipt-frame">
+        <section className="receipt px-5 pt-5">
+          <div className="text-center">
+            <p className="font-mono text-sm font-bold uppercase tracking-[0.2em] text-ink">Bayar Bareng</p>
+            <p className="mt-1 font-mono text-xs text-muted">nota tersimpan</p>
           </div>
-          <span className="rounded-full border border-white/10 px-3 py-1 font-mono text-xs text-white/60">
-            {formatBillDate(result, { day: 'numeric', month: 'short', year: 'numeric' })}
-          </span>
-        </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-            <p className="text-white/50">People</p>
-            <p className="mt-1 font-mono text-lg font-semibold">{result.people.length}</p>
+          <div className="perforation mt-4 space-y-1 pt-3 font-mono text-xs text-muted">
+            <div className="flex justify-between gap-2">
+              <span>TANGGAL</span>
+              <span className="text-ink2">
+                {formatBillDate(result, { day: 'numeric', month: 'short', year: 'numeric' })}
+              </span>
+            </div>
+            {result.billMode === 'kopiKenangan' && (
+              <div className="flex justify-between gap-2">
+                <span>STORE</span>
+                <span className="text-ink2">
+                  Kopi Kenangan · {formatOutletName(result.kopiKenanganOutlet)}
+                </span>
+              </div>
+            )}
+            {result.payerName && (
+              <div className="flex justify-between gap-2">
+                <span>DITALANGI</span>
+                <span className="text-ink2">
+                  {result.payerName}
+                  {result.payerAccountNumber ? ` · ${result.payerAccountNumber}` : ''}
+                </span>
+              </div>
+            )}
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-            <p className="text-white/50">Saved</p>
-            <p className="mt-1 font-mono text-lg font-semibold">{formatRp(result.totalSaved)}</p>
-          </div>
-        </div>
 
-        {result.payerName && (
-          <p className="mt-4 text-xs text-white/65">
-            Fronted by <span className="font-semibold text-white">{result.payerName}</span>
-            {result.payerAccountNumber ? `, ${result.payerAccountNumber}` : ''}
+          <div className="perforation mt-3 space-y-2 pt-3">
+            {result.results.map((item, index) => (
+              <div key={item.person.id} className="flex items-baseline font-mono text-sm">
+                <span className="truncate text-ink2">{item.person.name || `Orang ${index + 1}`}</span>
+                <span className="dots" aria-hidden />
+                <span className="shrink-0 font-semibold text-ink">{formatRp(item.final)}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="rule-total mt-4 pt-3">
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-ink">Total</span>
+              <span className="font-mono text-3xl font-bold tracking-tight text-ink">
+                {formatRp(result.totalFinal)}
+              </span>
+            </div>
+            {result.totalSaved > 0 && (
+              <div className="mt-1 flex items-baseline justify-between gap-3 font-mono text-xs">
+                <span className="text-muted">hemat</span>
+                <span className="font-semibold text-stamp">-{formatRp(result.totalSaved)}</span>
+              </div>
+            )}
+          </div>
+
+          <p className="pb-4 pt-3 font-mono text-[10px] uppercase tracking-[0.16em] text-faint">
+            {result.people.length} orang · dihitung otomatis
           </p>
-        )}
-        {result.billMode === 'kopiKenangan' && (
-          <p className="mt-2 text-xs text-white/65">
-            Kopi Kenangan, {formatOutletName(result.kopiKenanganOutlet)} outlet
-          </p>
-        )}
-      </section>
+        </section>
+      </div>
+
+      <WhatsAppActions result={result} />
 
       <SplitDistributionBar results={result.results} total={result.totalFinal} />
 
@@ -58,13 +90,6 @@ function HistoryDetail({ result }: { result: BillResult }) {
           <ResultCard key={item.person.id} result={item} index={index} grandTotal={result.totalFinal} />
         ))}
       </div>
-
-      <WhatsAppActions
-        result={result}
-        className="grid grid-cols-1 gap-3 sm:grid-cols-2"
-        copyClassName="button-primary bg-whatsapp hover:bg-whatsappDark"
-        whatsappClassName="button-secondary"
-      />
     </div>
   )
 }
@@ -93,7 +118,7 @@ export default function HistoryPage() {
   if (!mounted) {
     return (
       <div className="flex min-h-screen items-center justify-center px-4">
-        <div className="card px-5 py-4 text-sm text-muted">Loading saved bills...</div>
+        <div className="card px-5 py-4 font-mono text-sm text-muted">Memuat riwayat…</div>
       </div>
     )
   }
@@ -101,50 +126,29 @@ export default function HistoryPage() {
   return (
     <div className="min-h-screen px-4 py-5 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-[1440px]">
-        <header className="flex flex-col gap-4 border-b border-line pb-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex h-11 w-11 items-center justify-center rounded-2xl border border-line2 bg-white text-ink transition-colors hover:border-ink/25">
-              <IoArrowBack className="h-5 w-5" />
-            </Link>
-            <div>
-              <h1 className="text-xl font-semibold tracking-tight text-ink">History</h1>
-              <p className="text-sm text-muted">Review saved settlements and share them again.</p>
-            </div>
+        <header className="flex items-baseline justify-between gap-4 border-b border-rule pb-4">
+          <div>
+            <h1 className="font-mono text-lg font-bold uppercase tracking-[0.14em] text-ink">Riwayat</h1>
+            <p className="mt-0.5 text-sm text-muted">
+              {history.length > 0
+                ? `${history.length} nota tersimpan di browser ini.`
+                : 'Nota yang kamu simpan muncul di sini.'}
+            </p>
           </div>
-          <Link href="/" className="button-primary">
-            <IoAddOutline className="h-4 w-4" />
-            New bill
+          <Link href="/" className="button-primary shrink-0">
+            + Nota baru
           </Link>
         </header>
 
-        <section className="mt-6 sheet p-4 sm:p-5 lg:p-6">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_18rem] md:items-end">
-            <div>
-              <p className="label">Saved workspace</p>
-              <h2 className="mt-2 text-3xl font-semibold tracking-[-0.035em] text-ink sm:text-4xl">
-                Bills you have already settled.
-              </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted sm:text-base">
-                History is stored in this browser, matching the profile roster and current local-only workflow.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-line bg-white/75 px-4 py-3">
-              <p className="label">Total saved</p>
-              <p className="mt-1 font-mono text-3xl font-semibold text-ink">{history.length}</p>
-              <p className="mt-1 text-xs text-muted">{history.length === 1 ? 'bill' : 'bills'} in history</p>
-            </div>
-          </div>
-        </section>
-
         <main className="py-5">
           {history.length === 0 ? (
-            <div className="card p-10 text-center animate-fade-in">
-              <h2 className="text-lg font-semibold text-ink">No saved bills yet</h2>
+            <div className="animate-fade-in rounded-sm border border-dashed border-rule2 bg-paper/60 p-10 text-center">
+              <h2 className="text-lg font-semibold text-ink">Belum ada nota tersimpan</h2>
               <p className="mx-auto mt-2 max-w-md text-sm text-muted">
-                Save a result after calculating a split, then it will appear here.
+                Hitung satu patungan dulu, lalu tekan “Simpan ke riwayat” di halaman hasil.
               </p>
               <Link href="/" className="button-primary mt-6">
-                Start a bill
+                Mulai nota baru
               </Link>
             </div>
           ) : (
@@ -166,7 +170,9 @@ export default function HistoryPage() {
                   {selectedResult ? (
                     <HistoryDetail result={selectedResult} />
                   ) : (
-                    <div className="card p-10 text-center text-sm text-muted">Select a bill to inspect it.</div>
+                    <div className="rounded-sm border border-dashed border-rule2 bg-paper/60 p-10 text-center text-sm text-muted">
+                      Pilih nota di kiri untuk melihat rinciannya.
+                    </div>
                   )}
                 </div>
               </div>
@@ -176,22 +182,22 @@ export default function HistoryPage() {
       </div>
 
       {selectedResult && history.length > 0 && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-paper/95 px-4 py-5 backdrop-blur-md xl:hidden">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-counter/95 px-4 py-5 backdrop-blur-sm xl:hidden">
           <div className="mx-auto max-w-screen-md pb-12">
             <div className="mb-4 flex items-center justify-between gap-4">
               <div>
-                <p className="label">Full breakdown</p>
+                <p className="label">Rincian nota</p>
                 <h2 className="mt-1 text-lg font-semibold text-ink">
                   {formatBillDate(selectedResult, { day: 'numeric', month: 'long', year: 'numeric' })}
                 </h2>
               </div>
-              <button type="button" onClick={() => setSelectedResult(null)} className="icon-button bg-white">
+              <button type="button" onClick={() => setSelectedResult(null)} className="icon-button bg-paper">
                 <IoClose className="h-5 w-5" />
               </button>
             </div>
             <HistoryDetail result={selectedResult} />
             <button type="button" onClick={() => setSelectedResult(null)} className="button-secondary mt-4 w-full">
-              Close
+              Tutup
             </button>
           </div>
         </div>
