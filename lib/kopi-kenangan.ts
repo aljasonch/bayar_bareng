@@ -8,8 +8,7 @@ import {
 
 export type KopiKenanganCategory =
   | 'Coffee'
-  | 'Toffee Nut Series'
-  | 'Blueberry Series'
+  | 'OG Aren Series'
   | 'OATSIDE Series'
   | 'Kenangan Frappe'
   | 'Chocolate & Sweets'
@@ -37,8 +36,7 @@ export const ICE_LEVEL_OPTIONS: IceLevelOption[] = ['Normal', 'Less Ice', 'No Ic
 
 export const KOPI_KENANGAN_CATEGORIES: KopiKenanganCategory[] = [
   'Coffee',
-  'Toffee Nut Series',
-  'Blueberry Series',
+  'OG Aren Series',
   'OATSIDE Series',
   'Kenangan Frappe',
   'Chocolate & Sweets',
@@ -105,6 +103,12 @@ export const KOPI_KENANGAN_MENU: KopiKenanganCatalogItem[] = [
     prices: { R: price(22), L: price(31), J: price(40) },
   },
   {
+    id: 'creamy-caramel-latte',
+    name: 'Creamy Caramel Latte',
+    category: 'Coffee',
+    prices: { R: price(26), L: price(33), J: price(43) },
+  },
+  {
     id: 'dua-shot-iced-shaken',
     name: 'Dua Shot Iced Shaken',
     category: 'Coffee',
@@ -153,60 +157,16 @@ export const KOPI_KENANGAN_MENU: KopiKenanganCatalogItem[] = [
     prices: { R: price(26), L: price(34), J: price(43) },
   },
   {
-    id: 'toffee-nut-latte',
-    name: 'Toffee Nut Latte',
-    category: 'Toffee Nut Series',
-    prices: { R: price(19), L: price(26), J: price(36) },
-    isNew: true,
-    isLimitedTime: true,
+    id: 'og-aren-speculoos-latte',
+    name: 'OG Aren Speculoos Latte',
+    category: 'OG Aren Series',
+    prices: { R: price(21), L: price(28) },
   },
   {
-    id: 'toffee-nut-aren-latte',
-    name: 'Toffee Nut Aren Latte',
-    category: 'Toffee Nut Series',
-    prices: { R: price(21), L: price(28), J: price(38) },
-    isNew: true,
-    isLimitedTime: true,
-  },
-  {
-    id: 'toffee-nut-oat-latte',
-    name: 'Toffee Nut Oat Latte',
-    category: 'Toffee Nut Series',
-    prices: { R: price(22), L: price(29), J: price(39) },
-    isNew: true,
-    isLimitedTime: true,
-  },
-  {
-    id: 'blueberry-americano',
-    name: 'Blueberry Americano',
-    category: 'Blueberry Series',
-    prices: { R: price(19), L: price(26), J: price(36) },
-    isNew: true,
-    isLimitedTime: true,
-  },
-  {
-    id: 'blueberry-frappe',
-    name: 'Blueberry Frappe',
-    category: 'Blueberry Series',
-    prices: { R: price(23), L: price(30), J: price(40) },
-    isNew: true,
-    isLimitedTime: true,
-  },
-  {
-    id: 'Chocoberry-frappe',
-    name: 'Chocoberry Frappe',
-    category: 'Blueberry Series',
-    prices: { R: price(27), L: price(34), J: price(44) },
-    isNew: true,
-    isLimitedTime: true,
-  },
-  {
-    id: 'Coffeberry-frappe',
-    name: 'Coffeberry Frappe',
-    category: 'Blueberry Series',
-    prices: { R: price(25), L: price(32), J: price(42) },
-    isNew: true,
-    isLimitedTime: true,
+    id: 'dua-shot-og-aren',
+    name: 'Dua Shot OG Aren',
+    category: 'OG Aren Series',
+    prices: { R: price(25), L: price(32) },
   },
   {
     id: 'oatside-kopi-kenangan-mantan',
