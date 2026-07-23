@@ -3,31 +3,35 @@
 @tailwind utilities;
 
 /* ------------------------------------------------------------------
-   Bayar Bareng — "Nota Kasir"
+   Bilbil — "Nota Kasir"
    Paper, ink, hairline rules, one stamp-red accent.
    WhatsApp green appears only on the share CTA.
 ------------------------------------------------------------------- */
 
 :root {
   --color-white: 255 255 255;
-  --color-counter: 231 232 228; /* page background: the counter the receipt sits on */
-  --color-paper: 252 252 250; /* receipt paper surfaces */
-  --color-paper2: 245 245 242; /* inset zones inside a card */
-  --color-ink: 26 28 26;
-  --color-ink2: 58 61 57;
-  --color-ink3: 92 96 90;
-  --color-muted: 118 122 114;
-  --color-faint: 160 163 154;
-  --color-rule: 212 214 207; /* hairline rules */
-  --color-rule2: 186 189 180; /* stronger rules, input borders */
-  --color-stamp: 178 56 44; /* stempel red: save stamp, discounts, destructive */
-  --color-stamp-soft: 246 233 230;
-  --color-wa: 21 128 61;
-  --color-wa-dark: 22 101 52;
-  --color-scrollbar: 200 202 195;
-  --color-scrollbar-hover: 178 181 172;
+  --color-counter: 250 248 245; /* warm page background */
+  --color-paper: 255 255 255; /* receipt paper surfaces */
+  --color-paper2: 247 245 240; /* inset zones inside a card */
+  --color-ink: 30 27 24; /* deep warm text */
+  --color-ink2: 58 54 50;
+  --color-ink3: 92 86 80;
+  --color-muted: 118 114 108;
+  --color-faint: 168 163 154;
+  --color-rule: 226 222 214; /* hairline rules */
+  --color-rule2: 200 194 184; /* stronger rules, input borders */
+  --color-stamp: 217 108 74; /* terracotta accent */
+  --color-stamp-soft: 253 244 241;
+  --color-accent: 217 108 74; /* terracotta primary CTA */
+  --color-accent-hover: 196 90 58;
+  --color-accent-soft: 253 244 241; /* soft terracotta highlight */
+  --color-accent-secondary: 232 165 72; /* warm mustard/coral secondary */
+  --color-wa: 45 138 86;
+  --color-wa-dark: 35 110 68;
+  --color-scrollbar: 206 201 192;
+  --color-scrollbar-hover: 180 174 164;
 
-  --shadow-receipt: 0 1px 2px rgb(var(--color-ink) / 0.06), 0 14px 28px -18px rgb(var(--color-ink) / 0.35);
+  --shadow-receipt: 0 1px 3px rgb(var(--color-ink) / 0.04), 0 12px 24px -16px rgb(var(--color-ink) / 0.25);
 
   --color-person-pine: 67 81 72;
   --color-person-pine-soft: 229 233 227;
@@ -198,11 +202,15 @@ input[type='number'] {
      Labels set in mono caps: register-key lettering. */
 
   .button-primary {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-sm bg-ink px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-paper transition-colors hover:bg-ink2;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-sm bg-accent px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-accentHover shadow-sm;
+  }
+
+  .button-accent {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-sm bg-accent px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-accentHover shadow-sm;
   }
 
   .button-secondary {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-sm border border-rule2 bg-paper px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-ink3 transition-colors hover:border-ink hover:text-ink;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-sm border border-rule2 bg-paper px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-ink3 transition-colors hover:border-accent hover:text-accent;
   }
 
   .button-wa {

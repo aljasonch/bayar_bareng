@@ -5,7 +5,7 @@ import { formatRp, getItemDetailLines, getItemLabel } from '@/lib/item-display'
 
 export function generateWhatsAppText(result: BillResult): string {
   const lines: string[] = []
-  lines.push('*Bayar Bareng - Split Bill*')
+  lines.push('*Bilbil - Split Bill*')
   lines.push(`Tanggal split: ${formatBillDate(result)}`)
   if (result.billMode === 'kopiKenangan') {
     lines.push(`Store: Kopi Kenangan (${formatOutletName(result.kopiKenanganOutlet)})`)

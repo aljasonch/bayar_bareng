@@ -96,6 +96,7 @@ export default function PersonCard({ person, index, onUpdate, onRemove, canRemov
                     <span className="font-mono text-xs text-faint">Rp</span>
                     <input
                       type="number"
+                      inputMode="decimal"
                       value={item.price || ''}
                       onChange={(e) => updateItem(item.id, 'price', Number(e.target.value))}
                       placeholder="0"

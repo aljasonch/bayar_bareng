@@ -1,12 +1,13 @@
 import { BillResult } from '@/types'
 
-const STORAGE_KEY = 'bayar-bareng-history'
+const STORAGE_KEY = 'bilbil-history'
+const OLD_STORAGE_KEY = 'bayar-bareng-history'
 const MAX_ENTRIES = 20
 
 export function getHistory(): BillResult[] {
   if (typeof window === 'undefined') return []
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(OLD_STORAGE_KEY)
     if (!raw) return []
     return JSON.parse(raw) as BillResult[]
   } catch {

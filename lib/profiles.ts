@@ -1,6 +1,7 @@
 import { PersonProfile } from '@/types'
 
-const STORAGE_KEY = 'bayar-bareng-people-profiles'
+const STORAGE_KEY = 'bilbil-people-profiles'
+const OLD_STORAGE_KEY = 'bayar-bareng-people-profiles'
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 9) + Date.now().toString(36)
@@ -28,7 +29,7 @@ export function getProfiles(): PersonProfile[] {
   if (typeof window === 'undefined') return []
 
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(OLD_STORAGE_KEY)
     if (!raw) return []
     return sanitizeProfiles(JSON.parse(raw))
   } catch {

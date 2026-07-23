@@ -20,7 +20,7 @@ function HistoryDetail({ result }: { result: BillResult }) {
       <div className="receipt-frame">
         <section className="receipt px-5 pt-5">
           <div className="text-center">
-            <p className="font-mono text-sm font-bold uppercase tracking-[0.2em] text-ink">Bayar Bareng</p>
+            <p className="font-mono text-sm font-bold uppercase tracking-[0.2em] text-ink">Bilbil</p>
             <p className="mt-1 font-mono text-xs text-muted">nota tersimpan</p>
           </div>
 

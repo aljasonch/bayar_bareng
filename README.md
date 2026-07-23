@@ -1,6 +1,6 @@
-# Bayar Bareng
+# Bilbil
 
-Bayar Bareng is a modern, responsive, and user-friendly split bill calculator built with Next.js 14+ and Tailwind CSS v3. It's designed to make splitting bills among friends incredibly easy, handling complex calculations like proportional discounts, delivery fees, additional charges, and proportional cashback logic.
+Bilbil is a modern, responsive, and user-friendly split bill calculator built with Next.js 14+ and Tailwind CSS v3. It's designed to make splitting bills among friends incredibly easy, handling complex calculations like proportional discounts, delivery fees, additional charges, and proportional cashback logic.
 
 ## Features
 
@@ -40,5 +40,5 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Copyright
 
-&copy; Bayar Bareng. All rights reserved.
+&copy; Bilbil. All rights reserved.
 @aljasonch

@@ -23,6 +23,7 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
             <div className="relative">
               <input
                 type="number"
+                inputMode="decimal"
                 value={feeConfig.discountPct || ''}
                 onChange={(e) => update('discountPct', Number(e.target.value))}
                 placeholder="0"
@@ -37,6 +38,7 @@ export default function FeeSettings({ feeConfig, onUpdate }: FeeSettingsProps) {
               <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-xs text-faint">Rp</span>
               <input
                 type="number"
+                inputMode="decimal"
                 value={feeConfig.discountMax || ''}
                 onChange={(e) => update('discountMax', Number(e.target.value))}
                 placeholder="Tanpa batas"

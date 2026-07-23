@@ -14,7 +14,7 @@ const plexMono = IBM_Plex_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Bayar Bareng — Kalkulator Patungan',
+  title: 'Bilbil — Kalkulator Patungan',
   description:
     'Catat pesanan tiap orang, hitung diskon, ongkir, dan cashback, lalu tagih lewat WhatsApp. Split bill tanpa salah hitung.',
 }

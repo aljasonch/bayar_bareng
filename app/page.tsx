@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
+import { ReceiptText, CheckCircle2, History } from 'lucide-react'
 import { BillMode, BillResult, FeeConfig, KopiKenanganOutlet, Person, PersonProfile } from '@/types'
 import { calculateBill } from '@/lib/calculate'
 import { formatBillDate, getTodayDateInputValue } from '@/lib/date'
@@ -18,6 +19,8 @@ import PersonCard from '@/components/PersonCard'
 import ResultCard from '@/components/ResultCard'
 import SplitDistributionBar from '@/components/SplitDistributionBar'
 import WhatsAppActions from '@/components/WhatsAppActions'
+import StickySummaryBar from '@/components/StickySummaryBar'
+import MobileWizard from '@/components/MobileWizard'
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 9)
@@ -64,6 +67,7 @@ export default function Home() {
   const [payerAccountNumber, setPayerAccountNumber] = useState('')
   const [result, setResult] = useState<BillResult | null>(null)
   const [saved, setSaved] = useState(false)
+  const [isWizardOpen, setIsWizardOpen] = useState(false)
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -182,20 +186,31 @@ export default function Home() {
   return (
     <div className="min-h-screen px-4 py-5 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-[1440px]">
-        <header className="flex items-baseline justify-between gap-4 pb-4">
-          <div>
-            <h1 className="font-mono text-lg font-bold uppercase tracking-[0.14em] text-ink">
-              Bayar Bareng
-            </h1>
-            <p className="mt-0.5 text-sm text-muted">Kalkulator patungan — catat, bagi, tagih.</p>
+        <header className="flex items-center justify-between gap-4 pb-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent text-white shadow-md">
+              <ReceiptText className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="font-mono text-xl font-bold uppercase tracking-[0.12em] text-ink">
+                  Bilbil
+                </h1>
+                <span className="rounded bg-accentSoft px-1.5 py-0.5 font-mono text-[10px] font-bold text-accent">
+                  v2.0
+                </span>
+              </div>
+              <p className="mt-0.5 text-xs text-muted">Kalkulator patungan — catat, bagi, tagih.</p>
+            </div>
           </div>
-          <Link href="/history" className="button-secondary shrink-0">
-            Riwayat
+          <Link href="/history" className="button-secondary shrink-0 gap-1.5 px-3 py-2 text-xs">
+            <History className="h-4 w-4" />
+            <span>Riwayat</span>
           </Link>
         </header>
 
-        {/* Step tabs: the flow itself is the navigation. */}
-        <nav className="card overflow-hidden">
+        {/* Step indicator: progress bar + status */}
+        <nav className="card overflow-hidden border-accent/20 shadow-sm">
           <div className="grid grid-cols-3">
             {STEPS.map((item, i) => {
               const active = step === item.num
@@ -207,21 +222,39 @@ export default function Home() {
                   type="button"
                   onClick={() => openStep(item.num)}
                   disabled={disabled}
-                  className={`px-3 py-3 text-left transition-colors disabled:cursor-not-allowed sm:px-4 ${
+                  className={`relative px-3 py-3.5 text-left transition-all disabled:cursor-not-allowed sm:px-5 ${
                     i > 0 ? 'border-l border-rule' : ''
                   } ${
                     active
-                      ? 'bg-ink text-paper'
+                      ? 'bg-accent text-white font-bold shadow-inner'
+                      : done
+                      ? 'bg-accentSoft text-ink hover:bg-accentSoft/80'
                       : disabled
-                        ? 'text-faint'
-                        : 'text-muted hover:bg-paper2 hover:text-ink'
+                      ? 'text-faint bg-paper'
+                      : 'text-muted hover:bg-paper2 hover:text-ink'
                   }`}
                 >
-                  <span className="block font-mono text-xs font-bold uppercase tracking-[0.14em] sm:text-sm">
-                    {done ? '✓ ' : ''}
-                    {item.title}
-                  </span>
-                  <span className={`mt-0.5 hidden text-xs sm:block ${active ? 'text-paper/60' : 'text-faint'}`}>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold ${
+                        active
+                          ? 'bg-white text-accent'
+                          : done
+                          ? 'bg-accent text-white'
+                          : 'bg-rule2 text-muted'
+                      }`}
+                    >
+                      {done ? '✓' : item.num}
+                    </span>
+                    <span className="font-mono text-xs font-bold uppercase tracking-[0.1em] sm:text-sm">
+                      {item.title}
+                    </span>
+                  </div>
+                  <span
+                    className={`mt-1 block text-[11px] sm:text-xs ${
+                      active ? 'text-white/80' : done ? 'text-accent' : 'text-faint'
+                    }`}
+                  >
                     {item.description}
                   </span>
                 </button>
@@ -229,18 +262,20 @@ export default function Home() {
             })}
           </div>
 
-          {/* Running counter tape — hidden on settle, where the receipt takes over. */}
+          {/* Running counter bar */}
           {step !== 3 && (
-            <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1 border-t border-rule bg-paper2 px-3 py-2 font-mono text-xs sm:px-4">
-              <span className="text-muted">
-                ORANG <span className="font-bold text-ink">{people.length}</span>
-              </span>
-              <span className="text-muted">
-                ITEM <span className="font-bold text-ink">{itemCount}</span>
-              </span>
-              <span className="ml-auto text-muted">
-                SUBTOTAL <span className="font-bold text-ink">{formatRp(runningTotal)}</span>
-              </span>
+            <div className="flex flex-wrap items-center justify-between gap-x-5 gap-y-1 border-t border-rule bg-paper2 px-4 py-2.5 font-mono text-xs">
+              <div className="flex items-center gap-4">
+                <span className="text-muted">
+                  ORANG <span className="font-bold text-ink">{people.length}</span>
+                </span>
+                <span className="text-muted">
+                  ITEM <span className="font-bold text-ink">{itemCount}</span>
+                </span>
+              </div>
+              <div className="text-muted">
+                SUBTOTAL <span className="ml-1 font-mono text-sm font-bold text-accent">{formatRp(runningTotal)}</span>
+              </div>
             </div>
           )}
         </nav>
@@ -432,7 +467,7 @@ export default function Home() {
                   <section className="receipt px-5 pt-5">
                     <div className="text-center">
                       <p className="font-mono text-sm font-bold uppercase tracking-[0.2em] text-ink">
-                        Bayar Bareng
+                        Bilbil
                       </p>
                       <p className="mt-1 font-mono text-xs text-muted">nota pembagian</p>
                     </div>
@@ -527,7 +562,7 @@ export default function Home() {
       </div>
 
       {step !== 3 && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-paper/95 px-4 py-3 backdrop-blur-sm sm:px-6 lg:px-8">
+        <div className="hidden sm:block fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-paper/95 px-4 py-3 backdrop-blur-sm sm:px-6 lg:px-8">
           <div className="mx-auto flex max-w-[1440px] gap-3">
             {step === 1 && (
               <button
@@ -552,6 +587,70 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* Mobile Sticky Summary & Wizard */}
+      <StickySummaryBar
+        currentStep={step}
+        totalItems={itemCount}
+        totalPeople={people.length}
+        totalAmount={runningTotal}
+        onOpenStep={(targetStep) => {
+          if (canOpenStep(targetStep)) {
+            setStep(targetStep)
+            setIsWizardOpen(true)
+          }
+        }}
+      />
+
+      <MobileWizard
+        isOpen={isWizardOpen}
+        setIsOpen={setIsWizardOpen}
+        currentStep={step}
+        setStep={setStep}
+        canOpenStep={canOpenStep}
+      >
+        {step === 1 && (
+          <div className="space-y-4">
+            <PeopleProfiles
+              profiles={profiles}
+              people={people}
+              onCreateProfile={handleCreateProfile}
+              onRenameProfile={handleRenameProfile}
+              onDeleteProfile={handleDeleteProfile}
+              onAddProfileToSplit={addPerson}
+              onAddManualPerson={addManualPerson}
+            />
+            {people.map((person, index) => (
+              <PersonCard
+                key={person.id}
+                person={person}
+                index={index}
+                onUpdate={(updated) => updatePerson(index, updated)}
+                onRemove={() => removePerson(index)}
+                canRemove={people.length > 1}
+              />
+            ))}
+          </div>
+        )}
+        {step === 2 && (
+          <div className="space-y-4">
+            <FeeSettings feeConfig={feeConfig} onUpdate={setFeeConfig} />
+            <AdditionalFees
+              fees={feeConfig.additionalFees}
+              onUpdate={(fees) => setFeeConfig({ ...feeConfig, additionalFees: fees })}
+            />
+          </div>
+        )}
+        {step === 3 && result && (
+          <div className="space-y-4">
+            <WhatsAppActions result={result} />
+            <SplitDistributionBar results={result.results} total={result.totalFinal} />
+            {result.results.map((item, index) => (
+              <ResultCard key={item.person.id} result={item} index={index} grandTotal={result.totalFinal} />
+            ))}
+          </div>
+        )}
+      </MobileWizard>
     </div>
   )
 }
