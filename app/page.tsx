@@ -18,6 +18,7 @@ import PersonCard from '@/components/PersonCard'
 import ResultCard from '@/components/ResultCard'
 import SplitDistributionBar from '@/components/SplitDistributionBar'
 import WhatsAppActions from '@/components/WhatsAppActions'
+import BilbilLogo from '@/components/BilbilLogo'
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 9)
@@ -183,12 +184,15 @@ export default function Home() {
     <div className="min-h-screen px-4 py-5 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-[1440px]">
         {/* ── Header ────────────────────────────────── */}
-        <header className="flex items-baseline justify-between gap-4 pb-5">
-          <div>
-            <h1 className="font-mono text-lg font-bold uppercase tracking-[0.14em] text-ink">
-              Bilbil
-            </h1>
-            <p className="mt-0.5 text-xs text-muted">Patungan tanpa salah hitung</p>
+        <header className="flex items-center justify-between gap-4 pb-5">
+          <div className="flex items-center gap-3">
+            <BilbilLogo className="h-8 w-8 text-ink" />
+            <div>
+              <h1 className="font-mono text-lg font-bold uppercase tracking-[0.14em] text-ink leading-none">
+                Bilbil
+              </h1>
+              <p className="mt-1 text-xs text-muted leading-none">Patungan tanpa salah hitung</p>
+            </div>
           </div>
           <Link
             href="/history"

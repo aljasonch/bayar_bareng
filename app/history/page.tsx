@@ -11,6 +11,7 @@ import HistoryCard from '@/components/HistoryCard'
 import ResultCard from '@/components/ResultCard'
 import SplitDistributionBar from '@/components/SplitDistributionBar'
 import WhatsAppActions from '@/components/WhatsAppActions'
+import BilbilLogo from '@/components/BilbilLogo'
 import { IoClose } from 'react-icons/io5'
 
 function HistoryDetail({ result }: { result: BillResult }) {
@@ -63,14 +64,19 @@ export default function HistoryPage() {
   return (
     <div className="min-h-screen px-4 py-5 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-[1440px]">
-        <header className="flex items-baseline justify-between gap-4 border-b border-rule pb-4">
-          <div>
-            <h1 className="font-mono text-lg font-bold uppercase tracking-[0.14em] text-ink">Riwayat</h1>
-            <p className="mt-0.5 text-sm text-muted">
-              {history.length > 0
-                ? `${history.length} nota tersimpan di browser ini.`
-                : 'Nota yang kamu simpan muncul di sini.'}
-            </p>
+        <header className="flex items-center justify-between gap-4 border-b border-rule pb-4">
+          <div className="flex items-center gap-3">
+            <Link href="/" aria-label="Kembali ke beranda">
+              <BilbilLogo className="h-8 w-8 text-ink hover:opacity-80 transition-opacity" />
+            </Link>
+            <div>
+              <h1 className="font-mono text-lg font-bold uppercase tracking-[0.14em] text-ink leading-none">Riwayat</h1>
+              <p className="mt-1 text-sm text-muted leading-none">
+                {history.length > 0
+                  ? `${history.length} nota tersimpan di browser ini.`
+                  : 'Nota yang kamu simpan muncul di sini.'}
+              </p>
+            </div>
           </div>
           <Link href="/" className="button-primary shrink-0">
             + Nota baru
