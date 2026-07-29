@@ -8,7 +8,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         mono: ['var(--font-plex-mono)', 'Courier New', 'monospace'],
-        sans: ['var(--font-archivo)', 'sans-serif'],
+        sans: ['var(--font-dm-sans)', 'system-ui', 'sans-serif'],
       },
       colors: {
         white: colorVar('white'),
@@ -27,7 +27,6 @@ const config: Config = {
         accent: colorVar('accent'),
         accentHover: colorVar('accent-hover'),
         accentSoft: colorVar('accent-soft'),
-        accentSecondary: colorVar('accent-secondary'),
         wa: colorVar('wa'),
         waDark: colorVar('wa-dark'),
       },

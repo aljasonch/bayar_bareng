@@ -12,7 +12,6 @@ Bilbil is a modern, responsive, and user-friendly split bill calculator built wi
 - **Live Preview:** See real-time calculations on the desktop sidebar as you type.
 - **Share via WhatsApp:** Quickly share a beautifully formatted breakdown directly via WhatsApp.
 - **History Logs:** Saves your recent bills (up to 20 entries) locally so you can revisit or re-share them later.
-- **Beautiful UI:** Polished Dark Mode interface optimized for both desktop and mobile screens.
 
 ## Tech Stack
 

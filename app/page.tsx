@@ -1,8 +1,7 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { Fragment, useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ReceiptText, CheckCircle2, History } from 'lucide-react'
 import { BillMode, BillResult, FeeConfig, KopiKenanganOutlet, Person, PersonProfile } from '@/types'
 import { calculateBill } from '@/lib/calculate'
 import { formatBillDate, getTodayDateInputValue } from '@/lib/date'
@@ -19,8 +18,6 @@ import PersonCard from '@/components/PersonCard'
 import ResultCard from '@/components/ResultCard'
 import SplitDistributionBar from '@/components/SplitDistributionBar'
 import WhatsAppActions from '@/components/WhatsAppActions'
-import StickySummaryBar from '@/components/StickySummaryBar'
-import MobileWizard from '@/components/MobileWizard'
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 9)
@@ -67,7 +64,6 @@ export default function Home() {
   const [payerAccountNumber, setPayerAccountNumber] = useState('')
   const [result, setResult] = useState<BillResult | null>(null)
   const [saved, setSaved] = useState(false)
-  const [isWizardOpen, setIsWizardOpen] = useState(false)
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -186,101 +182,97 @@ export default function Home() {
   return (
     <div className="min-h-screen px-4 py-5 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-[1440px]">
-        <header className="flex items-center justify-between gap-4 pb-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent text-white shadow-md">
-              <ReceiptText className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="font-mono text-xl font-bold uppercase tracking-[0.12em] text-ink">
-                  Bilbil
-                </h1>
-                <span className="rounded bg-accentSoft px-1.5 py-0.5 font-mono text-[10px] font-bold text-accent">
-                  v2.0
-                </span>
-              </div>
-              <p className="mt-0.5 text-xs text-muted">Kalkulator patungan — catat, bagi, tagih.</p>
-            </div>
+        {/* ── Header ────────────────────────────────── */}
+        <header className="flex items-baseline justify-between gap-4 pb-5">
+          <div>
+            <h1 className="font-mono text-lg font-bold uppercase tracking-[0.14em] text-ink">
+              Bilbil
+            </h1>
+            <p className="mt-0.5 text-xs text-muted">Patungan tanpa salah hitung</p>
           </div>
-          <Link href="/history" className="button-secondary shrink-0 gap-1.5 px-3 py-2 text-xs">
-            <History className="h-4 w-4" />
-            <span>Riwayat</span>
+          <Link
+            href="/history"
+            className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted transition-colors hover:text-ink"
+          >
+            Riwayat
           </Link>
         </header>
 
-        {/* Step indicator: progress bar + status */}
-        <nav className="card overflow-hidden border-accent/20 shadow-sm">
-          <div className="grid grid-cols-3">
-            {STEPS.map((item, i) => {
-              const active = step === item.num
-              const done = canOpenStep(item.num) && step > item.num
-              const disabled = !canOpenStep(item.num)
-              return (
+        {/* ── Step progress ─────────────────────────── */}
+        <nav className="flex items-center gap-0 pb-1 pt-1" aria-label="Langkah">
+          {STEPS.map((item, i) => {
+            const active = step === item.num
+            const done = canOpenStep(item.num) && step > item.num
+            const disabled = !canOpenStep(item.num)
+            return (
+              <Fragment key={item.num}>
+                {i > 0 && (
+                  <div
+                    className={`mx-1 h-px flex-1 sm:mx-2 ${
+                      done || active ? 'bg-ink' : 'bg-rule'
+                    }`}
+                  />
+                )}
                 <button
-                  key={item.num}
                   type="button"
                   onClick={() => openStep(item.num)}
                   disabled={disabled}
-                  className={`relative px-3 py-3.5 text-left transition-all disabled:cursor-not-allowed sm:px-5 ${
-                    i > 0 ? 'border-l border-rule' : ''
-                  } ${
-                    active
-                      ? 'bg-accent text-white font-bold shadow-inner'
-                      : done
-                      ? 'bg-accentSoft text-ink hover:bg-accentSoft/80'
-                      : disabled
-                      ? 'text-faint bg-paper'
-                      : 'text-muted hover:bg-paper2 hover:text-ink'
-                  }`}
+                  className="flex items-center gap-1.5 disabled:cursor-not-allowed sm:gap-2"
                 >
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold ${
-                        active
-                          ? 'bg-white text-accent'
-                          : done
-                          ? 'bg-accent text-white'
-                          : 'bg-rule2 text-muted'
-                      }`}
-                    >
-                      {done ? '✓' : item.num}
-                    </span>
-                    <span className="font-mono text-xs font-bold uppercase tracking-[0.1em] sm:text-sm">
-                      {item.title}
-                    </span>
-                  </div>
                   <span
-                    className={`mt-1 block text-[11px] sm:text-xs ${
-                      active ? 'text-white/80' : done ? 'text-accent' : 'text-faint'
+                    className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold sm:h-7 sm:w-7 ${
+                      active
+                        ? 'bg-ink text-paper'
+                        : done
+                        ? 'bg-ink text-paper'
+                        : 'border border-rule2 text-faint'
                     }`}
                   >
-                    {item.description}
+                    {done ? '✓' : item.num}
                   </span>
+                  <div className="text-left">
+                    <span
+                      className={`block font-mono text-[11px] font-bold uppercase tracking-[0.08em] sm:text-xs ${
+                        active || done ? 'text-ink' : 'text-faint'
+                      }`}
+                    >
+                      {item.title}
+                    </span>
+                    <span
+                      className={`hidden text-[10px] sm:block ${
+                        active ? 'text-ink3' : 'text-faint'
+                      }`}
+                    >
+                      {item.description}
+                    </span>
+                  </div>
                 </button>
-              )
-            })}
-          </div>
-
-          {/* Running counter bar */}
-          {step !== 3 && (
-            <div className="flex flex-wrap items-center justify-between gap-x-5 gap-y-1 border-t border-rule bg-paper2 px-4 py-2.5 font-mono text-xs">
-              <div className="flex items-center gap-4">
-                <span className="text-muted">
-                  ORANG <span className="font-bold text-ink">{people.length}</span>
-                </span>
-                <span className="text-muted">
-                  ITEM <span className="font-bold text-ink">{itemCount}</span>
-                </span>
-              </div>
-              <div className="text-muted">
-                SUBTOTAL <span className="ml-1 font-mono text-sm font-bold text-accent">{formatRp(runningTotal)}</span>
-              </div>
-            </div>
-          )}
+              </Fragment>
+            )
+          })}
         </nav>
 
-        <main className={step !== 3 ? 'pb-28 pt-5 lg:pb-32' : 'pb-10 pt-5'}>
+        {/* Running counter */}
+        {step !== 3 && (
+          <div className="flex items-center justify-between border-b border-rule pb-4 pt-3 font-mono text-xs">
+            <div className="flex items-center gap-3 text-muted">
+              <span>
+                <span className="font-bold text-ink">{people.length}</span> orang
+              </span>
+              <span>
+                <span className="font-bold text-ink">{itemCount}</span> item
+              </span>
+            </div>
+            <div className="text-muted">
+              subtotal{' '}
+              <span className="ml-0.5 text-sm font-bold text-ink">{formatRp(runningTotal)}</span>
+            </div>
+          </div>
+        )}
+
+        {/* ── Step content ──────────────────────────── */}
+        <main className={step !== 3 ? 'pb-24 pt-5 sm:pb-28' : 'pb-10 pt-5'}>
+          {/* ─ Step 1: Catat ─ */}
           {step === 1 && (
             <div className="grid grid-cols-1 gap-5 xl:grid-cols-[24rem_minmax(0,1fr)]">
               <div className="xl:sticky xl:top-5 xl:self-start">
@@ -389,7 +381,7 @@ export default function Home() {
                       <div className="rounded-sm border border-dashed border-rule2 bg-paper/60 p-8 text-center">
                         <h3 className="text-base font-semibold text-ink">Nota masih kosong</h3>
                         <p className="mx-auto mt-2 max-w-md text-sm text-muted">
-                          Pilih nama dari roster di samping, atau tekan “+ Orang baru” untuk orang yang cuma ikut
+                          Pilih nama dari roster di samping, atau tekan &quot;+ Orang baru&quot; untuk orang yang cuma ikut
                           nota ini.
                         </p>
                       </div>
@@ -422,6 +414,7 @@ export default function Home() {
             </div>
           )}
 
+          {/* ─ Step 2: Sesuaikan ─ */}
           {step === 2 && (
             <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_24rem]">
               <div className="space-y-5">
@@ -449,8 +442,9 @@ export default function Home() {
             </div>
           )}
 
+          {/* ─ Step 3: Tagih ─ */}
           {step === 3 && result && (
-            <div className="space-y-5 animate-fade-in">
+            <div className="animate-fade-in space-y-5">
               <div className="flex items-end justify-between gap-3">
                 <div>
                   <p className="label">Hasil akhir</p>
@@ -462,7 +456,7 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(19rem,23rem)_minmax(0,1fr)] lg:items-start">
-                {/* The printed receipt: summary of the whole split. */}
+                {/* Receipt */}
                 <div className="receipt-frame lg:sticky lg:top-5">
                   <section className="receipt px-5 pt-5">
                     <div className="text-center">
@@ -561,9 +555,20 @@ export default function Home() {
         </main>
       </div>
 
+      {/* ── Sticky bottom action bar (all breakpoints) ── */}
       {step !== 3 && (
-        <div className="hidden sm:block fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-paper/95 px-4 py-3 backdrop-blur-sm sm:px-6 lg:px-8">
-          <div className="mx-auto flex max-w-[1440px] gap-3">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-paper/95 px-4 py-3 backdrop-blur-sm sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-[1440px] items-center gap-3">
+            {/* Mobile: compact summary */}
+            <div className="flex-1 sm:hidden">
+              <span className="font-mono text-[11px] text-muted">
+                {people.length} orang · {itemCount} item
+              </span>
+              <span className="block font-mono text-sm font-bold text-ink">
+                {formatRp(runningTotal)}
+              </span>
+            </div>
+
             {step === 1 && (
               <button
                 type="button"
@@ -576,10 +581,10 @@ export default function Home() {
             )}
             {step === 2 && (
               <>
-                <button type="button" onClick={() => setStep(1)} className="button-secondary min-h-12 px-5">
+                <button type="button" onClick={() => setStep(1)} className="button-secondary hidden min-h-12 px-5 sm:inline-flex">
                   ← Kembali
                 </button>
-                <button type="button" onClick={handleCalculate} className="button-primary min-h-12 flex-1">
+                <button type="button" onClick={handleCalculate} className="button-primary min-h-12 flex-1 sm:flex-none sm:px-8">
                   Hitung pembagian
                 </button>
               </>
@@ -587,86 +592,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
-      {/* Mobile Sticky Summary & Wizard */}
-      <StickySummaryBar
-        currentStep={step}
-        totalItems={itemCount}
-        totalPeople={people.length}
-        totalAmount={runningTotal}
-        onOpenStep={(targetStep) => {
-          if (canOpenStep(targetStep)) {
-            setStep(targetStep)
-            setIsWizardOpen(true)
-          }
-        }}
-      />
-
-      <MobileWizard
-        isOpen={isWizardOpen}
-        setIsOpen={setIsWizardOpen}
-        currentStep={step}
-        setStep={setStep}
-        canOpenStep={canOpenStep}
-      >
-        {step === 1 && (
-          <div className="space-y-4">
-            <PeopleProfiles
-              profiles={profiles}
-              people={people}
-              onCreateProfile={handleCreateProfile}
-              onRenameProfile={handleRenameProfile}
-              onDeleteProfile={handleDeleteProfile}
-              onAddProfileToSplit={addPerson}
-              onAddManualPerson={addManualPerson}
-            />
-            {people.map((person, index) => (
-              <PersonCard
-                key={person.id}
-                person={person}
-                index={index}
-                onUpdate={(updated) => updatePerson(index, updated)}
-                onRemove={() => removePerson(index)}
-                canRemove={people.length > 1}
-              />
-            ))}
-          </div>
-        )}
-        {step === 2 && (
-          <div className="space-y-4">
-            <FeeSettings feeConfig={feeConfig} onUpdate={setFeeConfig} />
-            <AdditionalFees
-              fees={feeConfig.additionalFees}
-              onUpdate={(fees) => setFeeConfig({ ...feeConfig, additionalFees: fees })}
-            />
-            <div className="flex gap-3 border-t border-rule pt-4">
-              <button
-                type="button"
-                onClick={() => setStep(1)}
-                className="button-secondary min-h-12 flex-1"
-              >
-                ← Kembali
-              </button>
-              <button
-                type="button"
-                onClick={handleCalculate}
-                className="button-primary min-h-12 flex-[2]"
-              >
-                Hitung pembagian
-              </button>
-            </div>
-          </div>
-        )}
-        {step === 3 && result && (
-          <div className="space-y-4">
-            <WhatsAppActions result={result} />
-            <SplitDistributionBar results={result.results} total={result.totalFinal} />
-            {result.results.map((item, index) => (
-              <ResultCard key={item.person.id} result={item} index={index} grandTotal={result.totalFinal} />
-            ))}
-          </div>
-        )}
-      </MobileWizard>
     </div>
   )
 }

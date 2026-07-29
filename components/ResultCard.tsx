@@ -95,7 +95,7 @@ export default function ResultCard({ result, index, grandTotal }: ResultCardProp
         <div className="rule-total pt-2.5">
           <div className="flex items-baseline justify-between gap-3">
             <span className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-ink">Bayar</span>
-            <span className="font-mono text-xl font-bold text-ink">{formatRp(result.final)}</span>
+            <span className="font-mono text-2xl font-bold text-ink">{formatRp(result.final)}</span>
           </div>
           {sharePct !== null && (
             <div className="mt-2.5 h-1 w-full overflow-hidden bg-paper2">

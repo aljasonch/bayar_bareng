@@ -75,7 +75,7 @@ export default function PersonCard({ person, index, onUpdate, onRemove, canRemov
 
       {/* Entry lines, written against the red ledger margin. */}
       <div className="px-4 py-3 sm:px-5">
-        <div className="border-l border-stamp/35 pl-3 sm:pl-4">
+        <div className="border-l border-rule pl-3 sm:pl-4">
           {person.items.length === 0 ? (
             <p className="py-3 text-sm text-muted">Belum ada item. Tulis pesanan pertama di bawah.</p>
           ) : (

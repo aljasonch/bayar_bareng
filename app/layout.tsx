@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
-import { Archivo, IBM_Plex_Mono } from 'next/font/google'
+import { DM_Sans, IBM_Plex_Mono } from 'next/font/google'
 import './globals.css'
 
-const archivo = Archivo({
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  variable: '--font-archivo',
+  variable: '--font-dm-sans',
 })
 
 const plexMono = IBM_Plex_Mono({
@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="id" className={`${archivo.variable} ${plexMono.variable}`}>
+    <html lang="id" className={`${dmSans.variable} ${plexMono.variable}`}>
       <body className="antialiased selection:bg-stamp/20">{children}</body>
     </html>
   )

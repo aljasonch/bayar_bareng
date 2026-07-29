@@ -16,70 +16,7 @@ import { IoClose } from 'react-icons/io5'
 function HistoryDetail({ result }: { result: BillResult }) {
   return (
     <div className="animate-fade-in space-y-4">
-      {/* The saved receipt, reprinted. */}
-      <div className="receipt-frame">
-        <section className="receipt px-5 pt-5">
-          <div className="text-center">
-            <p className="font-mono text-sm font-bold uppercase tracking-[0.2em] text-ink">Bilbil</p>
-            <p className="mt-1 font-mono text-xs text-muted">nota tersimpan</p>
-          </div>
 
-          <div className="perforation mt-4 space-y-1 pt-3 font-mono text-xs text-muted">
-            <div className="flex justify-between gap-2">
-              <span>TANGGAL</span>
-              <span className="text-ink2">
-                {formatBillDate(result, { day: 'numeric', month: 'short', year: 'numeric' })}
-              </span>
-            </div>
-            {result.billMode === 'kopiKenangan' && (
-              <div className="flex justify-between gap-2">
-                <span>STORE</span>
-                <span className="text-ink2">
-                  Kopi Kenangan · {formatOutletName(result.kopiKenanganOutlet)}
-                </span>
-              </div>
-            )}
-            {result.payerName && (
-              <div className="flex justify-between gap-2">
-                <span>DITALANGI</span>
-                <span className="text-ink2">
-                  {result.payerName}
-                  {result.payerAccountNumber ? ` · ${result.payerAccountNumber}` : ''}
-                </span>
-              </div>
-            )}
-          </div>
-
-          <div className="perforation mt-3 space-y-2 pt-3">
-            {result.results.map((item, index) => (
-              <div key={item.person.id} className="flex items-baseline font-mono text-sm">
-                <span className="truncate text-ink2">{item.person.name || `Orang ${index + 1}`}</span>
-                <span className="dots" aria-hidden />
-                <span className="shrink-0 font-semibold text-ink">{formatRp(item.final)}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="rule-total mt-4 pt-3">
-            <div className="flex items-baseline justify-between gap-3">
-              <span className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-ink">Total</span>
-              <span className="font-mono text-3xl font-bold tracking-tight text-ink">
-                {formatRp(result.totalFinal)}
-              </span>
-            </div>
-            {result.totalSaved > 0 && (
-              <div className="mt-1 flex items-baseline justify-between gap-3 font-mono text-xs">
-                <span className="text-muted">hemat</span>
-                <span className="font-semibold text-stamp">-{formatRp(result.totalSaved)}</span>
-              </div>
-            )}
-          </div>
-
-          <p className="pb-4 pt-3 font-mono text-[10px] uppercase tracking-[0.16em] text-faint">
-            {result.people.length} orang · dihitung otomatis
-          </p>
-        </section>
-      </div>
 
       <WhatsAppActions result={result} />
 
@@ -145,7 +82,7 @@ export default function HistoryPage() {
             <div className="animate-fade-in rounded-sm border border-dashed border-rule2 bg-paper/60 p-10 text-center">
               <h2 className="text-lg font-semibold text-ink">Belum ada nota tersimpan</h2>
               <p className="mx-auto mt-2 max-w-md text-sm text-muted">
-                Hitung satu patungan dulu, lalu tekan “Simpan ke riwayat” di halaman hasil.
+                Hitung satu patungan dulu, lalu tekan &quot;Simpan ke riwayat&quot; di halaman hasil.
               </p>
               <Link href="/" className="button-primary mt-6">
                 Mulai nota baru
@@ -191,7 +128,7 @@ export default function HistoryPage() {
                   {formatBillDate(selectedResult, { day: 'numeric', month: 'long', year: 'numeric' })}
                 </h2>
               </div>
-              <button type="button" onClick={() => setSelectedResult(null)} className="icon-button bg-paper">
+              <button type="button" onClick={() => setSelectedResult(null)} className="icon-button bg-paper" aria-label="Tutup rincian">
                 <IoClose className="h-5 w-5" />
               </button>
             </div>
