@@ -639,6 +639,22 @@ export default function Home() {
               fees={feeConfig.additionalFees}
               onUpdate={(fees) => setFeeConfig({ ...feeConfig, additionalFees: fees })}
             />
+            <div className="flex gap-3 border-t border-rule pt-4">
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="button-secondary min-h-12 flex-1"
+              >
+                ← Kembali
+              </button>
+              <button
+                type="button"
+                onClick={handleCalculate}
+                className="button-primary min-h-12 flex-[2]"
+              >
+                Hitung pembagian
+              </button>
+            </div>
           </div>
         )}
         {step === 3 && result && (
