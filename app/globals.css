@@ -140,18 +140,10 @@ input[type='number'] { -moz-appearance: textfield; }
     @apply rounded border border-rule bg-paper;
   }
 
-  /* Receipt: paper shadow + zigzag tear bottom edge. */
+  /* Receipt: paper shadow + authentic aesthetic. */
   .receipt-frame {
-    filter: drop-shadow(0 2px 4px rgb(var(--color-ink) / 0.06))
-            drop-shadow(0 12px 24px rgb(var(--color-ink) / 0.12));
-  }
-
-  .receipt {
-    --tooth: 12px;
-    background: rgb(var(--color-paper));
-    padding-bottom: var(--tooth);
-    -webkit-mask: conic-gradient(from -45deg at bottom, #0000 90deg, #000 0) 50% / var(--tooth) 100%;
-            mask: conic-gradient(from -45deg at bottom, #0000 90deg, #000 0) 50% / var(--tooth) 100%;
+    filter: drop-shadow(0 2px 5px rgb(var(--color-ink) / 0.08))
+            drop-shadow(0 14px 28px rgb(var(--color-ink) / 0.12));
   }
 
   /* — Rules ——————————————————————————————————————————————— */

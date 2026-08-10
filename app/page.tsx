@@ -19,6 +19,7 @@ import ResultCard from '@/components/ResultCard'
 import SplitDistributionBar from '@/components/SplitDistributionBar'
 import WhatsAppActions from '@/components/WhatsAppActions'
 import BilbilLogo from '@/components/BilbilLogo'
+import DigitalReceipt from '@/components/DigitalReceipt'
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 9)
@@ -460,77 +461,8 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(19rem,23rem)_minmax(0,1fr)] lg:items-start">
-                {/* Receipt */}
-                <div className="receipt-frame lg:sticky lg:top-5">
-                  <section className="receipt px-5 pt-5">
-                    <div className="text-center">
-                      <p className="font-mono text-sm font-bold uppercase tracking-[0.2em] text-ink">
-                        Bilbil
-                      </p>
-                      <p className="mt-1 font-mono text-xs text-muted">nota pembagian</p>
-                    </div>
-
-                    <div className="perforation mt-4 space-y-1 pt-3 font-mono text-xs text-muted">
-                      <div className="flex justify-between gap-2">
-                        <span>TANGGAL</span>
-                        <span className="text-ink2">{formatBillDate(result)}</span>
-                      </div>
-                      {result.billMode === 'kopiKenangan' && (
-                        <div className="flex justify-between gap-2">
-                          <span>STORE</span>
-                          <span className="text-ink2">
-                            Kopi Kenangan · {formatOutletName(result.kopiKenanganOutlet)}
-                          </span>
-                        </div>
-                      )}
-                      {result.payerName && (
-                        <div className="flex justify-between gap-2">
-                          <span>DITALANGI</span>
-                          <span className="text-ink2">
-                            {result.payerName}
-                            {result.payerAccountNumber ? ` · ${result.payerAccountNumber}` : ''}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="perforation mt-3 space-y-2 pt-3">
-                      {result.results.map((item, index) => (
-                        <div key={item.person.id} className="flex items-baseline font-mono text-sm">
-                          <span className="truncate text-ink2">
-                            {item.person.name || `Orang ${index + 1}`}
-                          </span>
-                          <span className="dots" aria-hidden />
-                          <span className="shrink-0 font-semibold text-ink">{formatRp(item.final)}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="rule-total mt-4 pt-3">
-                      <div className="flex items-baseline justify-between gap-3">
-                        <span className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-ink">
-                          Total
-                        </span>
-                        <span className="font-mono text-3xl font-bold tracking-tight text-ink">
-                          {formatRp(result.totalFinal)}
-                        </span>
-                      </div>
-                      {result.totalSaved > 0 && (
-                        <div className="mt-1 flex items-baseline justify-between gap-3 font-mono text-xs">
-                          <span className="text-muted">hemat</span>
-                          <span className="font-semibold text-stamp">-{formatRp(result.totalSaved)}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex min-h-14 items-center justify-between gap-3 pb-4 pt-3">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-faint">
-                        {result.people.length} orang · dihitung otomatis
-                      </p>
-                      {saved && <span className="stamp animate-stamp-in">Tersimpan</span>}
-                    </div>
-                  </section>
-                </div>
+                {/* Receipt Preview */}
+                <DigitalReceipt result={result} saved={saved} className="lg:sticky lg:top-5" />
 
                 <div className="space-y-5">
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">

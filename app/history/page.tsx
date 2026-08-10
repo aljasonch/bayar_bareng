@@ -12,21 +12,22 @@ import ResultCard from '@/components/ResultCard'
 import SplitDistributionBar from '@/components/SplitDistributionBar'
 import WhatsAppActions from '@/components/WhatsAppActions'
 import BilbilLogo from '@/components/BilbilLogo'
+import DigitalReceipt from '@/components/DigitalReceipt'
 import { IoClose } from 'react-icons/io5'
 
 function HistoryDetail({ result }: { result: BillResult }) {
   return (
-    <div className="animate-fade-in space-y-4">
+    <div className="animate-fade-in grid grid-cols-1 gap-5 lg:grid-cols-[minmax(18rem,21rem)_minmax(0,1fr)] lg:items-start">
+      <DigitalReceipt result={result} saved={true} className="lg:sticky lg:top-5" />
 
-
-      <WhatsAppActions result={result} />
-
-      <SplitDistributionBar results={result.results} total={result.totalFinal} />
-
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        {result.results.map((item, index) => (
-          <ResultCard key={item.person.id} result={item} index={index} grandTotal={result.totalFinal} />
-        ))}
+      <div className="space-y-4">
+        <WhatsAppActions result={result} />
+        <SplitDistributionBar results={result.results} total={result.totalFinal} />
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {result.results.map((item, index) => (
+            <ResultCard key={item.person.id} result={item} index={index} grandTotal={result.totalFinal} />
+          ))}
+        </div>
       </div>
     </div>
   )
