@@ -1,21 +1,22 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { IoAdd, IoClose, IoRemove, IoSearch, IoTrashOutline } from 'react-icons/io5'
 import {
   IceLevelOption,
   Item,
+  ItemModifier,
   KopiKenanganOutlet,
   KopiKenanganSize,
   Person,
   SweetnessOption,
 } from '@/types'
 import {
+  fetchCategories,
+  fetchMenu,
+  fetchModifierGroups,
   getAvailableSizes,
   getOutletAdjustment,
-  KOPI_KENANGAN_CATEGORIES,
-  KOPI_KENANGAN_MENU,
-  KOPI_KENANGAN_MODIFIER_GROUPS,
   KOPI_KENANGAN_SIZES,
   SWEETNESS_OPTIONS,
   ICE_LEVEL_OPTIONS,
@@ -35,8 +36,6 @@ interface KopiKenanganOrderProps {
 }
 
 type CategoryFilter = 'All' | KopiKenanganCategory
-
-const ALL_MODIFIERS = KOPI_KENANGAN_MODIFIER_GROUPS.flatMap((group) => group.items)
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 9)
@@ -98,6 +97,9 @@ function KopiKenanganPersonCard({
   canRemove,
   onUpdate,
   onRemove,
+  menu,
+  categories,
+  modifierGroups,
 }: {
   person: Person
   index: number
@@ -105,11 +107,14 @@ function KopiKenanganPersonCard({
   canRemove: boolean
   onUpdate: (person: Person) => void
   onRemove: () => void
+  menu: KopiKenanganCatalogItem[]
+  categories: string[]
+  modifierGroups: { title: string; items: ItemModifier[] }[]
 }) {
   const color = getPersonColor(index)
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('All')
-  const [selectedItemId, setSelectedItemId] = useState(KOPI_KENANGAN_MENU[0].id)
+  const [selectedItemId, setSelectedItemId] = useState(menu[0]?.id || '')
   const [selectedSize, setSelectedSize] = useState<KopiKenanganSize>('R')
   const [quantity, setQuantity] = useState(1)
   const [selectedModifierIds, setSelectedModifierIds] = useState<string[]>([])
@@ -120,24 +125,31 @@ function KopiKenanganPersonCard({
   const [customPrice, setCustomPrice] = useState(0)
   const [customQuantity, setCustomQuantity] = useState(1)
 
+  useEffect(() => {
+    if (!selectedItemId && menu.length > 0) {
+      setSelectedItemId(menu[0].id)
+    }
+  }, [menu, selectedItemId])
+
+  const allModifiers = useMemo(() => modifierGroups.flatMap((group) => group.items), [modifierGroups])
+
   const subtotal = person.items.reduce((sum, item) => sum + item.price, 0)
   const normalizedQuery = query.trim().toLowerCase()
 
   const filteredMenu = useMemo(() => {
-    return KOPI_KENANGAN_MENU.filter((item) => {
+    return menu.filter((item) => {
       const matchesCategory = category === 'All' || item.category === category
       const matchesQuery = !normalizedQuery || getItemSearchText(item).includes(normalizedQuery)
       return matchesCategory && matchesQuery
     })
-  }, [category, normalizedQuery])
+  }, [menu, category, normalizedQuery])
 
-  const selectedItem =
-    KOPI_KENANGAN_MENU.find((item) => item.id === selectedItemId) ?? KOPI_KENANGAN_MENU[0]
-  const availableSizes = getAvailableSizes(selectedItem)
-  const resolvedSize = selectedItem.prices[selectedSize] !== undefined ? selectedSize : availableSizes[0]
-  const basePrice = selectedItem.prices[resolvedSize] ?? 0
+  const selectedItem = menu.find((item) => item.id === selectedItemId) ?? menu[0]
+  const availableSizes = selectedItem ? getAvailableSizes(selectedItem) : []
+  const resolvedSize = selectedItem && selectedItem.prices[selectedSize] !== undefined ? selectedSize : availableSizes[0]
+  const basePrice = selectedItem && resolvedSize ? (selectedItem.prices[resolvedSize] ?? 0) : 0
   const outletAdjustment = getOutletAdjustment(outlet)
-  const selectedModifiers = ALL_MODIFIERS.filter((modifier) => selectedModifierIds.includes(modifier.id))
+  const selectedModifiers = allModifiers.filter((modifier) => selectedModifierIds.includes(modifier.id))
   const modifierTotal = selectedModifiers.reduce((sum, modifier) => sum + modifier.price, 0)
   const unitPrice = basePrice + outletAdjustment + modifierTotal
   const totalPrice = unitPrice * quantity
@@ -253,7 +265,7 @@ function KopiKenanganPersonCard({
           </div>
 
           <div className="flex gap-1.5 overflow-x-auto pb-1">
-            {(['All', ...KOPI_KENANGAN_CATEGORIES] as CategoryFilter[]).map((itemCategory) => (
+            {(['All', ...categories] as CategoryFilter[]).map((itemCategory) => (
               <button
                 key={itemCategory}
                 type="button"
@@ -411,7 +423,7 @@ function KopiKenanganPersonCard({
 
           <div className="space-y-3">
             <p className="label">Modifier</p>
-            {KOPI_KENANGAN_MODIFIER_GROUPS.map((group) => (
+            {modifierGroups.map((group) => (
               <div key={group.title}>
                 <p className="mb-1.5 text-[11px] font-semibold text-muted">{group.title}</p>
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 xl:grid-cols-1">
@@ -571,6 +583,39 @@ export default function KopiKenanganOrder({
   onUpdatePerson,
   onRemovePerson,
 }: KopiKenanganOrderProps) {
+  const [menu, setMenu] = useState<KopiKenanganCatalogItem[]>([])
+  const [categories, setCategories] = useState<string[]>([])
+  const [modifierGroups, setModifierGroups] = useState<{ title: string; items: ItemModifier[] }[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const [menuData, catData, modData] = await Promise.all([
+          fetchMenu(),
+          fetchCategories(),
+          fetchModifierGroups(),
+        ])
+        setMenu(menuData)
+        setCategories(catData)
+        setModifierGroups(modData)
+      } catch (err) {
+        console.error('Failed to load menu data:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="card p-8 text-center">
+        <p className="text-muted">Memuat menu...</p>
+      </div>
+    )
+  }
+
   return (
     <section className="space-y-5">
       <div className="card p-4 sm:p-5">
@@ -612,7 +657,7 @@ export default function KopiKenanganOrder({
         <div>
           <p className="label">Pesanan</p>
           <h3 className="mt-1 text-xl font-semibold tracking-tight text-ink">Orang di nota ini</h3>
-          <p className="mt-0.5 text-xs text-muted">{KOPI_KENANGAN_MENU.length} menu + modifier</p>
+          <p className="mt-0.5 text-xs text-muted">{menu.length} menu + modifier</p>
         </div>
         <button type="button" onClick={onAddPerson} className="button-secondary">
           + Orang baru
@@ -636,6 +681,9 @@ export default function KopiKenanganOrder({
             onUpdate={(updatedPerson) => onUpdatePerson(index, updatedPerson)}
             onRemove={() => onRemovePerson(index)}
             canRemove={people.length > 0}
+            menu={menu}
+            categories={categories}
+            modifierGroups={modifierGroups}
           />
         ))
       )}
