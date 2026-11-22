@@ -1,12 +1,13 @@
 'use client'
 
-import { useMemo, useReducer, useState, useSyncExternalStore, type Dispatch, type ReactNode } from 'react'
+import { useEffect, useMemo, useReducer, useState, useSyncExternalStore, type Dispatch, type ReactNode } from 'react'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { billReducer, initialBill, type BillAction } from '@/lib/bill/reducer'
 import { computeBill } from '@/lib/bill/compute'
 import { validateBill, type BillValidation } from '@/lib/bill/validate'
 import { formatRp } from '@/lib/money'
+import { clearDraft, loadDraft, saveDraft } from '@/lib/storage/draft'
 import type { Bill, BillMode, BillTotals } from '@/lib/types'
 
 export type FlowCtx = {
@@ -38,11 +39,26 @@ type Props = {
 }
 
 export default function SplitFlow({ mode, title, headerClassName = '', itemsStep, promoStep, resultStep }: Props) {
-  const [bill, dispatch] = useReducer(billReducer, mode, initialBill)
-  const [step, setStep] = useState<Step>('items')
+  // The draft (sessionStorage) brings the bill back after a reload or an accidental back gesture.
+  const [bill, dispatch] = useReducer(billReducer, mode, (m: BillMode) => loadDraft(m)?.bill ?? initialBill(m))
+  const [step, setStep] = useState<Step>(() => loadDraft(mode)?.step ?? 'items')
   const totals = useMemo(() => computeBill(bill), [bill])
   const validation = useMemo(() => validateBill(bill), [bill])
+
+  useEffect(() => {
+    if (bill.people.length || bill.items.length) saveDraft({ bill, step })
+    else clearDraft(bill.mode)
+  }, [bill, step])
+
+  // Each forward step gets a history entry, so the phone's back gesture goes back one step instead of leaving.
+  useEffect(() => {
+    const onPop = (e: PopStateEvent) => setStep((e.state?.bilbilStep as Step | undefined) ?? 'items')
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
+
   const goTo = (s: Step) => {
+    if (STEPS.findIndex((x) => x.id === s) > STEPS.findIndex((x) => x.id === step)) history.pushState({ bilbilStep: s }, '')
     setStep(s)
     window.scrollTo({ top: 0 })
   }

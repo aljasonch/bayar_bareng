@@ -39,3 +39,7 @@ test('no promo and no cashback gives none', () => {
   void [cashbackPct, cashbackMax]
   expect(receiptToBill(plain, catalog, 'normal').appPromo).toEqual({ kind: 'none' })
 })
+
+test('every scanned item is marked as coming from the receipt', () => {
+  expect(receiptToBill(receipt2, catalog, 'normal').items.every((i) => i.fromReceipt)).toBe(true)
+})

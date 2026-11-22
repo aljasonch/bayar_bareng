@@ -29,8 +29,8 @@ test('rejects a non-image file with 400', async () => {
   expect(generateContent).not.toHaveBeenCalled()
 })
 
-test('rejects images over 5 MB with 400', async () => {
-  const res = await POST(req(png(6 * 1024 * 1024)))
+test('rejects images over 4 MB with 400', async () => {
+  const res = await POST(req(png(4.2 * 1024 * 1024)))
   expect(res.status).toBe(400)
 })
 

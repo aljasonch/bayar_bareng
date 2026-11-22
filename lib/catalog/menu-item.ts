@@ -30,7 +30,7 @@ export function repriceForOutlet(items: BillItem[], catalog: Catalog, outlet: Ou
   return items.map((it) => {
     const ref = it.catalog
     const menuItem = ref && catalog.menu.find((m) => m.id === ref.menuItemId)
-    if (!ref || !menuItem) return it
+    if (!ref || !menuItem || it.fromReceipt) return it
     const mods = ref.modifierIds.flatMap((id) => modifiers.filter((m) => m.id === id))
     const rebuilt = buildMenuBillItem({ item: menuItem, size: ref.size, modifiers: mods, sweetness: ref.sweetness, ice: ref.ice }, outlet, catalog.outlet.mallAdjustment)
     return { ...it, price: rebuilt.price }

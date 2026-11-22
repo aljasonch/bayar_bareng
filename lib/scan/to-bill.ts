@@ -16,7 +16,7 @@ export function receiptToBill(r: ScannedReceipt, catalog: Catalog, outlet: Outle
   const items: BillItem[] = r.items.flatMap((line) =>
     unitPrices(line.lineTotal, line.qty).map((price): BillItem => {
       const match = matchCatalogItem(line.name, price, catalog, outlet)
-      if (!match) return { id: newId(), name: line.name, price, ...(line.note && { detail: line.note }), needsCheck: true, assignees: [] }
+      if (!match) return { id: newId(), name: line.name, price, ...(line.note && { detail: line.note }), needsCheck: true, fromReceipt: true, assignees: [] }
       const ice = iceFromNote(line.note)
       return {
         id: newId(),
@@ -24,6 +24,7 @@ export function receiptToBill(r: ScannedReceipt, catalog: Catalog, outlet: Outle
         price,
         detail: [SIZE_LABEL[match.size], line.note].filter(Boolean).join(' · '),
         catalog: { menuItemId: match.menuItem.id, size: match.size, modifierIds: [], ...(ice && { ice }) },
+        fromReceipt: true,
         assignees: [],
       }
     }),

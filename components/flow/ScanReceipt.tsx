@@ -13,6 +13,23 @@ type Props = Pick<FlowCtx, 'bill' | 'dispatch'> & { catalog: Catalog | null; com
 
 const EMPTY_CATALOG: Catalog = { categories: [], menu: [], modifierGroups: [], outlet: { mallAdjustment: 0, availableSizes: [] } }
 
+/** Big photos are re-encoded to JPEG (longest side 2000px) so uploads stay under the server's 4 MB limit. */
+async function shrink(file: File): Promise<File> {
+  if (file.size <= 1_500_000) return file
+  try {
+    const bmp = await createImageBitmap(file)
+    const scale = Math.min(1, 2000 / Math.max(bmp.width, bmp.height))
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.round(bmp.width * scale)
+    canvas.height = Math.round(bmp.height * scale)
+    canvas.getContext('2d')?.drawImage(bmp, 0, 0, canvas.width, canvas.height)
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.85))
+    return blob ? new File([blob], 'struk.jpg', { type: 'image/jpeg' }) : file
+  } catch {
+    return file
+  }
+}
+
 /** Upload a Kopi Kenangan receipt, let the user correct what the AI read, then load it into the bill. */
 export default function ScanReceipt({ bill, dispatch, catalog, combos }: Props) {
   const input = useRef<HTMLInputElement>(null)
@@ -25,9 +42,10 @@ export default function ScanReceipt({ bill, dispatch, catalog, combos }: Props) 
     setError('')
     try {
       const form = new FormData()
-      form.append('image', file)
+      form.append('image', await shrink(file))
       const res = await fetch('/api/scan', { method: 'POST', body: form })
       const data = await res.json().catch(() => ({}))
+      if (res.status === 413) throw new Error('Gambar terlalu besar. Pakai screenshot struk, bukan foto kamera.')
       if (!res.ok || !data.receipt) throw new Error(data.error || 'Struk tidak terbaca. Coba foto yang lebih jelas.')
       setReceipt(data.receipt)
       setStatus('review')

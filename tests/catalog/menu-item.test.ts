@@ -42,3 +42,10 @@ test('repriceForOutlet recomputes catalog items and leaves manual items alone', 
   expect(out[0].id).toBe('a')
   expect(out[1]).toBe(items[1])
 })
+
+test('repriceForOutlet leaves items that came from a receipt alone', async () => {
+  const { repriceForOutlet } = await import('@/lib/catalog/menu-item')
+  const catalog = { categories: [], menu: [mantan], modifierGroups: [], outlet: { mallAdjustment: 2000, availableSizes: ['R' as const, 'L' as const] } }
+  const scanned = { id: 's', name: 'Mantan', price: 25000, assignees: [], fromReceipt: true, catalog: { menuItemId: 'm1', size: 'L' as const, modifierIds: [] } }
+  expect(repriceForOutlet([scanned], catalog, 'mall')[0].price).toBe(25000)
+})

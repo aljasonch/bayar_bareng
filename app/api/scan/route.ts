@@ -1,7 +1,8 @@
 import { GoogleGenAI } from '@google/genai'
 import { parseScannedReceipt, RECEIPT_SCHEMA, ScanParseError } from '@/lib/scan/parse'
 
-const MAX_BYTES = 5 * 1024 * 1024
+// Vercel rejects request bodies over ~4.5 MB before the route runs; the client downscales first.
+const MAX_BYTES = 4 * 1024 * 1024
 const TYPES = new Set(['image/png', 'image/jpeg', 'image/webp'])
 const LIMIT = 10
 const WINDOW_MS = 60_000
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
   const file = form?.get('image')
   if (!(file instanceof File)) return error(400, 'Pilih gambar struk dulu.')
   if (!TYPES.has(file.type)) return error(400, 'Format gambar harus PNG, JPG, atau WEBP.')
-  if (file.size > MAX_BYTES) return error(400, 'Gambar terlalu besar (maks 5 MB).')
+  if (file.size > MAX_BYTES) return error(400, 'Gambar terlalu besar (maks 4 MB).')
 
   let text: string | undefined
   try {

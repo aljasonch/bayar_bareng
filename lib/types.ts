@@ -18,6 +18,7 @@ export type BillItem = {
   catalog?: CatalogRef
   assignees: string[]                           // person ids; shared equally
   needsCheck?: boolean                          // scan couldn't match catalog confidently
+  fromReceipt?: boolean                         // price comes from a scanned receipt; never repriced
 }
 export type Fee = { id: string; name: string; amount: number }
 export type Fees = { delivery: number; others: Fee[] }

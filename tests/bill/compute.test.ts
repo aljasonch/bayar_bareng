@@ -86,3 +86,10 @@ describe('computeBill', () => {
     expect(t.appDiscount).toBe(45000)
   })
 })
+
+test('ghost assignees are ignored when splitting a shared item', () => {
+  const bill = mk([[6000, ['A', 'ghost']]], ['A'])
+  const t = computeBill(bill)
+  expect(t.perPerson[0].itemTotal).toBe(6000)
+  expect(t.perPerson[0].final).toBe(6000)
+})

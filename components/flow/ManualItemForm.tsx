@@ -17,7 +17,8 @@ export default function ManualItemForm({ bill, dispatch }: Pick<FlowCtx, 'bill' 
   function submit(e: React.FormEvent) {
     e.preventDefault()
     if (!name.trim() || price <= 0) return
-    const items = Array.from({ length: qty }, () => ({ id: newId(), name: name.trim(), price, assignees }))
+    const valid = assignees.filter((a) => bill.people.some((p) => p.id === a))
+    const items = Array.from({ length: qty }, () => ({ id: newId(), name: name.trim(), price, assignees: valid }))
     dispatch({ type: 'addItems', items })
     setName('')
     setPrice(0)

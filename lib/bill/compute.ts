@@ -23,8 +23,11 @@ function roundToTarget(values: number[], target: number): number[] {
 export function computeBill(bill: Bill): BillTotals {
   const { people, items, fees, appPromo, paymentPromo } = bill
 
+  // Only count assignees still on the bill, so a removed person never leaves an item half-paid.
+  const ids = new Set(people.map((p) => p.id))
+  const shares = items.map((item) => item.assignees.filter((a) => ids.has(a)))
   const itemTotals = people.map((p) =>
-    items.reduce((sum, item) => (item.assignees.includes(p.id) ? sum + item.price / item.assignees.length : sum), 0),
+    items.reduce((sum, item, i) => (shares[i].includes(p.id) ? sum + item.price / shares[i].length : sum), 0),
   )
   const totalItem = items.reduce((sum, item) => sum + item.price, 0)
 

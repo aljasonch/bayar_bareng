@@ -54,7 +54,7 @@ body {
   font-feature-settings: 'tnum' 1;
 }
 
-[data-theme] {
+[data-theme]:not(.contents) {
   @apply min-h-screen bg-bg text-ink;
 }
 
@@ -73,7 +73,8 @@ input[type='number'] { -moz-appearance: textfield; }
   .btn-primary { @apply btn bg-accent text-onAccent hover:bg-accent/90; }
   .btn-secondary { @apply btn border border-line bg-surface text-ink hover:border-accent/50; }
   .btn-ghost { @apply btn text-muted hover:text-ink; }
-  .field { @apply w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-ink placeholder:text-muted/70 focus:border-accent focus:outline-none; }
+  /* 16px on phones: iOS Safari zooms into inputs smaller than that. */
+  .field { @apply w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-base text-ink sm:text-sm placeholder:text-muted/70 focus:border-accent focus:outline-none; }
   .chip { @apply inline-flex h-7 min-w-7 items-center justify-center rounded-full px-2 text-xs font-medium; }
   .num { @apply font-mono; }
 }

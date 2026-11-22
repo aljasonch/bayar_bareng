@@ -25,3 +25,9 @@ test('person with no items is only a warning', () => {
   expect(v.ok).toBe(true)
   expect(v.emptyPeopleIds).toEqual(['B'])
 })
+
+test('an item whose only assignee was removed counts as unassigned', () => {
+  const v = validateBill({ ...base(), items: [{ id: 'g', name: 'Nasi', price: 20000, assignees: ['ghost'] }] })
+  expect(v.ok).toBe(false)
+  expect(v.unassignedItemIds).toEqual(['g'])
+})
