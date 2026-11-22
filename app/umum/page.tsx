@@ -5,7 +5,9 @@ import PeoplePicker from '@/components/flow/PeoplePicker'
 import ItemList from '@/components/flow/ItemList'
 import ManualItemForm from '@/components/flow/ManualItemForm'
 import FeesEditor from '@/components/flow/FeesEditor'
-import { formatRp } from '@/lib/money'
+import PromoPicker from '@/components/flow/PromoPicker'
+import BillMeta from '@/components/flow/BillMeta'
+import ResultView from '@/components/flow/ResultView'
 
 export default function UmumPage() {
   return (
@@ -23,16 +25,22 @@ export default function UmumPage() {
             </section>
           </div>
         )}
-        promoStep={(ctx) => <FeesEditor {...ctx} />}
-        resultStep={({ bill, totals }) => (
-          <ul className="space-y-2">
-            {totals.perPerson.map((p, i) => (
-              <li key={p.personId} className="card flex justify-between p-4">
-                <span>{bill.people[i].name}</span>
-                <span className="num">{formatRp(p.final)}</span>
-              </li>
-            ))}
-          </ul>
+        promoStep={(ctx) => (
+          <div className="space-y-8">
+            <FeesEditor {...ctx} />
+            <PromoPicker {...ctx} />
+            <BillMeta {...ctx} />
+          </div>
+        )}
+        resultStep={({ bill, totals, dispatch, goTo }) => (
+          <ResultView
+            bill={bill}
+            totals={totals}
+            onReset={() => {
+              dispatch({ type: 'reset' })
+              goTo('items')
+            }}
+          />
         )}
       />
     </div>

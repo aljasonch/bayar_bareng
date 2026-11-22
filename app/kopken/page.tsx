@@ -7,6 +7,9 @@ import PeoplePicker from '@/components/flow/PeoplePicker'
 import ItemList from '@/components/flow/ItemList'
 import MenuPicker from '@/components/flow/MenuPicker'
 import FeesEditor from '@/components/flow/FeesEditor'
+import PromoPicker from '@/components/flow/PromoPicker'
+import BillMeta from '@/components/flow/BillMeta'
+import ResultView from '@/components/flow/ResultView'
 import PersonChip from '@/components/ui/PersonChip'
 import { useCatalog } from '@/lib/catalog/use-catalog'
 import { repriceForOutlet } from '@/lib/catalog/menu-item'
@@ -110,16 +113,22 @@ export default function KopkenPage() {
           </>
         }
         itemsStep={(ctx) => <KopkenItems {...ctx} catalogState={catalogState} />}
-        promoStep={(ctx) => <FeesEditor {...ctx} />}
-        resultStep={({ bill, totals }) => (
-          <ul className="space-y-2">
-            {totals.perPerson.map((p, i) => (
-              <li key={p.personId} className="card flex justify-between p-4">
-                <span>{bill.people[i].name}</span>
-                <span className="num">{formatRp(p.final)}</span>
-              </li>
-            ))}
-          </ul>
+        promoStep={(ctx) => (
+          <div className="space-y-8">
+            <PromoPicker {...ctx} combos={catalogState.combos} />
+            <FeesEditor {...ctx} />
+            <BillMeta {...ctx} />
+          </div>
+        )}
+        resultStep={({ bill, totals, dispatch, goTo }) => (
+          <ResultView
+            bill={bill}
+            totals={totals}
+            onReset={() => {
+              dispatch({ type: 'reset' })
+              goTo('items')
+            }}
+          />
         )}
       />
     </div>
