@@ -59,7 +59,7 @@ Download `service-account.json` from Firebase → Project settings → Service a
 
 ### 4. Gemini (receipt scan)
 
-Get an API key from Google AI Studio and set `GEMINI_API_KEY` (server only). `GEMINI_MODEL` defaults to `gemini-flash-lite-latest`.
+Get an API key from Google AI Studio and set `GEMINI_API_KEY` (server only). `GEMINI_MODEL` defaults to `gemini-3.5-flash-lite`.
 
 On the free tier, Google may use request content to improve its products. Kopi Kenangan receipts include the customer's name.
 

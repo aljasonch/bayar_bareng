@@ -68,3 +68,19 @@ test('the 11th request from one IP within a minute is 429', async () => {
   expect(codes.slice(0, 10).every((c) => c === 200)).toBe(true)
   expect(codes[10]).toBe(429)
 })
+
+test('a busy model (503) falls back to the backup model once', async () => {
+  generateContent
+    .mockRejectedValueOnce(Object.assign(new Error('high demand'), { status: 503 }))
+    .mockResolvedValueOnce({ text: JSON.stringify(receipt2) })
+  const res = await POST(req(png()))
+  expect(res.status).toBe(200)
+  expect(generateContent).toHaveBeenCalledTimes(2)
+  expect(generateContent.mock.calls[1][0].model).toBe('gemini-2.5-flash-lite')
+})
+
+test('a non-overload error does not retry', async () => {
+  generateContent.mockRejectedValue(Object.assign(new Error('bad request'), { status: 400 }))
+  expect((await POST(req(png()))).status).toBe(502)
+  expect(generateContent).toHaveBeenCalledTimes(1)
+})

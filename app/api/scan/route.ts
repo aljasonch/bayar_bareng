@@ -6,6 +6,7 @@ const MAX_BYTES = 4 * 1024 * 1024
 const TYPES = new Set(['image/png', 'image/jpeg', 'image/webp'])
 const LIMIT = 10
 const WINDOW_MS = 60_000
+const FALLBACK_MODEL = 'gemini-2.5-flash-lite'
 
 const PROMPT = `This image is a receipt screenshot from the Kopi Kenangan app.
 Read every line exactly as printed and return JSON.
@@ -49,10 +50,17 @@ export async function POST(req: Request) {
   let text: string | undefined
   try {
     const ai = new GoogleGenAI({ apiKey })
-    const res = await ai.models.generateContent({
-      model: process.env.GEMINI_MODEL || 'gemini-flash-lite-latest',
-      contents: [{ inlineData: { mimeType: file.type, data: Buffer.from(await file.arrayBuffer()).toString('base64') } }, { text: PROMPT }],
-      config: { responseMimeType: 'application/json', responseJsonSchema: RECEIPT_SCHEMA },
+    const data = Buffer.from(await file.arrayBuffer()).toString('base64')
+    const ask = (model: string) =>
+      ai.models.generateContent({
+        model,
+        contents: [{ inlineData: { mimeType: file.type, data } }, { text: PROMPT }],
+        config: { responseMimeType: 'application/json', responseJsonSchema: RECEIPT_SCHEMA },
+      })
+    // Free-tier models get "high demand" spikes (503/429); one try on an older model usually goes through.
+    const res = await ask(process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite').catch((e) => {
+      if (e?.status !== 503 && e?.status !== 429) throw e
+      return ask(FALLBACK_MODEL)
     })
     text = res.text
   } catch (e) {
