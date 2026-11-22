@@ -14,7 +14,7 @@ test('coerces "25.000" style strings to integers', () => {
 
 test('defaults missing promo, deliveryFee and otherFees', () => {
   const { promo, deliveryFee, otherFees, ...rest } = receipt2
-  void promo, void deliveryFee, void otherFees
+  void [promo, deliveryFee, otherFees]
   const r = parseScannedReceipt(rest)
   expect(r.promo).toBe(0)
   expect(r.deliveryFee).toBe(0)

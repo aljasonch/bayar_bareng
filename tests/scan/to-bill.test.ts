@@ -36,6 +36,6 @@ test('qty 2 line becomes two unit items', () => {
 
 test('no promo and no cashback gives none', () => {
   const { cashbackPct, cashbackMax, ...plain } = receipt1
-  void cashbackPct, void cashbackMax
+  void [cashbackPct, cashbackMax]
   expect(receiptToBill(plain, catalog, 'normal').appPromo).toEqual({ kind: 'none' })
 })

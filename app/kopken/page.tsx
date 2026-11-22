@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { Camera, Plus, RotateCw } from 'lucide-react'
+import { Plus, RotateCw } from 'lucide-react'
 import SplitFlow, { type FlowCtx } from '@/components/flow/SplitFlow'
 import PeoplePicker from '@/components/flow/PeoplePicker'
 import ItemList from '@/components/flow/ItemList'
 import MenuPicker from '@/components/flow/MenuPicker'
+import ScanReceipt from '@/components/flow/ScanReceipt'
 import FeesEditor from '@/components/flow/FeesEditor'
 import PromoPicker from '@/components/flow/PromoPicker'
 import BillMeta from '@/components/flow/BillMeta'
@@ -30,15 +31,7 @@ function KopkenItems(ctx: FlowCtx & { catalogState: ReturnType<typeof useCatalog
 
   return (
     <div className="space-y-6">
-      <button type="button" disabled className="card flex w-full items-center gap-3 p-4 text-left opacity-60">
-        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-accent text-onAccent">
-          <Camera size={20} />
-        </span>
-        <span>
-          <span className="block font-medium">Scan struk</span>
-          <span className="block text-sm text-muted">Segera hadir</span>
-        </span>
-      </button>
+      <ScanReceipt {...ctx} catalog={catalog} combos={catalogState.combos} />
 
       <section>
         <h2 className="font-semibold">Outlet</h2>
