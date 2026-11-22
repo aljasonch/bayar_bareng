@@ -46,3 +46,6 @@ next-env.d.ts
 
 
 .superpowers/
+
+# Firebase service account for the migration script
+service-account*.json
