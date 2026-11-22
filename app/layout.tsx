@@ -3,7 +3,7 @@ import { Google_Sans, Google_Sans_Code } from 'next/font/google'
 import './globals.css'
 
 const sans = Google_Sans({ subsets: ['latin'], variable: '--font-sans', adjustFontFallback: false })
-const mono = Google_Sans_Code({ subsets: ['latin'], variable: '--font-mono' })
+const mono = Google_Sans_Code({ subsets: ['latin'], variable: '--font-mono', adjustFontFallback: false })
 
 export const metadata: Metadata = {
   title: 'Bilbil | Patungan tanpa salah hitung',
