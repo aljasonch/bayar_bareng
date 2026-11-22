@@ -21,7 +21,6 @@ export default function BilbilLogo({ className }: { className?: string }) {
       <line x1="16" y1="7" x2="18" y2="7" />
       <line x1="16" y1="11" x2="18" y2="11" />
       
-      {/* Scissor icon in the middle? No, keep it minimal */}
     </svg>
   )
 }

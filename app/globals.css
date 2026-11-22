@@ -2,44 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ------------------------------------------------------------------
-   Bilbil — "Nota Kasir"
-------------------------------------------------------------------- */
+/* Kenangan Hangat — base theme */
+:root,
+[data-theme='hangat'] {
+  --bg: 246 239 230;
+  --surface: 255 250 244;
+  --line: 234 217 198;
+  --ink: 59 42 32;
+  --muted: 128 104 86;
+  --accent: 107 63 38;
+  --accent-soft: 239 224 207;
+  --on-accent: 255 248 239;
+  --danger: 180 52 40;
 
-:root {
-  --color-white: 255 255 255;
-  --color-counter: 246 245 242;   /* quiet warm-gray page bg */
-  --color-paper: 255 255 255;     /* card / receipt surface */
-  --color-paper2: 242 241 237;    /* inset, tray, footer bg */
-  --color-ink: 28 25 23;          /* primary text + primary CTA */
-  --color-ink2: 55 52 48;
-  --color-ink3: 87 83 78;
-  --color-muted: 115 111 106;
-  --color-faint: 163 158 152;
-  --color-rule: 229 227 222;      /* hairline dividers */
-  --color-rule2: 198 194 186;     /* input borders, stronger rules */
-
-  /* Accent = ink-dark.  CTA, active step, selection. */
-  --color-accent: 28 25 23;
-  --color-accent-hover: 55 52 48;
-  --color-accent-soft: 242 241 237;
-
-  /* Stamp = brick-red.  Confirmations, destructive hints, rubber stamp. */
-  --color-stamp: 184 76 58;
-  --color-stamp-soft: 253 241 238;
-
-  /* WhatsApp */
-  --color-wa: 45 138 86;
-  --color-wa-dark: 35 110 68;
-
-  /* Receipt shadow */
-  --shadow-receipt: 0 1px 3px rgb(var(--color-ink) / 0.05),
-                    0 14px 28px -12px rgb(var(--color-ink) / 0.18);
-
-  --color-scrollbar: 206 201 192;
-  --color-scrollbar-hover: 180 174 164;
-
-  /* Person color palette — unchanged, muted earth tones */
   --color-person-pine: 67 81 72;
   --color-person-pine-soft: 229 233 227;
   --color-person-clay: 137 93 74;
@@ -62,172 +37,61 @@
   --color-person-stone-soft: 231 228 222;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
+/* Merah Kenangan — Kopi Kenangan mode */
+[data-theme='kopken'] {
+  --bg: 255 255 255;
+  --surface: 255 255 255;
+  --line: 240 227 229;
+  --ink: 26 26 26;
+  --muted: 112 100 102;
+  --accent: 200 16 46;
+  --accent-soft: 255 241 243;
+  --on-accent: 255 255 255;
 }
 
 body {
-  @apply bg-counter font-sans text-ink;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  @apply bg-bg font-sans text-ink antialiased;
   font-feature-settings: 'tnum' 1;
 }
 
+[data-theme] {
+  @apply min-h-screen bg-bg text-ink;
+}
+
 :focus-visible {
-  outline: 2px solid rgb(var(--color-ink));
+  outline: 2px solid rgb(var(--accent));
   outline-offset: 2px;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgb(var(--color-scrollbar) / 1); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgb(var(--color-scrollbar-hover) / 1); }
-
-/* Number input: hide spinner */
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 input[type='number'] { -moz-appearance: textfield; }
 
-/* ---------------------------------------------------------------
-   Animations — all gated behind prefers-reduced-motion
---------------------------------------------------------------- */
-@media (prefers-reduced-motion: no-preference) {
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .animate-fade-in { animation: fadeIn 0.22s ease-out both; }
-
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(14px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .animate-slide-up { animation: slideUp 0.3s ease-out both; }
-
-  @keyframes growBar {
-    from { transform: scaleX(0); }
-    to   { transform: scaleX(1); }
-  }
-  .animate-grow-bar {
-    transform-origin: left;
-    animation: growBar 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  @keyframes stampIn {
-    from { opacity: 0; transform: rotate(-6deg) scale(1.4); }
-    to   { opacity: 1; transform: rotate(-6deg) scale(1); }
-  }
-  .animate-stamp-in {
-    animation: stampIn 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  }
+@layer components {
+  .card { @apply rounded-xl2 border border-line bg-surface; }
+  .btn { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl px-5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40; }
+  .btn-primary { @apply btn bg-accent text-onAccent hover:bg-accent/90; }
+  .btn-secondary { @apply btn border border-line bg-surface text-ink hover:border-accent/50; }
+  .btn-ghost { @apply btn text-muted hover:text-ink; }
+  .field { @apply w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-ink placeholder:text-muted/70 focus:border-accent focus:outline-none; }
+  .chip { @apply inline-flex h-7 min-w-7 items-center justify-center rounded-full px-2 text-xs font-medium; }
+  .num { @apply font-mono; }
 }
 
-/* ---------------------------------------------------------------
-   Component layer
---------------------------------------------------------------- */
-@layer components {
-
-  /* — Surfaces —————————————————————————————————————————————— */
-
-  .card {
-    @apply rounded border border-rule bg-paper;
-  }
-
-  /* Receipt: paper shadow + authentic aesthetic. */
-  .receipt-frame {
-    filter: drop-shadow(0 2px 5px rgb(var(--color-ink) / 0.08))
-            drop-shadow(0 14px 28px rgb(var(--color-ink) / 0.12));
-  }
-
-  /* — Rules ——————————————————————————————————————————————— */
-
-  .perforation {
-    border-top: 1px dashed rgb(var(--color-rule2) / 1);
-  }
-
-  .rule-total {
-    border-top: 3px double rgb(var(--color-ink) / 0.7);
-  }
-
-  /* Dot leader between label and amount */
-  .dots {
-    flex: 1 1 auto;
-    min-width: 0.75rem;
-    margin: 0 0.35rem;
-    border-bottom: 2px dotted rgb(var(--color-rule2) / 1);
-    transform: translateY(-0.28em);
-  }
-
-  /* — Stamp ——————————————————————————————————————————————— */
-
-  .stamp {
-    @apply inline-flex items-center justify-center border-2 border-stamp px-3 py-1 font-mono text-xs font-bold uppercase tracking-[0.18em] text-stamp;
-    border-radius: 3px;
-    transform: rotate(-6deg);
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0.25'/%3E%3C/filter%3E%3Crect width='120' height='120' fill='black'/%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
-    -webkit-mask-size: 120px 120px;
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0.25'/%3E%3C/filter%3E%3Crect width='120' height='120' fill='black'/%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
-    mask-size: 120px 120px;
-  }
-
-  /* — Buttons ————————————————————————————————————————————— */
-
-  .button-primary {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-sm bg-ink px-4 py-2.5
-           font-mono text-xs font-bold uppercase tracking-[0.1em] text-paper
-           transition-colors hover:bg-ink2;
-  }
-
-  .button-secondary {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-sm border border-rule2 bg-paper px-4 py-2.5
-           font-mono text-xs font-bold uppercase tracking-[0.1em] text-ink3
-           transition-colors hover:border-ink hover:text-ink;
-  }
-
-  .button-wa {
-    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-sm bg-wa px-5 py-3
-           font-mono text-sm font-bold uppercase tracking-[0.1em] text-white
-           transition-colors hover:bg-waDark;
-  }
-
-  .icon-button {
-    @apply inline-flex h-9 w-9 items-center justify-center rounded-sm text-muted
-           transition-colors hover:bg-paper2 hover:text-ink;
-  }
-
-  /* — Inputs —————————————————————————————————————————————— */
-
-  .field {
-    @apply w-full rounded-sm border border-rule2 bg-white px-3 py-2.5 text-sm text-ink
-           outline-none transition-colors placeholder:text-faint;
-  }
-  .field:focus {
-    @apply border-ink;
-    box-shadow: 0 0 0 2px rgb(var(--color-ink) / 0.06);
-  }
-
-  .field-line {
-    @apply w-full border-b border-rule2 bg-transparent px-1 py-2 text-sm text-ink
-           outline-none transition-colors placeholder:text-faint;
-  }
-  .field-line:focus {
-    @apply border-ink;
-  }
-
-  .field-mono {
-    @apply font-mono;
-  }
-
-  /* — Labels —————————————————————————————————————————————— */
-
-  .label {
-    @apply font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted;
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes pop { 0% { opacity: 0; transform: scale(.6); } 70% { transform: scale(1.12); } 100% { opacity: 1; transform: scale(1); } }
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+  @keyframes shimmer { from { background-position: -240px 0; } to { background-position: 240px 0; } }
+  .anim-rise { animation: rise .4s ease-out both; }
+  .anim-pop { animation: pop .45s cubic-bezier(.34, 1.56, .64, 1) both; }
+  .anim-grow { transform-origin: left; animation: grow .6s cubic-bezier(.16, 1, .3, 1) both; }
+  .anim-beat { display: inline-block; animation: beat 1.2s ease-in-out infinite; }
+  .anim-shimmer {
+    background-image: linear-gradient(90deg, transparent, rgb(255 255 255 / .8), transparent);
+    background-size: 240px 100%;
+    background-repeat: no-repeat;
+    animation: shimmer 1.3s linear infinite;
   }
 }
