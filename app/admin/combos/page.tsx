@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { errorText, removeDoc, saveDoc, useCollection } from '@/lib/admin/firestore'
+import { removeDoc, saveDoc, useCollection } from '@/lib/admin/firestore'
 import { describeCombo } from '@/lib/bill/promo-text'
 import { AppPromoFields, PaymentPromoFields } from '@/components/flow/PromoFields'
 import type { PromoCombo } from '@/lib/types'
@@ -13,31 +13,16 @@ const ORDER_TYPES: { value: PromoCombo['orderType']; label: string }[] = [
 ]
 
 export default function CombosPage() {
-  const { items, loading, error, reload } = useCollection<PromoCombo>('promoCombos')
+  const { items, loading, error, run } = useCollection<PromoCombo>('promoCombos')
   const [form, setForm] = useState<PromoCombo | null>(null)
-  const [message, setMessage] = useState('')
 
-  async function save(e: React.FormEvent) {
+  function save(e: React.FormEvent) {
     e.preventDefault()
     if (!form) return
-    try {
+    run(async () => {
       await saveDoc('promoCombos', form.id || undefined, { ...form, name: form.name.trim() })
       setForm(null)
-      setMessage('')
-      reload()
-    } catch (err) {
-      setMessage(errorText(err))
-    }
-  }
-
-  async function remove(c: PromoCombo) {
-    if (!window.confirm(`Hapus combo "${c.name}"?`)) return
-    try {
-      await removeDoc('promoCombos', c.id)
-      reload()
-    } catch (err) {
-      setMessage(errorText(err))
-    }
+    })
   }
 
   return (
@@ -54,7 +39,7 @@ export default function CombosPage() {
           Tambah combo
         </button>
       </div>
-      {(error || message) && <p className="text-sm text-danger">{error || message}</p>}
+      {error && <p className="text-sm text-danger">{error}</p>}
 
       {form && (
         <form onSubmit={save} className="card space-y-4 p-4">
@@ -92,8 +77,10 @@ export default function CombosPage() {
                 <div>{c.name}</div>
                 <div className="text-xs text-muted">{describeCombo(c)}</div>
               </div>
-              <button type="button" className="btn-ghost min-h-9 px-2" onClick={() => setForm(c)}>Ubah</button>
-              <button type="button" className="btn-ghost min-h-9 px-2 text-danger" onClick={() => remove(c)}>Hapus</button>
+              <button type="button" className="btn-ghost btn-sm" onClick={() => setForm(c)}>Ubah</button>
+              <button type="button" className="btn-ghost btn-sm text-danger" onClick={() => window.confirm(`Hapus combo "${c.name}"?`) && run(() => removeDoc('promoCombos', c.id))}>
+                Hapus
+              </button>
             </li>
           ))}
         </ul>

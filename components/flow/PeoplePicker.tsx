@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { Plus, Settings2, X } from 'lucide-react'
 import PersonChip from '@/components/ui/PersonChip'
-import { newId } from '@/lib/bill/reducer'
 import { getProfiles, normalizeName, saveProfiles } from '@/lib/storage/profiles'
 import type { FlowCtx } from '@/components/flow/SplitFlow'
 import type { Profile } from '@/lib/types'
@@ -24,11 +23,11 @@ export default function PeoplePicker({ bill, dispatch }: Pick<FlowCtx, 'bill' | 
     if (!clean) return
     let profile = roster.find((p) => p.name.toLowerCase() === clean.toLowerCase())
     if (!profile) {
-      profile = { id: newId(), name: clean }
+      profile = { id: crypto.randomUUID(), name: clean }
       persist([...roster, profile])
     }
     if (!bill.people.some((p) => p.profileId === profile!.id)) {
-      dispatch({ type: 'addPerson', person: { id: newId(), name: profile.name, profileId: profile.id } })
+      dispatch({ type: 'addPerson', person: { id: crypto.randomUUID(), name: profile.name, profileId: profile.id } })
     }
     setName('')
   }
@@ -40,7 +39,7 @@ export default function PeoplePicker({ bill, dispatch }: Pick<FlowCtx, 'bill' | 
       <div className="flex items-center justify-between">
         <h2 className="font-semibold">Siapa saja yang ikut?</h2>
         {roster.length > 0 && (
-          <button type="button" className="btn-ghost min-h-9 px-2 text-xs" onClick={() => setManaging(!managing)}>
+          <button type="button" className="btn-ghost btn-sm text-xs" onClick={() => setManaging(!managing)}>
             <Settings2 size={14} />
             {managing ? 'Selesai' : 'Atur daftar'}
           </button>
@@ -77,7 +76,7 @@ export default function PeoplePicker({ bill, dispatch }: Pick<FlowCtx, 'bill' | 
       {available.length > 0 && !managing && (
         <div className="mt-3 flex flex-wrap gap-1.5">
           {available.map((p) => (
-            <button key={p.id} type="button" onClick={() => add(p.name)} className="rounded-full border border-dashed border-line px-3 py-1.5 text-sm text-muted hover:border-accent hover:text-ink">
+            <button key={p.id} type="button" onClick={() => add(p.name)} className="pill-dashed">
               + {p.name}
             </button>
           ))}
@@ -99,7 +98,7 @@ export default function PeoplePicker({ bill, dispatch }: Pick<FlowCtx, 'bill' | 
                   bill.people.filter((person) => person.profileId === p.id).forEach((person) => dispatch({ type: 'renamePerson', id: person.id, name: clean }))
                 }}
               />
-              <button type="button" className="btn-ghost min-h-8 px-2 text-danger" onClick={() => persist(roster.filter((r) => r.id !== p.id))}>
+              <button type="button" className="btn-ghost btn-sm text-danger" onClick={() => persist(roster.filter((r) => r.id !== p.id))}>
                 Hapus
               </button>
             </li>

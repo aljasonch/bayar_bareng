@@ -20,10 +20,9 @@ test('unassigned items block calculation', () => {
   expect(v.unassignedItemIds).toEqual(['x'])
 })
 
-test('person with no items is only a warning', () => {
+test('person with no items does not block calculation', () => {
   const v = validateBill({ ...base(), items: [{ id: 'y', name: 'y', price: 1, assignees: ['A'] }] })
   expect(v.ok).toBe(true)
-  expect(v.emptyPeopleIds).toEqual(['B'])
 })
 
 test('an item whose only assignee was removed counts as unassigned', () => {

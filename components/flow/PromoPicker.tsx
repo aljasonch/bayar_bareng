@@ -44,7 +44,7 @@ export default function PromoPicker({ bill, dispatch, totals, combos = [] }: Pro
                 type="button"
                 aria-pressed={active}
                 onClick={() => dispatch({ type: 'applyCombo', combo: c })}
-                className={`flex items-center gap-3 rounded-2xl border p-3.5 text-left transition-colors ${active ? 'border-accent bg-accentSoft' : 'border-line hover:border-accent/50'}`}
+                className={`option-card flex items-center gap-3 ${active ? 'option-card-active' : ''}`}
               >
                 <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border ${active ? 'border-accent bg-accent text-onAccent' : 'border-line'}`}>
                   {active && <Check size={12} />}

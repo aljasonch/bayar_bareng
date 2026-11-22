@@ -38,10 +38,7 @@ export default function OutletConfigPage() {
   return (
     <form onSubmit={save} className="max-w-md space-y-4">
       <h1 className="text-2xl font-semibold">Outlet</h1>
-      <label className="block text-sm text-muted">
-        Tambahan harga per item di outlet mall
-        <MoneyInput className="mt-1" value={config.mallAdjustment} onChange={(mallAdjustment) => setConfig({ ...config, mallAdjustment })} aria-label="Tambahan harga mall" />
-      </label>
+      <MoneyInput label="Tambahan harga per item di outlet mall" value={config.mallAdjustment} onChange={(mallAdjustment) => setConfig({ ...config, mallAdjustment })} />
       <fieldset>
         <legend className="text-sm text-muted">Ukuran yang tersedia</legend>
         <div className="mt-2 flex gap-4">

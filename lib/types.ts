@@ -3,22 +3,17 @@ export type Outlet = 'normal' | 'mall'
 export type Size = 'R' | 'L' | 'J'
 export type Sweetness = 'Normal' | 'Less Sugar' | 'No Sugar'
 export type IceLevel = 'Normal' | 'Less Ice' | 'No Ice'
-export type ModifierType = 'upgrade' | 'syrup' | 'addon'
 
 export type Person = { id: string; name: string; profileId?: string }
 export type Profile = { id: string; name: string }
 
-export type CatalogRef = {
-  menuItemId: string; size: Size; modifierIds: string[]
-  sweetness?: Sweetness; ice?: IceLevel
-}
+export type CatalogRef = { menuItemId: string; size: Size; modifierIds: string[] }
 export type BillItem = {
   id: string; name: string; price: number      // price of ONE unit, integer Rp
   detail?: string                               // e.g. "Large · Less Ice · +Extra Shot"
   catalog?: CatalogRef
   assignees: string[]                           // person ids; shared equally
   needsCheck?: boolean                          // scan couldn't match catalog confidently
-  fromReceipt?: boolean                         // price comes from a scanned receipt; never repriced
 }
 export type Fee = { id: string; name: string; amount: number }
 export type Fees = { delivery: number; others: Fee[] }
@@ -33,7 +28,7 @@ export type PaymentPromo =
   | { kind: 'discountPct'; pct: number; max: number; minSpend: number }
 
 export type Bill = {
-  id: string; createdAt: string; mode: BillMode; outlet: Outlet
+  id: string; mode: BillMode; outlet: Outlet
   date: string                                  // yyyy-mm-dd
   payerName?: string; payerAccount?: string
   people: Person[]; items: BillItem[]; fees: Fees
@@ -57,10 +52,10 @@ export type BillTotals = {
 export type MenuItem = {
   id: string; name: string; categoryId: string
   prices: Partial<Record<Size, number>>
-  hasOneLiter?: boolean; isBaristaChoice?: boolean; isNew?: boolean; isLimitedTime?: boolean
+  isBaristaChoice?: boolean; isNew?: boolean; isLimitedTime?: boolean
   sortOrder: number
 }
-export type Modifier = { id: string; name: string; type: ModifierType; price: number; sortOrder: number }
+export type Modifier = { id: string; name: string; price: number; sortOrder: number }
 export type ModifierGroup = { id: string; name: string; sortOrder: number; modifiers: Modifier[] }
 export type Category = { id: string; name: string; sortOrder: number }
 export type OutletConfig = { mallAdjustment: number; availableSizes: Size[] }

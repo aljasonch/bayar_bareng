@@ -17,7 +17,7 @@ export default function HistoryPage() {
   const list = entries ?? (mounted ? getHistory() : [])
 
   return (
-    <div data-theme="hangat" className="px-5 pb-12 pt-5">
+    <div className="px-5 pb-12 pt-5">
       <div className="mx-auto max-w-lg">
         <div className="flex items-center gap-2">
           <Link href="/" className="-ml-2 rounded-full p-2 text-muted hover:text-ink" aria-label="Kembali ke beranda">
@@ -39,7 +39,7 @@ export default function HistoryPage() {
             const isOpen = open === bill.id
             const sum = totals.perPerson.reduce((s, p) => s + p.final, 0)
             return (
-              <li key={bill.id} data-theme={bill.mode === 'kopken' ? 'kopken' : 'hangat'} className="!min-h-0 rounded-xl2 !bg-transparent">
+              <li key={bill.id} data-theme={bill.mode === 'kopken' ? 'kopken' : undefined}>
                 <div className="card">
                   <button type="button" className="flex w-full items-center gap-3 p-4 text-left" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : bill.id)}>
                     <span className="min-w-0 flex-1">

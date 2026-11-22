@@ -3,38 +3,29 @@
 import { useState } from 'react'
 import { collection, getCountFromServer, query, where } from 'firebase/firestore'
 import { db } from '@/lib/firebase/client'
-import { errorText, removeDoc, saveDoc, useCollection } from '@/lib/admin/firestore'
+import { removeDoc, saveDoc, useCollection } from '@/lib/admin/firestore'
 import type { Category } from '@/lib/types'
 
 const EMPTY = { id: '', name: '', sortOrder: 0 }
 
 export default function CategoriesPage() {
-  const { items, loading, error, reload } = useCollection<Category>('categories')
+  const { items, loading, error, setError, run } = useCollection<Category>('categories')
   const [form, setForm] = useState<Category | null>(null)
-  const [message, setMessage] = useState('')
 
-  async function save(e: React.FormEvent) {
+  function save(e: React.FormEvent) {
     e.preventDefault()
     if (!form) return
-    try {
+    run(async () => {
       await saveDoc('categories', form.id || undefined, { name: form.name.trim(), sortOrder: form.sortOrder })
       setForm(null)
-      reload()
-    } catch (err) {
-      setMessage(errorText(err))
-    }
+    })
   }
 
   async function remove(c: Category) {
     const used = await getCountFromServer(query(collection(db, 'menuItems'), where('categoryId', '==', c.id)))
-    if (used.data().count > 0) return setMessage(`"${c.name}" masih dipakai ${used.data().count} menu. Pindahkan menunya dulu.`)
+    if (used.data().count > 0) return setError(`"${c.name}" masih dipakai ${used.data().count} menu. Pindahkan menunya dulu.`)
     if (!window.confirm(`Hapus kategori "${c.name}"?`)) return
-    try {
-      await removeDoc('categories', c.id)
-      reload()
-    } catch (err) {
-      setMessage(errorText(err))
-    }
+    run(() => removeDoc('categories', c.id))
   }
 
   return (
@@ -45,7 +36,7 @@ export default function CategoriesPage() {
           Tambah kategori
         </button>
       </div>
-      {(error || message) && <p className="text-sm text-danger">{error || message}</p>}
+      {error && <p className="text-sm text-danger">{error}</p>}
 
       {form && (
         <form onSubmit={save} className="card grid gap-3 p-4 sm:grid-cols-[1fr_8rem_auto]">
@@ -66,8 +57,8 @@ export default function CategoriesPage() {
             <li key={c.id} className="flex items-center gap-3 px-4 py-3">
               <span className="num w-8 text-sm text-muted">{c.sortOrder}</span>
               <span className="flex-1">{c.name}</span>
-              <button type="button" className="btn-ghost min-h-9 px-2" onClick={() => setForm(c)}>Ubah</button>
-              <button type="button" className="btn-ghost min-h-9 px-2 text-danger" onClick={() => remove(c)}>Hapus</button>
+              <button type="button" className="btn-ghost btn-sm" onClick={() => setForm(c)}>Ubah</button>
+              <button type="button" className="btn-ghost btn-sm text-danger" onClick={() => remove(c)}>Hapus</button>
             </li>
           ))}
         </ul>

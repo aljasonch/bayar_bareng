@@ -118,33 +118,18 @@ export default function ScanReceipt({ bill, dispatch, catalog, combos }: Props) 
             </li>
           ))}
         </ul>
-        <button type="button" className="btn-ghost -ml-3 min-h-9 px-3" onClick={() => set({ items: [...receipt.items, { qty: 1, name: '', lineTotal: 0 }] })}>
+        <button type="button" className="btn-ghost btn-sm -ml-3 px-3" onClick={() => set({ items: [...receipt.items, { qty: 1, name: '', lineTotal: 0 }] })}>
           <Plus size={16} /> Item yang terlewat
         </button>
 
-        <div className="grid grid-cols-2 gap-2 text-xs text-muted">
+        <div className="grid grid-cols-2 gap-2">
           {receipt.otherFees.map((f, i) => (
-            <label key={i}>
-              {f.name}
-              <MoneyInput className="mt-1" value={f.amount} onChange={(amount) => set({ otherFees: receipt.otherFees.map((x, j) => (j === i ? { ...x, amount } : x)) })} aria-label={f.name} />
-            </label>
+            <MoneyInput key={i} label={f.name} value={f.amount} onChange={(amount) => set({ otherFees: receipt.otherFees.map((x, j) => (j === i ? { ...x, amount } : x)) })} />
           ))}
-          <label>
-            Subtotal
-            <MoneyInput className="mt-1" value={receipt.subtotal} onChange={(subtotal) => set({ subtotal })} aria-label="Subtotal" />
-          </label>
-          <label>
-            Promo
-            <MoneyInput className="mt-1" value={receipt.promo} onChange={(promo) => set({ promo })} aria-label="Promo" />
-          </label>
-          <label>
-            Ongkir
-            <MoneyInput className="mt-1" value={receipt.deliveryFee} onChange={(deliveryFee) => set({ deliveryFee })} aria-label="Ongkir" />
-          </label>
-          <label>
-            Total
-            <MoneyInput className="mt-1" value={receipt.total} onChange={(total) => set({ total })} aria-label="Total" />
-          </label>
+          <MoneyInput label="Subtotal" value={receipt.subtotal} onChange={(subtotal) => set({ subtotal })} />
+          <MoneyInput label="Promo" value={receipt.promo} onChange={(promo) => set({ promo })} />
+          <MoneyInput label="Ongkir" value={receipt.deliveryFee} onChange={(deliveryFee) => set({ deliveryFee })} />
+          <MoneyInput label="Total" value={receipt.total} onChange={(total) => set({ total })} />
         </div>
         {receipt.cashbackPct ? (
           <p className="text-sm text-muted">

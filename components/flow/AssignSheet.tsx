@@ -53,10 +53,7 @@ export default function AssignSheet({ bill, dispatch, itemId, onClose }: Props) 
               Nama
               <input className="field mt-1" value={item.name} onChange={(e) => dispatch({ type: 'updateItem', item: { ...item, name: e.target.value } })} />
             </label>
-            <label className="text-xs text-muted">
-              Harga
-              <MoneyInput className="mt-1" value={item.price} onChange={(price) => dispatch({ type: 'updateItem', item: { ...item, price, needsCheck: false } })} aria-label="Harga" />
-            </label>
+            <MoneyInput label="Harga" value={item.price} onChange={(price) => dispatch({ type: 'updateItem', item: { ...item, price, needsCheck: false } })} />
           </div>
 
           <div className="flex gap-2">

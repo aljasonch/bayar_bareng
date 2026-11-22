@@ -29,7 +29,7 @@ export default function AdminSidebar({ email }: { email: string }) {
         </Link>
       ))}
       <div className="text-xs text-muted md:mt-6 md:px-3">{email}</div>
-      <button type="button" className="btn-ghost min-h-9 justify-start px-3" onClick={() => signOut(auth)}>
+      <button type="button" className="btn-ghost btn-sm justify-start px-3" onClick={() => signOut(auth)}>
         Keluar
       </button>
     </nav>

@@ -17,22 +17,12 @@ export type BillAction =
   | { type: 'loadReceipt'; items: BillItem[]; fees: Fees; appPromo: AppPromo }
   | { type: 'reset' }
 
-export function todayInputValue(now = new Date()): string {
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`
-}
-
-export function newId(): string {
-  return crypto.randomUUID()
-}
-
 export function initialBill(mode: BillMode): Bill {
   return {
-    id: newId(),
-    createdAt: new Date().toISOString(),
+    id: crypto.randomUUID(),
     mode,
     outlet: 'normal',
-    date: todayInputValue(),
+    date: new Date().toLocaleDateString('en-CA'),
     people: [],
     items: [],
     fees: { delivery: 0, others: [] },

@@ -38,7 +38,7 @@ const docs = {
       id: m.id,
       data: {
         name: m.name, categoryId: m.category_id, prices, sortOrder: m.sort_order ?? 0,
-        hasOneLiter: !!m.has_one_liter, isBaristaChoice: !!m.is_barista_choice, isNew: !!m.is_new, isLimitedTime: !!m.is_limited_time,
+        isBaristaChoice: !!m.is_barista_choice, isNew: !!m.is_new, isLimitedTime: !!m.is_limited_time,
       },
     }
   }),
@@ -49,7 +49,7 @@ const docs = {
       sortOrder: g.sort_order ?? 0,
       modifiers: modifiers
         .filter((mod) => mod.group_id === g.id)
-        .map((mod) => ({ id: mod.id, name: mod.name, type: mod.type, price: mod.price, sortOrder: mod.sort_order ?? 0 })),
+        .map((mod) => ({ id: mod.id, name: mod.name, price: mod.price, sortOrder: mod.sort_order ?? 0 })),
     },
   })),
 }

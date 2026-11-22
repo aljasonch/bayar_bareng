@@ -2,13 +2,14 @@ import { expect, test } from 'vitest'
 import { receiptToBill } from '@/lib/scan/to-bill'
 import { computeBill } from '@/lib/bill/compute'
 import { initialBill } from '@/lib/bill/reducer'
+import { repriceForOutlet } from '@/lib/catalog/menu-item'
 import { catalog } from './catalog-fixture'
 import { receipt1, receipt2 } from './fixtures'
 
 test('receipt 2 becomes items, fees and a fixed promo', () => {
   const out = receiptToBill(receipt2, catalog, 'normal')
   expect(out.items).toHaveLength(3)
-  expect(out.items[0]).toMatchObject({ name: 'Kopi Kenangan Mantan', price: 25000, detail: 'Large · Normal Ice', assignees: [], catalog: { menuItemId: 'mantan', size: 'L', modifierIds: [] } })
+  expect(out.items[0]).toMatchObject({ name: 'Kopi Kenangan Mantan', price: 25000, detail: 'Large · Normal Ice', assignees: [] })
   expect(out.items[0].needsCheck).toBeFalsy()
   expect(out.items[1]).toMatchObject({ name: 'Kopi Kenangan Mantan Ice...', price: 28000, detail: 'Normal Ice', needsCheck: true })
   expect(out.fees.delivery).toBe(11500)
@@ -40,6 +41,7 @@ test('no promo and no cashback gives none', () => {
   expect(receiptToBill(plain, catalog, 'normal').appPromo).toEqual({ kind: 'none' })
 })
 
-test('every scanned item is marked as coming from the receipt', () => {
-  expect(receiptToBill(receipt2, catalog, 'normal').items.every((i) => i.fromReceipt)).toBe(true)
+test('scanned items are never repriced when switching outlets', () => {
+  const items = receiptToBill(receipt2, catalog, 'normal').items
+  expect(repriceForOutlet(items, catalog, 'mall').map((i) => i.price)).toEqual(items.map((i) => i.price))
 })

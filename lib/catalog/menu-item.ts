@@ -15,12 +15,11 @@ export function buildMenuBillItem(sel: MenuSelection, outlet: Outlet, mallAdjust
   ]
     .filter(Boolean)
     .join(' · ')
-  const catalog = { menuItemId: sel.item.id, size: sel.size, modifierIds: sel.modifiers.map((m) => m.id) }
   return {
     name: sel.item.name,
     price,
     detail,
-    catalog: { ...catalog, ...(sel.sweetness && { sweetness: sel.sweetness }), ...(sel.ice && { ice: sel.ice }) },
+    catalog: { menuItemId: sel.item.id, size: sel.size, modifierIds: sel.modifiers.map((m) => m.id) },
   }
 }
 
@@ -30,9 +29,9 @@ export function repriceForOutlet(items: BillItem[], catalog: Catalog, outlet: Ou
   return items.map((it) => {
     const ref = it.catalog
     const menuItem = ref && catalog.menu.find((m) => m.id === ref.menuItemId)
-    if (!ref || !menuItem || it.fromReceipt) return it
+    if (!ref || !menuItem) return it
     const mods = ref.modifierIds.flatMap((id) => modifiers.filter((m) => m.id === id))
-    const rebuilt = buildMenuBillItem({ item: menuItem, size: ref.size, modifiers: mods, sweetness: ref.sweetness, ice: ref.ice }, outlet, catalog.outlet.mallAdjustment)
+    const rebuilt = buildMenuBillItem({ item: menuItem, size: ref.size, modifiers: mods }, outlet, catalog.outlet.mallAdjustment)
     return { ...it, price: rebuilt.price }
   })
 }

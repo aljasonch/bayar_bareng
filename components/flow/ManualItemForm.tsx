@@ -4,7 +4,6 @@ import { useState } from 'react'
 import MoneyInput from '@/components/ui/MoneyInput'
 import PersonChip from '@/components/ui/PersonChip'
 import Stepper from '@/components/ui/Stepper'
-import { newId } from '@/lib/bill/reducer'
 import type { FlowCtx } from '@/components/flow/SplitFlow'
 
 /** Add an item by hand. Qty N adds N separate units so each can go to a different person. */
@@ -18,7 +17,7 @@ export default function ManualItemForm({ bill, dispatch }: Pick<FlowCtx, 'bill' 
     e.preventDefault()
     if (!name.trim() || price <= 0) return
     const valid = assignees.filter((a) => bill.people.some((p) => p.id === a))
-    const items = Array.from({ length: qty }, () => ({ id: newId(), name: name.trim(), price, assignees: valid }))
+    const items = Array.from({ length: qty }, () => ({ id: crypto.randomUUID(), name: name.trim(), price, assignees: valid }))
     dispatch({ type: 'addItems', items })
     setName('')
     setPrice(0)

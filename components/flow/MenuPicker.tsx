@@ -2,14 +2,15 @@
 
 import { useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
+import PillGroup from '@/components/ui/PillGroup'
 import Sheet from '@/components/ui/Sheet'
 import Stepper from '@/components/ui/Stepper'
 import { buildMenuBillItem, SIZE_LABEL } from '@/lib/catalog/menu-item'
 import { formatRp } from '@/lib/money'
 import type { BillItem, Catalog, IceLevel, MenuItem, Modifier, Outlet, Size, Sweetness } from '@/lib/types'
 
-const SWEETNESS: Sweetness[] = ['Normal', 'Less Sugar', 'No Sugar']
-const ICE: IceLevel[] = ['Normal', 'Less Ice', 'No Ice']
+const SWEETNESS = (['Normal', 'Less Sugar', 'No Sugar'] as Sweetness[]).map((v) => ({ value: v, label: v }))
+const ICE = (['Normal', 'Less Ice', 'No Ice'] as IceLevel[]).map((v) => ({ value: v, label: v }))
 
 type Props = {
   open: boolean
@@ -18,24 +19,6 @@ type Props = {
   outlet: Outlet
   onClose: () => void
   onAdd: (item: Omit<BillItem, 'id' | 'assignees'>, qty: number) => void
-}
-
-function Choice<T extends string>({ options, value, onChange, label }: { options: T[]; value: T; onChange: (v: T) => void; label: (v: T) => string }) {
-  return (
-    <div className="flex flex-wrap gap-1.5">
-      {options.map((o) => (
-        <button
-          key={o}
-          type="button"
-          aria-pressed={value === o}
-          onClick={() => onChange(o)}
-          className={`rounded-full border px-3.5 py-2 text-sm transition-colors ${value === o ? 'border-accent bg-accent text-onAccent' : 'border-line hover:border-accent/50'}`}
-        >
-          {label(o)}
-        </button>
-      ))}
-    </div>
-  )
 }
 
 export default function MenuPicker({ open, personName, catalog, outlet, onClose, onAdd }: Props) {
@@ -104,20 +87,20 @@ export default function MenuPicker({ open, personName, catalog, outlet, onClose,
         </div>
       ) : (
         <div className="space-y-5 pb-2">
-          <button type="button" className="btn-ghost -ml-3 -mt-2 min-h-9 px-3" onClick={() => setItem(null)}>
+          <button type="button" className="btn-ghost btn-sm -ml-3 -mt-2 px-3" onClick={() => setItem(null)}>
             <ArrowLeft size={16} /> Menu lain
           </button>
           <section>
             <h3 className="mb-2 text-sm text-muted">Ukuran</h3>
-            <Choice options={sizesFor(item)} value={size} onChange={setSize} label={(s) => `${SIZE_LABEL[s]} · ${formatRp((item.prices[s] ?? 0) + adj)}`} />
+            <PillGroup options={sizesFor(item).map((s) => ({ value: s, label: `${SIZE_LABEL[s]} · ${formatRp((item.prices[s] ?? 0) + adj)}` }))} value={size} onChange={setSize} />
           </section>
           <section>
             <h3 className="mb-2 text-sm text-muted">Es</h3>
-            <Choice options={ICE} value={ice} onChange={setIce} label={(v) => v} />
+            <PillGroup options={ICE} value={ice} onChange={setIce} />
           </section>
           <section>
             <h3 className="mb-2 text-sm text-muted">Gula</h3>
-            <Choice options={SWEETNESS} value={sweetness} onChange={setSweetness} label={(v) => v} />
+            <PillGroup options={SWEETNESS} value={sweetness} onChange={setSweetness} />
           </section>
           {catalog.modifierGroups.map((g) => (
             <section key={g.id}>
@@ -131,7 +114,7 @@ export default function MenuPicker({ open, personName, catalog, outlet, onClose,
                       type="button"
                       aria-pressed={on}
                       onClick={() => setMods(on ? mods.filter((x) => x.id !== m.id) : [...mods, m])}
-                      className={`rounded-full border px-3.5 py-2 text-sm ${on ? 'border-accent bg-accentSoft text-accent' : 'border-line'}`}
+                      className={`pill ${on ? 'pill-soft' : ''}`}
                     >
                       {m.name} <span className="num text-xs opacity-70">+{formatRp(m.price)}</span>
                     </button>

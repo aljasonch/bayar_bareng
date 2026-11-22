@@ -2,7 +2,6 @@
 
 import { Plus, X } from 'lucide-react'
 import MoneyInput from '@/components/ui/MoneyInput'
-import { newId } from '@/lib/bill/reducer'
 import type { FlowCtx } from '@/components/flow/SplitFlow'
 
 /** Delivery and other shared fees. Both are split equally between everyone on the bill. */
@@ -29,7 +28,7 @@ export default function FeesEditor({ bill, dispatch }: Pick<FlowCtx, 'bill' | 'd
           </button>
         </div>
       ))}
-      <button type="button" className="btn-ghost -ml-3 px-3" onClick={() => setOthers([...fees.others, { id: newId(), name: '', amount: 0 }])}>
+      <button type="button" className="btn-ghost -ml-3 px-3" onClick={() => setOthers([...fees.others, { id: crypto.randomUUID(), name: '', amount: 0 }])}>
         <Plus size={16} /> Biaya lain (take away, service, pajak)
       </button>
     </section>

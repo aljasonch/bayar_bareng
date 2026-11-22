@@ -2,15 +2,6 @@ import { collection, doc, getDoc, getDocs, orderBy, query } from 'firebase/fires
 import { db } from '@/lib/firebase/client'
 import type { Catalog, Category, MenuItem, ModifierGroup, OutletConfig, PromoCombo } from '@/lib/types'
 
-export const COLLECTIONS = {
-  categories: 'categories',
-  menuItems: 'menuItems',
-  modifierGroups: 'modifierGroups',
-  config: 'config',
-  promoCombos: 'promoCombos',
-  admins: 'admins',
-} as const
-
 export const DEFAULT_OUTLET: OutletConfig = { mallAdjustment: 2000, availableSizes: ['R', 'L', 'J'] }
 
 async function list<T>(name: string): Promise<T[]> {
@@ -20,10 +11,10 @@ async function list<T>(name: string): Promise<T[]> {
 
 export async function fetchCatalog(): Promise<Catalog> {
   const [categories, menu, groups, outletSnap] = await Promise.all([
-    list<Category>(COLLECTIONS.categories),
-    list<MenuItem>(COLLECTIONS.menuItems),
-    list<ModifierGroup>(COLLECTIONS.modifierGroups),
-    getDoc(doc(db, COLLECTIONS.config, 'outlet')),
+    list<Category>('categories'),
+    list<MenuItem>('menuItems'),
+    list<ModifierGroup>('modifierGroups'),
+    getDoc(doc(db, 'config', 'outlet')),
   ])
   const modifierGroups = groups.map((g) => ({
     ...g,
@@ -34,5 +25,5 @@ export async function fetchCatalog(): Promise<Catalog> {
 }
 
 export function fetchPromoCombos(): Promise<PromoCombo[]> {
-  return list<PromoCombo>(COLLECTIONS.promoCombos)
+  return list<PromoCombo>('promoCombos')
 }

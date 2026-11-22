@@ -1,14 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { errorText, removeDoc, saveDoc, useCollection } from '@/lib/admin/firestore'
+import { removeDoc, saveDoc, useCollection } from '@/lib/admin/firestore'
 import { formatRp } from '@/lib/money'
 import MoneyInput from '@/components/ui/MoneyInput'
 import type { Category, MenuItem, Size } from '@/lib/types'
 
 const SIZES: Size[] = ['R', 'L', 'J']
 const FLAGS = [
-  ['hasOneLiter', '1 liter'],
   ['isBaristaChoice', 'Barista choice'],
   ['isNew', 'Baru'],
   ['isLimitedTime', 'Terbatas'],
@@ -19,7 +18,6 @@ export default function MenuPage() {
   const cats = useCollection<Category>('categories')
   const [filter, setFilter] = useState('')
   const [form, setForm] = useState<MenuItem | null>(null)
-  const [message, setMessage] = useState('')
 
   const catName = (id: string) => cats.items.find((c) => c.id === id)?.name ?? '—'
   const shown = filter ? menu.items.filter((m) => m.categoryId === filter) : menu.items
@@ -36,28 +34,14 @@ export default function MenuPage() {
     setForm({ ...form, prices })
   }
 
-  async function save(e: React.FormEvent) {
+  function save(e: React.FormEvent) {
     e.preventDefault()
     if (!form) return
-    if (Object.keys(form.prices).length === 0) return setMessage('Isi minimal satu harga ukuran.')
-    try {
+    if (Object.keys(form.prices).length === 0) return menu.setError('Isi minimal satu harga ukuran.')
+    menu.run(async () => {
       await saveDoc('menuItems', form.id || undefined, { ...form, name: form.name.trim() })
       setForm(null)
-      setMessage('')
-      menu.reload()
-    } catch (err) {
-      setMessage(errorText(err))
-    }
-  }
-
-  async function remove(m: MenuItem) {
-    if (!window.confirm(`Hapus menu "${m.name}"?`)) return
-    try {
-      await removeDoc('menuItems', m.id)
-      menu.reload()
-    } catch (err) {
-      setMessage(errorText(err))
-    }
+    })
   }
 
   return (
@@ -74,7 +58,7 @@ export default function MenuPage() {
           <button type="button" className="btn-primary" onClick={() => setForm(blank())}>Tambah menu</button>
         </div>
       </div>
-      {(menu.error || message) && <p className="text-sm text-danger">{menu.error || message}</p>}
+      {menu.error && <p className="text-sm text-danger">{menu.error}</p>}
 
       {form && (
         <form onSubmit={save} className="card space-y-3 p-4">
@@ -89,10 +73,7 @@ export default function MenuPage() {
           </div>
           <div className="grid grid-cols-3 gap-3">
             {SIZES.map((s) => (
-              <label key={s} className="text-sm text-muted">
-                Harga {s}
-                <MoneyInput className="mt-1" value={form.prices[s] ?? 0} onChange={(v) => setPrice(s, v)} placeholder="kosong" aria-label={`Harga ${s}`} />
-              </label>
+              <MoneyInput key={s} label={`Harga ${s}`} value={form.prices[s] ?? 0} onChange={(v) => setPrice(s, v)} placeholder="kosong" />
             ))}
           </div>
           <div className="flex flex-wrap gap-4 text-sm">
@@ -123,8 +104,10 @@ export default function MenuPage() {
               <div className="num text-sm text-muted">
                 {SIZES.filter((s) => m.prices[s] != null).map((s) => `${s} ${formatRp(m.prices[s]!)}`).join('  ')}
               </div>
-              <button type="button" className="btn-ghost min-h-9 px-2" onClick={() => setForm(m)}>Ubah</button>
-              <button type="button" className="btn-ghost min-h-9 px-2 text-danger" onClick={() => remove(m)}>Hapus</button>
+              <button type="button" className="btn-ghost btn-sm" onClick={() => setForm(m)}>Ubah</button>
+              <button type="button" className="btn-ghost btn-sm text-danger" onClick={() => window.confirm(`Hapus menu "${m.name}"?`) && menu.run(() => removeDoc('menuItems', m.id))}>
+                Hapus
+              </button>
             </li>
           ))}
         </ul>

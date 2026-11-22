@@ -1,10 +1,6 @@
-import { newId } from '@/lib/bill/reducer'
 import { SIZE_LABEL } from '@/lib/catalog/menu-item'
 import { matchCatalogItem } from '@/lib/scan/match'
-import type { AppPromo, BillItem, Catalog, Fees, IceLevel, Outlet, ScannedReceipt } from '@/lib/types'
-
-const ICE: IceLevel[] = ['Normal', 'Less Ice', 'No Ice']
-const iceFromNote = (note?: string) => ICE.find((v) => note?.toLowerCase() === `${v} ice`.toLowerCase() || note?.toLowerCase() === v.toLowerCase())
+import type { AppPromo, BillItem, Catalog, Fees, Outlet, ScannedReceipt } from '@/lib/types'
 
 /** Split a line total into qty unit prices that still sum to the line total. */
 function unitPrices(lineTotal: number, qty: number): number[] {
@@ -16,21 +12,18 @@ export function receiptToBill(r: ScannedReceipt, catalog: Catalog, outlet: Outle
   const items: BillItem[] = r.items.flatMap((line) =>
     unitPrices(line.lineTotal, line.qty).map((price): BillItem => {
       const match = matchCatalogItem(line.name, price, catalog, outlet)
-      if (!match) return { id: newId(), name: line.name, price, ...(line.note && { detail: line.note }), needsCheck: true, fromReceipt: true, assignees: [] }
-      const ice = iceFromNote(line.note)
+      if (!match) return { id: crypto.randomUUID(), name: line.name, price, ...(line.note && { detail: line.note }), needsCheck: true, assignees: [] }
       return {
-        id: newId(),
+        id: crypto.randomUUID(),
         name: match.menuItem.name,
         price,
         detail: [SIZE_LABEL[match.size], line.note].filter(Boolean).join(' · '),
-        catalog: { menuItemId: match.menuItem.id, size: match.size, modifierIds: [], ...(ice && { ice }) },
-        fromReceipt: true,
         assignees: [],
       }
     }),
   )
 
-  const fees: Fees = { delivery: r.deliveryFee, others: r.otherFees.map((f) => ({ id: newId(), ...f })) }
+  const fees: Fees = { delivery: r.deliveryFee, others: r.otherFees.map((f) => ({ id: crypto.randomUUID(), ...f })) }
 
   const appPromo: AppPromo =
     r.promo > 0

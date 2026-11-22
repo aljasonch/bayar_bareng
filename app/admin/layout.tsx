@@ -34,10 +34,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (gate.state === 'admin' && isLogin) router.replace('/admin')
   }, [gate.state, isLogin, router])
 
-  if (isLogin) return <div data-theme="hangat">{children}</div>
+  if (isLogin) return <>{children}</>
 
   return (
-    <div data-theme="hangat" className="px-5 py-6">
+    <div className="px-5 py-6">
       {gate.state === 'loading' || gate.state === 'out' ? (
         <p className="text-sm text-muted">Memeriksa akun…</p>
       ) : gate.state === 'notAdmin' ? (

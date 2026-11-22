@@ -3,12 +3,16 @@
 import { useEffect, useMemo, useReducer, useState, useSyncExternalStore, type Dispatch, type ReactNode } from 'react'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import FeesEditor from '@/components/flow/FeesEditor'
+import PromoPicker from '@/components/flow/PromoPicker'
+import BillMeta from '@/components/flow/BillMeta'
+import ResultView from '@/components/flow/ResultView'
 import { billReducer, initialBill, type BillAction } from '@/lib/bill/reducer'
 import { computeBill } from '@/lib/bill/compute'
 import { validateBill, type BillValidation } from '@/lib/bill/validate'
 import { formatRp } from '@/lib/money'
 import { clearDraft, loadDraft, saveDraft } from '@/lib/storage/draft'
-import type { Bill, BillMode, BillTotals } from '@/lib/types'
+import type { Bill, BillMode, BillTotals, PromoCombo } from '@/lib/types'
 
 export type FlowCtx = {
   bill: Bill
@@ -31,14 +35,12 @@ const STEPS: { id: Step; label: string }[] = [
 type Props = {
   mode: BillMode
   title: ReactNode
-  /** Extra header content under the title (e.g. Kopi Kenangan's curved red band). */
   headerClassName?: string
+  combos?: PromoCombo[]
   itemsStep: (ctx: FlowCtx) => ReactNode
-  promoStep: (ctx: FlowCtx) => ReactNode
-  resultStep: (ctx: FlowCtx) => ReactNode
 }
 
-export default function SplitFlow({ mode, title, headerClassName = '', itemsStep, promoStep, resultStep }: Props) {
+export default function SplitFlow({ mode, title, headerClassName = '', combos, itemsStep }: Props) {
   // The draft (sessionStorage) brings the bill back after a reload or an accidental back gesture.
   const [bill, dispatch] = useReducer(billReducer, mode, (m: BillMode) => loadDraft(m)?.bill ?? initialBill(m))
   const [step, setStep] = useState<Step>(() => loadDraft(mode)?.step ?? 'items')
@@ -104,12 +106,36 @@ export default function SplitFlow({ mode, title, headerClassName = '', itemsStep
 
       <main className="mx-auto max-w-lg px-5 pt-5">
         {step === 'items' && itemsStep(ctx)}
-        {step === 'promo' && promoStep(ctx)}
-        {step === 'result' && resultStep(ctx)}
+        {step === 'promo' && (
+          <div className="space-y-8">
+            {combos ? (
+              <>
+                <PromoPicker {...ctx} combos={combos} />
+                <FeesEditor {...ctx} />
+              </>
+            ) : (
+              <>
+                <FeesEditor {...ctx} />
+                <PromoPicker {...ctx} />
+              </>
+            )}
+            <BillMeta {...ctx} />
+          </div>
+        )}
+        {step === 'result' && (
+          <ResultView
+            bill={bill}
+            totals={totals}
+            onReset={() => {
+              dispatch({ type: 'reset' })
+              goTo('items')
+            }}
+          />
+        )}
       </main>
 
       {step !== 'result' && (
-        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface/95 px-5 pb-[max(.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur">
+        <div className="sticky-bar">
           <div className="mx-auto flex max-w-lg items-center gap-3">
             <div className="min-w-0 flex-1">
               <div className="text-xs text-muted">

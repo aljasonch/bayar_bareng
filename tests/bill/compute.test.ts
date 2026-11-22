@@ -13,7 +13,7 @@ function mk(
   paymentPromo: PaymentPromo = NONE,
 ): Bill {
   return {
-    id: 'b', createdAt: '', mode: 'kopken', outlet: 'normal', date: '2026-11-22',
+    id: 'b', mode: 'kopken', outlet: 'normal', date: '2026-11-22',
     people: people.map((id) => ({ id, name: id })),
     items: items.map(([price, assignees], i): BillItem => ({ id: `i${i}`, name: `item ${i}`, price, assignees })),
     fees: { delivery: 0, others: [], ...fees },

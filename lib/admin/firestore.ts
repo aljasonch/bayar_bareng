@@ -23,11 +23,24 @@ export function useCollection<T extends { id: string }>(name: string) {
     }
   }, [name])
 
+  const run = useCallback(
+    async (fn: () => Promise<unknown>) => {
+      try {
+        await fn()
+        setError('')
+        await reload()
+      } catch (e) {
+        setError(errorText(e))
+      }
+    },
+    [reload],
+  )
+
   useEffect(() => {
     reload()
   }, [reload])
 
-  return { items, loading, error, reload }
+  return { items, loading, error, setError, reload, run }
 }
 
 /** Create (no id) or overwrite (id) a document. The id field itself is never stored. */

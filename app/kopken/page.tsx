@@ -7,14 +7,9 @@ import PeoplePicker from '@/components/flow/PeoplePicker'
 import ItemList from '@/components/flow/ItemList'
 import MenuPicker from '@/components/flow/MenuPicker'
 import ScanReceipt from '@/components/flow/ScanReceipt'
-import FeesEditor from '@/components/flow/FeesEditor'
-import PromoPicker from '@/components/flow/PromoPicker'
-import BillMeta from '@/components/flow/BillMeta'
-import ResultView from '@/components/flow/ResultView'
 import PersonChip from '@/components/ui/PersonChip'
 import { useCatalog } from '@/lib/catalog/use-catalog'
 import { repriceForOutlet } from '@/lib/catalog/menu-item'
-import { newId } from '@/lib/bill/reducer'
 import { formatRp } from '@/lib/money'
 import type { Outlet } from '@/lib/types'
 
@@ -42,7 +37,7 @@ function KopkenItems(ctx: FlowCtx & { catalogState: ReturnType<typeof useCatalog
               type="button"
               aria-pressed={bill.outlet === o}
               onClick={() => setOutlet(o)}
-              className={`rounded-2xl border p-3 text-left text-sm ${bill.outlet === o ? 'border-accent bg-accentSoft' : 'border-line'}`}
+              className={`option-card p-3 text-sm ${bill.outlet === o ? 'option-card-active' : ''}`}
             >
               <span className="block font-medium">{o === 'normal' ? 'Normal store' : 'Mall store'}</span>
               <span className="text-xs text-muted">{o === 'normal' ? 'Harga biasa' : `+${formatRp(catalog?.outlet.mallAdjustment ?? 2000)} per item`}</span>
@@ -58,7 +53,7 @@ function KopkenItems(ctx: FlowCtx & { catalogState: ReturnType<typeof useCatalog
         {catalogState.error ? (
           <div className="card flex items-center gap-3 p-4 text-sm">
             <span className="flex-1 text-danger">{catalogState.error}</span>
-            <button type="button" className="btn-secondary min-h-9" onClick={catalogState.retry}>
+            <button type="button" className="btn-secondary btn-sm px-3" onClick={catalogState.retry}>
               <RotateCw size={14} /> Coba lagi
             </button>
           </div>
@@ -86,7 +81,7 @@ function KopkenItems(ctx: FlowCtx & { catalogState: ReturnType<typeof useCatalog
           catalog={catalog}
           outlet={bill.outlet}
           onClose={() => setForPerson(null)}
-          onAdd={(item, qty) => dispatch({ type: 'addItems', items: Array.from({ length: qty }, () => ({ ...item, id: newId(), assignees: [person.id] })) })}
+          onAdd={(item, qty) => dispatch({ type: 'addItems', items: Array.from({ length: qty }, () => ({ ...item, id: crypto.randomUUID(), assignees: [person.id] })) })}
         />
       )}
     </div>
@@ -96,33 +91,17 @@ function KopkenItems(ctx: FlowCtx & { catalogState: ReturnType<typeof useCatalog
 export default function KopkenPage() {
   const catalogState = useCatalog()
   return (
-    <div data-theme="kopken">
+    <div data-theme="kopken" className="min-h-screen bg-bg text-ink">
       <SplitFlow
         mode="kopken"
-        headerClassName="bg-accent text-onAccent rounded-b-[2rem]"
+        headerClassName="kopken-band"
+        combos={catalogState.combos}
         title={
           <>
-            Kopi Kenangan <span className="anim-beat text-[#ff9aac]">♥</span>
+            Kopi Kenangan <span className="anim-beat kopken-heart">♥</span>
           </>
         }
         itemsStep={(ctx) => <KopkenItems {...ctx} catalogState={catalogState} />}
-        promoStep={(ctx) => (
-          <div className="space-y-8">
-            <PromoPicker {...ctx} combos={catalogState.combos} />
-            <FeesEditor {...ctx} />
-            <BillMeta {...ctx} />
-          </div>
-        )}
-        resultStep={({ bill, totals, dispatch, goTo }) => (
-          <ResultView
-            bill={bill}
-            totals={totals}
-            onReset={() => {
-              dispatch({ type: 'reset' })
-              goTo('items')
-            }}
-          />
-        )}
       />
     </div>
   )

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { AlertCircle } from 'lucide-react'
 import PersonChip from '@/components/ui/PersonChip'
 import AssignSheet from '@/components/flow/AssignSheet'
@@ -20,7 +20,7 @@ export default function ItemList({ bill, dispatch, validation }: Pick<FlowCtx, '
         {bill.items.map((item, n) => {
           const unassigned = validation.unassignedItemIds.includes(item.id)
           return (
-            <li key={item.id} className="anim-rise" style={{ animationDelay: `${Math.min(n, 8) * 40}ms` }}>
+            <li key={item.id} className="anim-rise" style={{ '--stagger': Math.min(n, 8) } as CSSProperties}>
               <button
                 type="button"
                 onClick={() => setOpenId(item.id)}

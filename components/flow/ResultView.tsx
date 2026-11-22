@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { Check, MessageCircle, RotateCcw } from 'lucide-react'
 import BilbilLogo from '@/components/BilbilLogo'
 import PersonChip from '@/components/ui/PersonChip'
@@ -20,7 +20,7 @@ export default function ResultView({ bill, totals, onReset }: Props) {
 
   return (
     <div className="space-y-5">
-      <div className="anim-rise relative overflow-hidden rounded-xl2 bg-surface p-5 shadow-[0_16px_36px_-22px_rgb(var(--ink)/.5)] ring-1 ring-line">
+      <div className="card-receipt anim-rise">
         <div className="flex items-center gap-2 text-sm text-muted">
           <BilbilLogo className="h-5 w-5 text-accent" />
           <span>{formatBillDate(bill.date)}</span>
@@ -38,13 +38,13 @@ export default function ResultView({ bill, totals, onReset }: Props) {
 
         <div className="mt-5 flex h-3 gap-0.5 overflow-hidden rounded-full" aria-hidden>
           {totals.perPerson.map((p, i) => (
-            <span key={p.personId} className="anim-grow h-full" style={{ flex: Math.max(p.final, 0), background: getPersonColor(i).base, animationDelay: `${150 + i * 60}ms` }} />
+            <span key={p.personId} className="anim-grow h-full" style={{ '--stagger': i, flex: Math.max(p.final, 0), background: getPersonColor(i).base } as CSSProperties} />
           ))}
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <a href={whatsappUrl(bill, totals)} target="_blank" rel="noreferrer" className="btn min-h-12 bg-[#25a35a] text-white hover:bg-[#1f8c4d]">
+        <a href={whatsappUrl(bill, totals)} target="_blank" rel="noreferrer" className="btn-wa">
           <MessageCircle size={18} /> Kirim WA
         </a>
         <button
@@ -71,7 +71,7 @@ export default function ResultView({ bill, totals, onReset }: Props) {
           const share = totals.perPerson[i]
           const items = bill.items.filter((it) => it.assignees.includes(person.id))
           return (
-            <li key={person.id} className="card anim-rise p-4" style={{ animationDelay: `${120 + i * 50}ms` }}>
+            <li key={person.id} className="card anim-rise p-4" style={{ '--stagger': i + 2 } as CSSProperties}>
               <div className="flex items-center gap-2.5">
                 <PersonChip name={person.name} index={i} />
                 <span className="flex-1 font-medium">{person.name}</span>
