@@ -82,8 +82,8 @@ export function billReducer(bill: Bill, action: BillAction): Bill {
     case 'setPaymentPromo':
       return { ...bill, paymentPromo: action.promo, comboId: undefined }
     case 'setMeta': {
-      const { type: _type, ...meta } = action
-      return { ...bill, ...meta }
+      const { date = bill.date, payerName = bill.payerName, payerAccount = bill.payerAccount, outlet = bill.outlet } = action
+      return { ...bill, date, payerName, payerAccount, outlet }
     }
     case 'loadReceipt':
       return { ...bill, items: action.items, fees: action.fees, appPromo: action.appPromo, comboId: undefined }
