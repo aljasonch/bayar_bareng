@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // Admin markers: only the admin themself can read their marker; set by hand in the console.
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Catalog, outlet config and promo combos: public read, admin-only write.
+    match /{collection}/{docId} {
+      allow read: if collection in ['categories', 'menuItems', 'modifierGroups', 'config', 'promoCombos'];
+      allow write: if isAdmin()
+        && collection in ['categories', 'menuItems', 'modifierGroups', 'config', 'promoCombos'];
+    }
+  }
+}

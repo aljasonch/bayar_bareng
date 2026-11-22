@@ -1,104 +1,59 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { onAuthStateChanged, signOut, type User } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
+import { auth, db } from '@/lib/firebase/client'
 import AdminSidebar from '@/components/admin/AdminSidebar'
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const pathname = usePathname()
-  const router = useRouter()
-  const [loading, setLoading] = useState(true)
-  const [authenticated, setAuthenticated] = useState(false)
+type Gate =
+  | { state: 'loading' }
+  | { state: 'out' }
+  | { state: 'notAdmin'; user: User }
+  | { state: 'admin'; user: User }
 
-  // If current route is login, bypass layout shell and auth check
-  const isLoginPage = pathname === '/admin/login'
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const [gate, setGate] = useState<Gate>({ state: 'loading' })
+  const isLogin = pathname === '/admin/login'
+
+  useEffect(
+    () =>
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) return setGate({ state: 'out' })
+        const marker = await getDoc(doc(db, 'admins', user.uid)).catch(() => null)
+        setGate(marker?.exists() ? { state: 'admin', user } : { state: 'notAdmin', user })
+      }),
+    [],
+  )
 
   useEffect(() => {
-    if (isLoginPage) {
-      setLoading(false)
-      return
-    }
+    if (gate.state === 'out' && !isLogin) router.replace('/admin/login')
+    if (gate.state === 'admin' && isLogin) router.replace('/admin')
+  }, [gate.state, isLogin, router])
 
-    let isMounted = true
-
-    const checkAuth = async () => {
-      try {
-        const {
-          data: { user },
-          error,
-        } = await supabase.auth.getUser()
-
-        if (error || !user) {
-          if (isMounted) {
-            setAuthenticated(false)
-            router.push('/admin/login')
-          }
-        } else {
-          if (isMounted) {
-            setAuthenticated(true)
-          }
-        }
-      } catch {
-        if (isMounted) {
-          setAuthenticated(false)
-          router.push('/admin/login')
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    checkAuth()
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        if (!session && !isLoginPage) {
-          setAuthenticated(false)
-          router.push('/admin/login')
-        } else if (session && !isLoginPage) {
-          setAuthenticated(true)
-        }
-      }
-    )
-
-    return () => {
-      isMounted = false
-      authListener.subscription.unsubscribe()
-    }
-  }, [isLoginPage, router])
-
-  if (isLoginPage) {
-    return <>{children}</>
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-counter flex flex-col items-center justify-center gap-3">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-ink border-t-transparent" />
-        <p className="font-mono text-xs uppercase tracking-widest text-ink3">
-          Memeriksa Autentikasi...
-        </p>
-      </div>
-    )
-  }
-
-  if (!authenticated) {
-    return null
-  }
+  if (isLogin) return <>{children}</>
 
   return (
-    <div className="flex min-h-screen bg-counter text-ink">
-      <AdminSidebar />
-      <main className="flex-1 p-6 md:p-8 overflow-y-auto">
-        {children}
-      </main>
+    <div className="px-5 py-6">
+      {gate.state === 'loading' || gate.state === 'out' ? (
+        <p className="text-sm text-muted">Memeriksa akun…</p>
+      ) : gate.state === 'notAdmin' ? (
+        <div className="card mx-auto max-w-sm p-6">
+          <h1 className="font-semibold">Akun ini bukan admin</h1>
+          <p className="mt-1 text-sm text-muted">{gate.user.email} belum terdaftar di koleksi admins.</p>
+          <button type="button" className="btn-secondary mt-4" onClick={() => signOut(auth)}>
+            Keluar
+          </button>
+        </div>
+      ) : (
+        <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-[12rem_1fr]">
+          <AdminSidebar email={gate.user.email ?? ''} />
+          <main className="min-w-0">{children}</main>
+        </div>
+      )}
     </div>
   )
 }

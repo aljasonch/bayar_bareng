@@ -1,32 +1,21 @@
-import type { Metadata } from 'next'
-import { DM_Sans, IBM_Plex_Mono } from 'next/font/google'
+import type { Metadata, Viewport } from 'next'
+import { Google_Sans, Google_Sans_Code } from 'next/font/google'
 import './globals.css'
 
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  variable: '--font-dm-sans',
-})
-
-const plexMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-plex-mono',
-})
+const sans = Google_Sans({ subsets: ['latin'], variable: '--font-sans', adjustFontFallback: false })
+const mono = Google_Sans_Code({ subsets: ['latin'], variable: '--font-mono', adjustFontFallback: false })
 
 export const metadata: Metadata = {
-  title: 'Bilbil | Kalkulator Patungan',
-  description:
-    'Catat pesanan tiap orang, hitung diskon, ongkir, dan cashback, lalu tagih lewat WhatsApp. Split bill tanpa salah hitung.',
+  title: 'Bilbil | Patungan tanpa salah hitung',
+  description: 'Scan struk, bagi pesanan ke teman, hitung promo, lalu tagih lewat WhatsApp.',
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export const viewport: Viewport = { themeColor: '#f6efe6' }
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="id" className={`${dmSans.variable} ${plexMono.variable}`}>
-      <body className="antialiased selection:bg-stamp/20">{children}</body>
+    <html lang="id" className={`${sans.variable} ${mono.variable}`}>
+      <body>{children}</body>
     </html>
   )
 }

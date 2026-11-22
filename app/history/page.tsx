@@ -1,151 +1,77 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
-import { BillResult } from '@/types'
-import { formatBillDate } from '@/lib/date'
-import { deleteFromHistory, getHistory } from '@/lib/history'
-import { formatOutletName } from '@/lib/kopi-kenangan'
-import { formatRp } from '@/lib/item-display'
-import HistoryCard from '@/components/HistoryCard'
-import ResultCard from '@/components/ResultCard'
-import SplitDistributionBar from '@/components/SplitDistributionBar'
-import WhatsAppActions from '@/components/WhatsAppActions'
-import BilbilLogo from '@/components/BilbilLogo'
-import DigitalReceipt from '@/components/DigitalReceipt'
-import { IoClose } from 'react-icons/io5'
+import { ArrowLeft, ChevronDown, Trash2 } from 'lucide-react'
+import ResultView from '@/components/flow/ResultView'
+import { deleteFromHistory, getHistory, type HistoryEntry } from '@/lib/storage/history'
+import { formatBillDate } from '@/lib/bill/whatsapp'
+import { formatRp } from '@/lib/money'
 
-function HistoryDetail({ result }: { result: BillResult }) {
-  return (
-    <div className="animate-fade-in grid grid-cols-1 gap-5 lg:grid-cols-[minmax(18rem,21rem)_minmax(0,1fr)] lg:items-start">
-      <DigitalReceipt result={result} saved={true} className="lg:sticky lg:top-5" />
-
-      <div className="space-y-4">
-        <WhatsAppActions result={result} />
-        <SplitDistributionBar results={result.results} total={result.totalFinal} />
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {result.results.map((item, index) => (
-            <ResultCard key={item.person.id} result={item} index={index} grandTotal={result.totalFinal} />
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
+const noop = () => () => {}
 
 export default function HistoryPage() {
-  const [history, setHistory] = useState<BillResult[]>([])
-  const [selectedResult, setSelectedResult] = useState<BillResult | null>(null)
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      setMounted(true)
-      setHistory(getHistory())
-    }, 0)
-
-    return () => window.clearTimeout(timeoutId)
-  }, [])
-
-  const handleDelete = (id: string) => {
-    deleteFromHistory(id)
-    const entries = getHistory()
-    setHistory(entries)
-    if (selectedResult?.id === id) setSelectedResult(entries[0] ?? null)
-  }
-
-  if (!mounted) {
-    return (
-      <div className="flex min-h-screen items-center justify-center px-4">
-        <div className="card px-5 py-4 font-mono text-sm text-muted">Memuat riwayat…</div>
-      </div>
-    )
-  }
+  const mounted = useSyncExternalStore(noop, () => true, () => false)
+  const [entries, setEntries] = useState<HistoryEntry[] | null>(null)
+  const [open, setOpen] = useState<string | null>(null)
+  const list = entries ?? (mounted ? getHistory() : [])
 
   return (
-    <div className="min-h-screen px-4 py-5 sm:px-6 lg:px-8">
-      <div className="mx-auto w-full max-w-[1440px]">
-        <header className="flex items-center justify-between gap-4 border-b border-rule pb-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" aria-label="Kembali ke beranda">
-              <BilbilLogo className="h-8 w-8 text-ink hover:opacity-80 transition-opacity" />
-            </Link>
-            <div>
-              <h1 className="font-mono text-lg font-bold uppercase tracking-[0.14em] text-ink leading-none">Riwayat</h1>
-              <p className="mt-1 text-sm text-muted leading-none">
-                {history.length > 0
-                  ? `${history.length} nota tersimpan di browser ini.`
-                  : 'Nota yang kamu simpan muncul di sini.'}
-              </p>
-            </div>
-          </div>
-          <Link href="/" className="button-primary shrink-0">
-            + Nota baru
+    <div className="px-5 pb-12 pt-5">
+      <div className="mx-auto max-w-lg">
+        <div className="flex items-center gap-2">
+          <Link href="/" className="-ml-2 rounded-full p-2 text-muted hover:text-ink" aria-label="Kembali ke beranda">
+            <ArrowLeft size={20} />
           </Link>
-        </header>
+          <h1 className="text-lg font-semibold">Riwayat</h1>
+        </div>
 
-        <main className="py-5">
-          {history.length === 0 ? (
-            <div className="animate-fade-in rounded-sm border border-dashed border-rule2 bg-paper/60 p-10 text-center">
-              <h2 className="text-lg font-semibold text-ink">Belum ada nota tersimpan</h2>
-              <p className="mx-auto mt-2 max-w-md text-sm text-muted">
-                Hitung satu patungan dulu, lalu tekan &quot;Simpan ke riwayat&quot; di halaman hasil.
-              </p>
-              <Link href="/" className="button-primary mt-6">
-                Mulai nota baru
-              </Link>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(22rem,0.75fr)_minmax(0,1.25fr)]">
-              <div className="space-y-3">
-                {history.map((item) => (
-                  <HistoryCard
-                    key={item.id}
-                    result={item}
-                    onDelete={handleDelete}
-                    onView={setSelectedResult}
-                    active={selectedResult?.id === item.id}
-                  />
-                ))}
-              </div>
+        {mounted && list.length === 0 && (
+          <div className="mt-16 text-center">
+            <p className="font-medium">Belum ada tagihan tersimpan</p>
+            <p className="mt-1 text-sm text-muted">Tekan &quot;Simpan ke riwayat&quot; di halaman tagihan untuk menyimpannya di sini.</p>
+            <Link href="/" className="btn-primary mt-5">Buat tagihan</Link>
+          </div>
+        )}
 
-              <div className="hidden xl:block">
-                <div className="sticky top-5">
-                  {selectedResult ? (
-                    <HistoryDetail result={selectedResult} />
-                  ) : (
-                    <div className="rounded-sm border border-dashed border-rule2 bg-paper/60 p-10 text-center text-sm text-muted">
-                      Pilih nota di kiri untuk melihat rinciannya.
+        <ul className="mt-5 space-y-3">
+          {list.map(({ bill, totals }) => {
+            const isOpen = open === bill.id
+            const sum = totals.perPerson.reduce((s, p) => s + p.final, 0)
+            return (
+              <li key={bill.id} data-theme={bill.mode === 'kopken' ? 'kopken' : undefined}>
+                <div className="card">
+                  <button type="button" className="flex w-full items-center gap-3 p-4 text-left" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : bill.id)}>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-medium">{bill.mode === 'kopken' ? 'Kopi Kenangan' : 'Nota umum'}</span>
+                      <span className="block text-sm text-muted">
+                        {formatBillDate(bill.date)} · {bill.people.length} orang
+                      </span>
+                    </span>
+                    <span className="num font-semibold">{formatRp(sum)}</span>
+                    <ChevronDown size={18} className={`text-muted transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {isOpen && (
+                    <div className="border-t border-line p-4">
+                      <ResultView bill={bill} totals={totals} />
+                      <button
+                        type="button"
+                        className="btn-ghost mt-3 w-full text-danger"
+                        onClick={() => {
+                          deleteFromHistory(bill.id)
+                          setEntries(getHistory())
+                        }}
+                      >
+                        <Trash2 size={16} /> Hapus dari riwayat
+                      </button>
                     </div>
                   )}
                 </div>
-              </div>
-            </div>
-          )}
-        </main>
+              </li>
+            )
+          })}
+        </ul>
       </div>
-
-      {selectedResult && history.length > 0 && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-counter/95 px-4 py-5 backdrop-blur-sm xl:hidden">
-          <div className="mx-auto max-w-screen-md pb-12">
-            <div className="mb-4 flex items-center justify-between gap-4">
-              <div>
-                <p className="label">Rincian nota</p>
-                <h2 className="mt-1 text-lg font-semibold text-ink">
-                  {formatBillDate(selectedResult, { day: 'numeric', month: 'long', year: 'numeric' })}
-                </h2>
-              </div>
-              <button type="button" onClick={() => setSelectedResult(null)} className="icon-button bg-paper" aria-label="Tutup rincian">
-                <IoClose className="h-5 w-5" />
-              </button>
-            </div>
-            <HistoryDetail result={selectedResult} />
-            <button type="button" onClick={() => setSelectedResult(null)} className="button-secondary mt-4 w-full">
-              Tutup
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

@@ -1,94 +1,37 @@
 'use client'
 
-import React from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import {
-  LayoutDashboard,
-  FolderOpen,
-  Coffee,
-  Sliders,
-  Store,
-  LogOut,
-} from 'lucide-react'
-import { supabase } from '@/lib/supabase'
-import BilbilLogo from '@/components/BilbilLogo'
+import { usePathname } from 'next/navigation'
+import { signOut } from 'firebase/auth'
+import { auth } from '@/lib/firebase/client'
 
-const NAV_ITEMS = [
-  { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-  { label: 'Kategori', href: '/admin/categories', icon: FolderOpen },
-  { label: 'Menu Items', href: '/admin/menu', icon: Coffee },
-  { label: 'Modifiers', href: '/admin/modifiers', icon: Sliders },
-  { label: 'Outlet Config', href: '/admin/outlet', icon: Store },
+const LINKS = [
+  { href: '/admin', label: 'Ringkasan' },
+  { href: '/admin/menu', label: 'Menu' },
+  { href: '/admin/categories', label: 'Kategori' },
+  { href: '/admin/modifiers', label: 'Modifier' },
+  { href: '/admin/combos', label: 'Combo promo' },
+  { href: '/admin/outlet', label: 'Outlet' },
 ]
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ email }: { email: string }) {
   const pathname = usePathname()
-  const router = useRouter()
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.push('/admin/login')
-  }
-
-  const isLinkActive = (href: string) => {
-    if (href === '/admin') {
-      return pathname === '/admin'
-    }
-    return pathname.startsWith(href)
-  }
-
   return (
-    <aside className="w-64 bg-ink text-paper flex flex-col justify-between shrink-0 min-h-screen border-r border-ink2/20">
-      <div>
-        {/* Brand Header */}
-        <div className="p-6 border-b border-ink2/30 flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded bg-paper/10 text-paper">
-            <BilbilLogo className="h-5 w-5" />
-          </div>
-          <div>
-            <h1 className="font-mono text-sm font-bold tracking-wider text-paper uppercase">
-              Bilbil
-            </h1>
-            <span className="font-mono text-[10px] uppercase tracking-widest text-faint">
-              Admin Panel
-            </span>
-          </div>
-        </div>
-
-        {/* Navigation Links */}
-        <nav className="p-4 space-y-1">
-          {NAV_ITEMS.map((item) => {
-            const Icon = item.icon
-            const active = isLinkActive(item.href)
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-sm font-mono text-xs tracking-wider uppercase transition-colors ${
-                  active
-                    ? 'bg-paper/15 text-paper font-semibold shadow-sm'
-                    : 'text-faint hover:text-paper hover:bg-paper/5'
-                }`}
-              >
-                <Icon className="h-4 w-4 shrink-0" />
-                <span>{item.label}</span>
-              </Link>
-            )
-          })}
-        </nav>
-      </div>
-
-      {/* Footer / Logout */}
-      <div className="p-4 border-t border-ink2/30">
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-sm font-mono text-xs tracking-wider uppercase text-faint hover:text-stamp hover:bg-stamp/10 transition-colors text-left"
+    <nav className="flex flex-wrap items-center gap-1 border-b border-line pb-3 md:flex-col md:items-stretch md:border-b-0 md:border-r md:pb-0 md:pr-4">
+      <Link href="/" className="mr-3 font-semibold md:mb-4">Bilbil admin</Link>
+      {LINKS.map((l) => (
+        <Link
+          key={l.href}
+          href={l.href}
+          className={`rounded-xl px-3 py-2 text-sm ${pathname === l.href ? 'bg-accentSoft font-medium text-accent' : 'text-muted hover:text-ink'}`}
         >
-          <LogOut className="h-4 w-4 shrink-0" />
-          <span>Keluar</span>
-        </button>
-      </div>
-    </aside>
+          {l.label}
+        </Link>
+      ))}
+      <div className="text-xs text-muted md:mt-6 md:px-3">{email}</div>
+      <button type="button" className="btn-ghost btn-sm justify-start px-3" onClick={() => signOut(auth)}>
+        Keluar
+      </button>
+    </nav>
   )
 }
